@@ -12,6 +12,17 @@ import SwiftData
 struct WingApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
+            // Wing 核心模型
+            DailySession.self,
+            WingEntry.self,
+            RawFragment.self,
+            // 记忆系统模型
+            SemanticMemory.self,
+            EpisodicMemory.self,
+            ProceduralMemory.self,
+            // 应用设置
+            AppSettings.self,
+            // 示例模型（可后续移除）
             Item.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
