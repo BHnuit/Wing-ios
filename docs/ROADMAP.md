@@ -1,8 +1,8 @@
 # 🗺️ Wing iOS Native - Development Roadmap
 
-> **Current Status**: Phase 3 (Core Services) - Ready to Start
+> **Current Status**: Phase 4 (UI Architecture) - Ready to Start
 > **Target**: iOS 26.2+ | Swift 6.2 | SwiftUI | SwiftData
-> **Last Updated**: 2026-01-28
+> **Last Updated**: 2026-01-29
 
 ## 📌 Project Overview
 Wing is an AI-powered diary application being refactored from React/TypeScript to Native iOS.
@@ -46,20 +46,22 @@ It uses **SwiftData** for local persistence, **SwiftUI** for the interface, and 
 
 ---
 
-## 🚧 Phase 3: Core Services (The Brain)
-**Goal**: Port `aiService.ts` logic to Swift Actors.
+## ✅ Phase 3: Core Services (The Brain) (Completed)
+**Goal**: Port by migrating `aiService.ts` logic to Swift Actors and setting up secure preferences.
 
-- [ ] **3.1 Security Layer** (`Utils/KeychainHelper.swift`)
-    - [ ] Create `KeychainHelper` class (Singleton/Static).
-    - [ ] Implement `save`, `load`, `delete` using `kSecClassGenericPassword`.
-- [ ] **3.2 AI Service Engine** (`Services/AIService.swift`)
-    - [ ] Define `AIConfig` struct (API Key, Model, Provider).
-    - [ ] Create `actor AIService`.
-    - [ ] Implement `synthesizeJournalStream(fragments:config:) -> AsyncThrowingStream`.
-    - [ ] Port Prompt Engineering logic (from `aiService.ts`).
-    - [ ] Implement SSE (Server-Sent Events) manual parsing.
-- [ ] **3.3 Smoke Test**
-    - [ ] Add a temporary button in `ContentView` to trigger a fake AI call and print tokens to console.
+- [x] **3.1 Security Layer** (`Utils/KeychainHelper.swift`)
+    - [x] Create `KeychainHelper` class (Singleton/Static).
+    - [x] Implement `save`, `load`, `delete` using `kSecClassGenericPassword`.
+- [x] **3.2 AI Service Engine** (`Services/AIService.swift`)
+    - [x] Define `AIConfig` struct (API Key, Model, Provider).
+    - [x] Create `actor AIService`.
+    - [x] Implement `synthesizeJournalStream(fragments:config:) -> AsyncThrowingStream`.
+    - [x] Port Prompt Engineering logic (from `aiService.ts`).
+    - [x] Implement SSE (Server-Sent Events) manual parsing (OpenAI & Gemini).
+- [x] **3.3 User Preferences & UI**
+    - [x] Implement `SettingsManager` (SwiftData + Keychain).
+    - [x] Create `SettingsEntryView` for AI Configuration.
+    - [x] Verify persistence and security.
 
 ---
 

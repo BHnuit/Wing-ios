@@ -695,19 +695,15 @@ final class AppSettings {
     /// 唯一标识符（用于单例模式）
     @Attribute(.unique) var id: UUID
     
-    /// 按 AI 供应商分别存储的 API Key
+    /// 按 AI 供应商分别存储的模型名称
     /// 存储为 JSON 字符串
-    @Attribute(.externalStorage) private var apiKeysData: Data?
+    @Attribute(.externalStorage) private var aiModelsData: Data?
     
     /// AI 供应商选择
     var aiProvider: AiProvider
     
     /// 自定义 API Base URL（仅当 aiProvider 为 custom 时使用）
     var aiBaseUrl: String?
-    
-    /// 按 AI 供应商分别存储的模型名称
-    /// 存储为 JSON 字符串
-    @Attribute(.externalStorage) private var aiModelsData: Data?
     
     /// 界面语言
     var language: Language
@@ -748,29 +744,6 @@ final class AppSettings {
     /// 是否在生成日记时检索记忆（向AI传递记忆内容，需记忆数≥100）
     var memoryRetrievalEnabled: Bool
     
-    /// 按 AI 供应商分别存储的 API Key（计算属性）
-    var apiKeys: [AiProvider: String] {
-        get {
-            guard let data = apiKeysData else { return [:] }
-            do {
-                let dict = try JSONDecoder().decode([String: String].self, from: data)
-                return dict.compactMapKeys { AiProvider(rawValue: $0) }
-            } catch {
-                return [:]
-            }
-        }
-        set {
-            do {
-                let stringDict = newValue.reduce(into: [String: String]()) { result, pair in
-                    result[pair.key.rawValue] = pair.value
-                }
-                apiKeysData = try JSONEncoder().encode(stringDict)
-            } catch {
-                apiKeysData = nil
-            }
-        }
-    }
-    
     /// 按 AI 供应商分别存储的模型名称（计算属性）
     var aiModels: [AiProvider: String] {
         get {
@@ -796,7 +769,6 @@ final class AppSettings {
     
     init(
         id: UUID = UUID(),
-        apiKeys: [AiProvider: String] = [:],
         aiProvider: AiProvider = .gemini,
         aiBaseUrl: String? = nil,
         aiModels: [AiProvider: String] = [:],
@@ -832,7 +804,6 @@ final class AppSettings {
         self.memoryRetrievalEnabled = memoryRetrievalEnabled
         
         // 使用计算属性的 setter 来初始化
-        self.apiKeys = apiKeys
         self.aiModels = aiModels
     }
 }

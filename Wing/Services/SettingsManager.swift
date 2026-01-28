@@ -1,0 +1,152 @@
+//
+//  SettingsManager.swift
+//  Wing
+//
+//  Created on 2026-01-29.
+//
+
+import Foundation
+import SwiftData
+import SwiftUI
+
+/**
+ * 设置管理器 (SettingsManager)
+ *
+ * 职责：
+ * 1. 作为应用设置的单一真实数据源（Single Source of Truth）。
+ * 2. 协调非敏感配置（存储在 SwiftData AppSettings）与敏感密钥（存储在 Keychain）。
+ * 3. 提供统一的 AIConfig 生成接口供 Service 层调用。
+ *
+ * 使用 @Observable 宏，支持 SwiftUI 视图直接绑定。
+ */
+@Observable
+class SettingsManager {
+    static let shared = SettingsManager()
+    
+    /// SwiftData 模型上下文（将在初始化时由外部传入或延迟获取）
+    var modelContext: ModelContext?
+    
+    /// 当前生效的应用设置（从数据库加载或新建默认）
+    /// 注意：不要直接创建 AppSettings 实例，必须通过 fetchOrInitSettings 获取以确保只有一份
+    var appSettings: AppSettings?
+    
+    private let keychain = KeychainHelper.shared
+    
+    private init() {
+        // 单例模式
+    }
+    
+    // MARK: - Initialization
+    
+    /**
+     * 初始化设置管理器，通常在 App 启动时调用
+     */
+    @MainActor
+    func initialize(with container: ModelContainer) {
+        self.modelContext = container.mainContext
+        fetchOrInitSettings()
+    }
+    
+    /**
+     * 获取或初始化 AppSettings
+     * 如果数据库中没有记录，则创建一个默认配置
+     */
+    @MainActor
+    private func fetchOrInitSettings() {
+        guard let context = modelContext else { return }
+        
+        do {
+            let descriptor = FetchDescriptor<AppSettings>()
+            let existingSettings = try context.fetch(descriptor)
+            
+            if let first = existingSettings.first {
+                self.appSettings = first
+            } else {
+                // 创建默认设置 (对齐 Web 版默认值)
+                print("SettingsManager: Creating default AppSettings")
+                let defaultSettings = AppSettings(
+                    aiProvider: .gemini,
+                    aiModels: [
+                        .gemini: "gemini-2.5-flash",
+                        .openai: "gpt-4o",
+                        .deepseek: "deepseek-chat"
+                    ],
+                    language: .zh, // 简配版，实际可检测 Locale.current
+                    theme: .system,
+                    pageFont: .system,
+                    fontSize: .medium,
+                    modelLanguage: .zh,
+                    keepEditHistory: true,
+                    backupApiKeys: true,
+                    writingStyle: .prose,
+                    enableLongTermMemory: false,
+                    memoryExtractionAuto: true,
+                    memoryRetrievalEnabled: false
+                )
+                context.insert(defaultSettings)
+                try context.save()
+                self.appSettings = defaultSettings
+            }
+        } catch {
+            print("SettingsManager Error: Failed to fetch/init settings: \(error)")
+        }
+    }
+    
+    // MARK: - API Key Management (Keychain)
+    
+    /**
+     * 异步获取指定 Provider 的 API Key
+     */
+    func getApiKey(for provider: AiProvider) async -> String? {
+        let keyName = keychainKey(for: provider)
+        return try? await keychain.loadString(for: keyName)
+    }
+    
+    /**
+     * 异步设置指定 Provider 的 API Key
+     */
+    func setApiKey(_ key: String, for provider: AiProvider) async {
+        let keyName = keychainKey(for: provider)
+        if key.isEmpty {
+            try? await keychain.delete(keyName)
+        } else {
+            try? await keychain.save(key, for: keyName)
+        }
+    }
+    
+    private func keychainKey(for provider: AiProvider) -> String {
+        return "api_key_\(provider.rawValue)"
+    }
+    
+    // MARK: - AI Config Factory
+    
+    /**
+     * 获取当前生效的 AI 配置 (合并 Settings 与 Keychain)
+     */
+    func getAIConfig() async -> AIConfig {
+        guard let settings = appSettings else {
+            // Fallback default
+            return AIConfig(provider: .gemini, model: "gemini-2.5-flash", apiKey: "")
+        }
+        
+        let provider = settings.aiProvider
+        let model = settings.aiModels[provider] ?? defaultModel(for: provider)
+        let apiKey = await getApiKey(for: provider) ?? ""
+        
+        return AIConfig(
+            provider: provider,
+            model: model,
+            apiKey: apiKey,
+            baseURL: settings.aiBaseUrl
+        )
+    }
+    
+    private func defaultModel(for provider: AiProvider) -> String {
+        switch provider {
+        case .gemini: return "gemini-2.5-flash"
+        case .openai: return "gpt-4o"
+        case .deepseek: return "deepseek-chat"
+        case .custom: return ""
+        }
+    }
+}

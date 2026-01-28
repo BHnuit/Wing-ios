@@ -34,9 +34,16 @@ struct WingApp: App {
         }
     }()
 
+    init() {
+        // 初始化设置管理器
+        SettingsManager.shared.initialize(with: sharedModelContainer)
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+            // AIServiceDebugView() 
+            // SettingsEntryView() // Phase 3.3 Entry
         }
         .modelContainer(sharedModelContainer)
     }
