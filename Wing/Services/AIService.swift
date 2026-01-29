@@ -75,6 +75,56 @@ actor AIService {
         }
     }
     
+    /**
+     * 合成完整日记（JSON 模式）
+     *
+     * - Parameters:
+     *   - fragments: 当日的碎片记录
+     *   - config: AI 配置对象
+     * - Returns: JournalOutput 结构化输出
+     * - Note: 包含 Fallback 机制，解析失败时返回"无题日记"
+     */
+    func synthesizeJournal(fragments: [RawFragment], config: AIConfig) async throws -> JournalOutput {
+        guard !config.apiKey.isEmpty else {
+            throw AIError.missingAPIKey
+        }
+        
+        let systemInstruction = getJournalSystemInstruction()
+        let userPrompt = buildUserPrompt(from: fragments)
+        
+        // 构建非流式请求
+        var request: URLRequest
+        if config.provider == .gemini {
+            request = try buildGeminiJSONRequest(config: config, system: systemInstruction, user: userPrompt)
+        } else {
+            request = try buildOpenAIJSONRequest(config: config, system: systemInstruction, user: userPrompt)
+        }
+        
+        // 发送请求
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw AIError.networkError(URLError(.badServerResponse))
+        }
+        
+        guard (200...299).contains(httpResponse.statusCode) else {
+            let errorMsg = String(data: data, encoding: .utf8) ?? "Unknown error"
+            throw AIError.apiError(statusCode: httpResponse.statusCode, message: errorMsg)
+        }
+        
+        // 解析响应
+        let rawContent: String
+        if config.provider == .gemini {
+            rawContent = try parseGeminiJSONResponse(data)
+        } else {
+            rawContent = try parseOpenAIJSONResponse(data)
+        }
+        
+        // 尝试解析 JSON
+        return parseJournalOutput(rawContent)
+    }
+
+    
     // MARK: - Internal Logic
     
     private func processStream(
@@ -219,15 +269,46 @@ actor AIService {
         """
     }
     
+    private func getJournalSystemInstruction() -> String {
+        return """
+        Role: You are "Wing", an empathetic AI diary assistant.
+        Task: Create a complete diary entry from the user's raw fragments.
+        
+        Output Format: Return ONLY a valid JSON object with this exact structure:
+        {
+          "title": "A concise, poetic title (5-10 characters, no emoji)",
+          "summary": "One-sentence summary of the day",
+          "mood": "A single emoji representing the overall mood",
+          "content": "Full diary content in Markdown format",
+          "insights": "Psychological insights and encouragement (2-3 sentences)"
+        }
+        
+        Content Guidelines:
+        - Use proper Markdown formatting (headers ##, bold **, lists -)
+        - DO NOT include emoji in the content field
+        - DO NOT include [Image] or [Photo] placeholders
+        - Write a cohesive narrative weaving the fragments together
+        
+        Language: Detect from fragments or default to Chinese.
+        Tone: Warm, reflective, literary.
+        
+        CRITICAL: Output ONLY the JSON object. No markdown code blocks, no extra text.
+        """
+    }
+
+    
     private func buildUserPrompt(from fragments: [RawFragment]) -> String {
-        let fragmentTexts = fragments.map { fragment in
+        // 按时间戳排序，确保先后顺序正确
+        let sortedFragments = fragments.sorted { $0.timestamp < $1.timestamp }
+        
+        let fragmentTexts = sortedFragments.map { fragment in
             let timeStr = Date(timeIntervalSince1970: TimeInterval(fragment.timestamp) / 1000).formatted(date: .omitted, time: .shortened)
-            let imageMarker = fragment.type == .image ? "[Image]" : ""
+            let imageMarker = fragment.type == .image ? "[Photo]" : ""
             return "[\(timeStr)] \(imageMarker) \(fragment.content)"
         }.joined(separator: "\n")
         
         return """
-        User's fragments for today:
+        User's fragments for today (in chronological order):
         
         \(fragmentTexts)
         
@@ -292,6 +373,67 @@ actor AIService {
         return request
     }
     
+    // MARK: - JSON Mode Request Builders
+    
+    private func buildOpenAIJSONRequest(config: AIConfig, system: String, user: String) throws -> URLRequest {
+        let baseURL = config.baseURL ?? openAIBaseURL
+        let urlString = baseURL.trimmingCharacters(in: .init(charactersIn: "/")) + "/chat/completions"
+        guard let url = URL(string: urlString) else { throw AIError.invalidURL }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(config.apiKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = [
+            "model": config.model,
+            "messages": [
+                ["role": "system", "content": system],
+                ["role": "user", "content": user]
+            ],
+            "stream": false,
+            "max_tokens": 4096,
+            "response_format": ["type": "json_object"]
+        ]
+        
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        return request
+    }
+    
+    private func buildGeminiJSONRequest(config: AIConfig, system: String, user: String) throws -> URLRequest {
+        let model = config.model.isEmpty ? "gemini-2.5-flash" : config.model
+        // 非流式：使用 generateContent 而非 streamGenerateContent
+        let urlString = "\(geminiBaseURL)/models/\(model):generateContent?key=\(config.apiKey)"
+        
+        guard let url = URL(string: urlString) else { throw AIError.invalidURL }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = [
+            "contents": [
+                [
+                    "parts": [
+                        ["text": user]
+                    ]
+                ]
+            ],
+            "system_instruction": [
+                "parts": [
+                    ["text": system]
+                ]
+            ],
+            "generationConfig": [
+                "response_mime_type": "application/json"
+            ]
+        ]
+        
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        return request
+    }
+
+    
     // MARK: - Parsers
     
     private func parseOpenAIResponse(jsonString: String) -> String? {
@@ -316,5 +458,53 @@ actor AIService {
             return nil
         }
         return text
+    }
+    
+    // MARK: - JSON Mode Parsers
+    
+    private func parseOpenAIJSONResponse(_ data: Data) throws -> String {
+        guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let choices = json["choices"] as? [[String: Any]],
+              let firstChoice = choices.first,
+              let message = firstChoice["message"] as? [String: Any],
+              let content = message["content"] as? String else {
+            throw AIError.parsingError
+        }
+        return content
+    }
+    
+    private func parseGeminiJSONResponse(_ data: Data) throws -> String {
+        guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let candidates = json["candidates"] as? [[String: Any]],
+              let firstCandidate = candidates.first,
+              let contentObj = firstCandidate["content"] as? [String: Any],
+              let parts = contentObj["parts"] as? [[String: Any]],
+              let firstPart = parts.first,
+              let text = firstPart["text"] as? String else {
+            throw AIError.parsingError
+        }
+        return text
+    }
+    
+    /// 解析日记输出 JSON
+    /// 使用 nonisolated 确保解码操作不受 actor 隔离限制
+    nonisolated private func parseJournalOutput(_ rawContent: String) -> JournalOutput {
+        // 清理可能的 Markdown 代码块包裹
+        var cleanedContent = rawContent.trimmingCharacters(in: .whitespacesAndNewlines)
+        if cleanedContent.hasPrefix("```json") {
+            cleanedContent = cleanedContent.replacingOccurrences(of: "```json", with: "")
+            cleanedContent = cleanedContent.replacingOccurrences(of: "```", with: "")
+            cleanedContent = cleanedContent.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        
+        // 尝试解析 JSON
+        guard let data = cleanedContent.data(using: .utf8),
+              let output = try? JSONDecoder().decode(JournalOutput.self, from: data) else {
+            // Fallback: 解析失败时返回"无题日记"
+            print("⚠️ JSON 解析失败，使用 Fallback 模式")
+            return JournalOutput.fallback(rawContent: cleanedContent)
+        }
+        
+        return output
     }
 }

@@ -83,17 +83,16 @@ private struct JournalTabView: View {
                 } else {
                     ForEach(entries) { entry in
                         NavigationLink(value: AppRoute.journalDetail(entryId: entry.id)) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                HStack {
-                                    Text(entry.mood)
-                                        .font(.title2)
-                                    Text(entry.title)
-                                        .font(.headline)
-                                }
-                                Text(entry.summary)
-                                    .font(.subheadline)
+                            HStack {
+                                Text(entry.mood)
+                                    .font(.title2)
+                                Text(entry.title)
+                                    .font(.headline)
+                                Spacer()
+                                // 右侧日期（优先使用 session.date，fallback 到 createdAt）
+                                Text(formatEntryDate(entry))
+                                    .font(.caption)
                                     .foregroundStyle(.secondary)
-                                    .lineLimit(2)
                             }
                             .padding(.vertical, 4)
                         }
@@ -104,75 +103,39 @@ private struct JournalTabView: View {
             .navigationDestination(for: AppRoute.self) { route in
                 switch route {
                 case .journalDetail(let entryId):
-                    JournalDetailPlaceholderView(entryId: entryId)
+                    JournalDetailView(entryId: entryId)
                 default:
                     Text("未知路由")
                 }
             }
         }
     }
-}
-
-/**
- * 日记详情占位视图
- *
- * Phase 6 将实现完整的 Markdown 渲染和详情页
- */
-private struct JournalDetailPlaceholderView: View {
-    let entryId: UUID
-    @Query private var entries: [WingEntry]
     
-    private var entry: WingEntry? {
-        entries.first { $0.id == entryId }
+    /// 格式化日记日期 (MM/dd)
+    private func formatEntryDate(_ entry: WingEntry) -> String {
+        // 优先使用 session.date
+        if let dateString = entry.dailySession?.date {
+            return formatListDate(dateString)
+        }
+        
+        // Fallback: 使用 createdAt 时间戳
+        let date = Date(timeIntervalSince1970: TimeInterval(entry.createdAt) / 1000)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd"
+        return formatter.string(from: date)
     }
     
-    var body: some View {
-        ScrollView {
-            if let entry = entry {
-                VStack(alignment: .leading, spacing: 16) {
-                    HStack {
-                        Text(entry.mood)
-                            .font(.system(size: 48))
-                        Spacer()
-                    }
-                    
-                    Text(entry.title)
-                        .font(.title)
-                        .fontWeight(.bold)
-                    
-                    Text(entry.summary)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                    
-                    Divider()
-                    
-                    Text(entry.markdownContent)
-                        .font(.body)
-                    
-                    if !entry.aiInsights.isEmpty {
-                        Divider()
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            Label("猫头鹰的洞察", systemImage: "brain.head.profile")
-                                .font(.headline)
-                            
-                            Text(entry.aiInsights)
-                                .font(.callout)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                }
-                .padding()
-            } else {
-                ContentUnavailableView(
-                    "日记不存在",
-                    systemImage: "exclamationmark.triangle",
-                    description: Text("无法找到该日记")
-                )
-            }
+    /// 格式化日期字符串 (MM/dd)
+    private func formatListDate(_ dateString: String) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        
+        guard let date = formatter.date(from: dateString) else {
+            return dateString
         }
-        .navigationTitle("日记详情")
-        .navigationBarTitleDisplayMode(.inline)
+        
+        formatter.dateFormat = "MM/dd"
+        return formatter.string(from: date)
     }
 }
 

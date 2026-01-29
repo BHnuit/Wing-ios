@@ -53,6 +53,8 @@ struct ChatInputBar: View {
             // 发送按钮
             Button {
                 onSend()
+                // 触感反馈
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
             } label: {
                 Image(systemName: "arrow.up.circle.fill")
                     .font(.title2)

@@ -118,20 +118,23 @@ class SettingsManager {
         return "api_key_\(provider.rawValue)"
     }
     
-    // MARK: - AI Config Factory
-    
     /**
      * 获取当前生效的 AI 配置 (合并 Settings 与 Keychain)
+     * 如果 API Key 缺失，返回 nil
      */
-    func getAIConfig() async -> AIConfig {
+    func getAIConfig() async -> AIConfig? {
         guard let settings = appSettings else {
-            // Fallback default
-            return AIConfig(provider: .gemini, model: "gemini-2.5-flash", apiKey: "")
+            return nil
         }
         
         let provider = settings.aiProvider
         let model = settings.aiModels[provider] ?? defaultModel(for: provider)
         let apiKey = await getApiKey(for: provider) ?? ""
+        
+        // 如果 API Key 为空，返回 nil
+        guard !apiKey.isEmpty else {
+            return nil
+        }
         
         return AIConfig(
             provider: provider,

@@ -38,11 +38,11 @@ struct WingApp: App {
         // 初始化设置管理器
         SettingsManager.shared.initialize(with: sharedModelContainer)
         
-        // 注入测试数据（仅在开发阶段）
+        // 注入测试数据（仅在开发阶段，且数据库为空时）
         #if DEBUG
         let container = sharedModelContainer
-        Task.detached {
-            let context = ModelContext(container)
+        Task { @MainActor in
+            let context = container.mainContext
             let injector = TestDataInjector()
             await injector.injectTestData(context: context)
         }

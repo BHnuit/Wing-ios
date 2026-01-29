@@ -66,8 +66,6 @@ actor SessionService {
         return try? context.fetch(descriptor).first
     }
     
-    // MARK: - Fragment Operations
-    
     /**
      * 添加文本碎片到 Session
      */
@@ -81,6 +79,9 @@ actor SessionService {
         fragment.dailySession = session
         session.fragments.append(fragment)
         context.insert(fragment)
+        
+        // 持久化保存
+        try? context.save()
     }
     
     /**
@@ -105,6 +106,9 @@ actor SessionService {
         fragment.dailySession = session
         session.fragments.append(fragment)
         context.insert(fragment)
+        
+        // 持久化保存
+        try? context.save()
     }
     
     /**

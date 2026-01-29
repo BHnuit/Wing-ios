@@ -19,11 +19,18 @@ import SwiftData
  */
 struct ChatView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(NavigationManager.self) private var navigationManager
+    @Environment(SettingsManager.self) private var settingsManager
     @Query private var allSessions: [DailySession]
     
     @State private var selectedDate: String
     @State private var inputText = ""
     @State private var sessionService = SessionService()
+    
+    // 日记合成状态
+    @State private var isSynthesizing = false
+    @State private var synthesisProgress: SynthesisProgress = .started
+    @State private var synthesisError: Error?
     
     // 当前查看的 Session
     private var currentSession: DailySession? {
@@ -98,6 +105,36 @@ struct ChatView: View {
             }
             .navigationTitle("当下")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        handleSynthesizeJournal()
+                    } label: {
+                        Label("生成日记", systemImage: "wand.and.stars")
+                    }
+                    .disabled(fragments.isEmpty || !isToday)
+                }
+            }
+            .overlay {
+                // 合成进度 UI
+                if isSynthesizing {
+                    ZStack {
+                        Color.black.opacity(0.3)
+                            .ignoresSafeArea()
+                        
+                        SynthesisProgressView(progress: synthesisProgress)
+                    }
+                }
+            }
+            .alert("生成失败", isPresented: .constant(synthesisError != nil)) {
+                Button("确定") {
+                    synthesisError = nil
+                }
+            } message: {
+                if let error = synthesisError {
+                    Text(error.localizedDescription)
+                }
+            }
             .safeAreaInset(edge: .bottom) {
                 ChatInputBar(
                     text: $inputText,
@@ -173,6 +210,55 @@ struct ChatView: View {
             to: session,
             context: modelContext
         )
+    }
+    
+    private func handleSynthesizeJournal() {
+        guard let session = currentSession else { return }
+        
+        Task {
+            // 获取 AI 配置
+            guard let config = await settingsManager.getAIConfig() else {
+                synthesisError = SynthesisError.configurationMissing
+                return
+            }
+            
+            // 显示进度 UI
+            await MainActor.run {
+                isSynthesizing = true
+                synthesisProgress = .started
+            }
+            
+            do {
+                // 调用合成服务
+                let entryId = try await JournalSynthesisService.shared.synthesize(
+                    session: session,
+                    config: config,
+                    context: modelContext,
+                    progressCallback: { progress in
+                        synthesisProgress = progress
+                    }
+                )
+                
+                // 等待一下让用户看到完成状态
+                try await Task.sleep(for: .seconds(1))
+                
+                // 关闭进度 UI
+                await MainActor.run {
+                    isSynthesizing = false
+                }
+                
+                // 跳转到日记详情
+                await MainActor.run {
+                    navigationManager.navigateToJournalDetail(entryId: entryId)
+                }
+                
+            } catch {
+                await MainActor.run {
+                    isSynthesizing = false
+                    synthesisError = error
+                }
+            }
+        }
     }
     
     // MARK: - Helper Methods

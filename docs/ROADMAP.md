@@ -1,8 +1,8 @@
 # 🗺️ Wing iOS Native - Development Roadmap
 
-> **Current Status**: Phase 4 (UI Architecture) - Ready to Start
+> **Current Status**: Phase 7 (Settings & Polish) - Ready to Start
 > **Target**: iOS 26.2+ | Swift 6.2 | SwiftUI | SwiftData
-> **Last Updated**: 2026-01-29
+> **Last Updated**: 2026-01-30
 
 ## 📌 Project Overview
 Wing is an AI-powered diary application being refactored from React/TypeScript to Native iOS.
@@ -63,49 +63,66 @@ It uses **SwiftData** for local persistence, **SwiftUI** for the interface, and 
     - [x] Create `SettingsEntryView` for AI Configuration.
     - [x] Verify persistence and security.
 
+> 📖 技术回顾: [phase3-retrospective.md](.agent/memories/phase3-retrospective.md)
+
 ---
 
-## 📅 Phase 4: UI Architecture (The Body)
+## ✅ Phase 4: UI Architecture (The Body) (Completed)
 **Goal**: Establish navigation and app structure.
 
-- [ ] **4.1 Navigation Infrastructure**
-    - [ ] Define `AppRoute` enum (Chat, JournalDetail, Settings, etc.).
-    - [ ] Create `AppNavigation` environment object or logic.
-- [ ] **4.2 Main Tab View**
-    - [ ] Tab 1: **Today (当下)** - Chat/Recording Interface.
-    - [ ] Tab 2: **Journal (回忆)** - History List.
-    - [ ] Tab 3: **Settings (设置)**.
+- [x] **4.1 Navigation Infrastructure**
+    - [x] Define `AppRoute` enum (Chat, JournalDetail, Settings, etc.).
+    - [x] Create `NavigationManager` (`@Observable` class) for state management.
+- [x] **4.2 Main Tab View**
+    - [x] Tab 1: **Today (当下)** - Chat/Recording Interface.
+    - [x] Tab 2: **Journal (回忆)** - History List.
+    - [x] Tab 3: **Settings (设置)**.
+
+> 📖 技术回顾: [phase4-retrospective.md](.agent/memories/phase4-retrospective.md)
 
 ---
 
-## 💬 Phase 5: Input Flow (The "Now")
+## ✅ Phase 5: Input Flow (The "Now") (Completed)
 **Goal**: Recreate the chat-like recording experience.
 
-- [ ] **5.1 Chat Interface** (`Views/Chat/ChatView.swift`)
-    - [ ] Fetch today's `DailySession` using `@Query`.
-    - [ ] Implement `ScrollView` with `LazyVStack` for performance.
-    - [ ] Render `FragmentBubble` views (Text & Image).
-- [ ] **5.2 Input Area**
-    - [ ] Text Input Field (auto-expanding).
-    - [ ] **Photo Picker**: Integrate `PhotosPicker` (SwiftUI Native).
-    - [ ] **Haptics**: Add `UIImpactFeedbackGenerator` on send.
+- [x] **5.1 Chat Interface** (`Views/Chat/ChatView.swift`)
+    - [x] Fetch today's `DailySession` using `@Query`.
+    - [x] Implement `ScrollView` with `LazyVStack` for performance.
+    - [x] Render `FragmentBubble` views (Text & Image).
+- [x] **5.2 Input Area**
+    - [x] Text Input Field (auto-expanding).
+    - [x] **Photo Picker**: Integrate `PhotosPicker` (SwiftUI Native).
+    - [x] **Haptics**: Add `UIImpactFeedbackGenerator` on send.
+    - [x] **Date Navigation**: Robust date switching & calendar (`DateNavigator.swift`).
+
+> 📖 技术回顾: [phase5-retrospective.md](.agent/memories/phase5-retrospective.md)
 
 ---
 
-## 📖 Phase 6: Output Flow (The "Journal")
+## ✅ Phase 6: Output Flow (The "Journal") (Completed)
 **Goal**: Render the AI-synthesized entries.
 
-- [ ] **6.1 Markdown Rendering**
-    - [ ] Integrate `swift-markdown-ui` (or implement custom `AttributedString` parser).
-    - [ ] Style headers, blockquotes, and lists to match Wing's aesthetic.
-- [ ] **6.2 Journal Detail** (`Views/Journal/JournalDetailView.swift`)
-    - [ ] Display Metadata: Mood, Weather, Date.
-    - [ ] Display AI Insights ("Owl's Comment").
-    - [ ] Render Main Content.
+- [x] **6.1 Markdown Rendering**
+    - [x] Implement native `AttributedString(markdown:)` parser with paragraph separation.
+    - [x] Style headers, lists, bold to match Wing's aesthetic.
+- [x] **6.2 Journal Detail** (`Views/Journal/JournalDetailView.swift`)
+    - [x] Cover photo section with tap-to-zoom.
+    - [x] Display Metadata: Title, Date (with fallback).
+    - [x] Display AI Insights ("Owl's Comment").
+    - [x] Render Main Content with Markdown.
+- [x] **6.3 Journal Synthesis**
+    - [x] `JournalSynthesisService`: Orchestrate synthesis flow.
+    - [x] `AIService.synthesizeJournal`: One-shot JSON mode.
+    - [x] `SynthesisProgressView`: rotating encouragements + time estimate.
+    - [x] **Fallback**: JSON parse failure → save as "无题日记".
+
+> 📖 技术回顾: [phase6-retrospective.md](.agent/memories/phase6-retrospective.md)
 
 ---
 
-## ⚙️ Phase 7: Settings & Polish
+## 📖 Phase 7: Settings & Polish
+**Goal**: Complete settings UI and polish the app for release.
+
 - [ ] **7.1 Settings Views**
     - [ ] AI Provider Configuration (API Key input -> Keychain).
     - [ ] Personality/Prompt Settings.
@@ -114,10 +131,21 @@ It uses **SwiftData** for local persistence, **SwiftUI** for the interface, and 
 - [ ] **7.3 Polish**
     - [ ] App Icon & Launch Screen.
     - [ ] Dark Mode refinements.
+    - [ ] Real device testing (haptics, performance).
 
 ---
 
-## 📝 Workflow Guide for Cursor
-1.  **Read Context**: Before starting a task, check this roadmap to see active phase.
-2.  **Reference Web Code**: When porting logic, look at `Wing-main` files (e.g., `aiService.ts`, `ChatView.tsx`) for logic, but implement using **SwiftUI/Swift patterns**.
-3.  **Verify**: After implementing a major component (Service or Model change), request to run/update Tests.
+## 📝 Developer Guide
+
+### Workflow
+1. **Read Context**: Check this roadmap for current phase.
+2. **Reference Web Code**: Look at `Wing-main` files for logic, implement using Swift patterns.
+3. **Use Workflows**: Run `/add-service` for new services.
+4. **Verify**: Run tests after major changes.
+
+### Technical Retrospectives
+Each phase has a retrospective document in `.agent/memories/`:
+- `phase3-retrospective.md` - AI Service, Keychain, SSE
+- `phase4-retrospective.md` - Navigation, Tab Architecture
+- `phase5-retrospective.md` - DateNavigator, Image Compression
+- `phase6-retrospective.md` - Swift 6 Concurrency, SwiftData Isolation

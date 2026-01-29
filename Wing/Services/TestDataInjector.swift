@@ -23,10 +23,20 @@ actor TestDataInjector {
      * - 今天的 Session 和多条碎片（文本 + 图片）
      * - 昨天的 Session 和碎片
      * - 一周前的 Session 和碎片
+     *
+     * 注意：仅在数据库为空时才注入，避免重复创建
      */
     func injectTestData(context: ModelContext) async {
-        // 清空现有数据（可选）
-        // clearAllData(context: context)
+        // 检查是否已有数据，避免重复注入
+        let descriptor = FetchDescriptor<DailySession>()
+        let existingCount = (try? context.fetchCount(descriptor)) ?? 0
+        
+        guard existingCount == 0 else {
+            print("TestDataInjector: 数据库已有 \(existingCount) 个 Session，跳过注入")
+            return
+        }
+        
+        print("TestDataInjector: 数据库为空，开始注入测试数据...")
         
         // 1. 创建今天的 Session
         let today = getCurrentDateString()
@@ -52,6 +62,7 @@ actor TestDataInjector {
         
         // 保存
         try? context.save()
+        print("TestDataInjector: 测试数据注入完成")
     }
     
     // MARK: - Helper Methods

@@ -453,16 +453,17 @@ final class DailySession {
 
 /**
  * 收拢完成记录
+ * 遵循 Sendable 协议以支持跨 actor 边界传递
  */
-struct GatherCompletion: Codable, Hashable {
+struct GatherCompletion: Codable, Hashable, Sendable {
     /// 完成时间戳
-    var completedAt: Int64
+    let completedAt: Int64
     
     /// 日记条目 ID
-    var entryId: UUID
+    let entryId: UUID
     
     /// 日记标题
-    var title: String
+    let title: String
     
     init(
         completedAt: Int64,
