@@ -37,13 +37,21 @@ struct WingApp: App {
     init() {
         // 初始化设置管理器
         SettingsManager.shared.initialize(with: sharedModelContainer)
+        
+        // 注入测试数据（仅在开发阶段）
+        #if DEBUG
+        let container = sharedModelContainer
+        Task.detached {
+            let context = ModelContext(container)
+            let injector = TestDataInjector()
+            await injector.injectTestData(context: context)
+        }
+        #endif
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-            // AIServiceDebugView() 
-            // SettingsEntryView() // Phase 3.3 Entry
+            MainTabView()
         }
         .modelContainer(sharedModelContainer)
     }
