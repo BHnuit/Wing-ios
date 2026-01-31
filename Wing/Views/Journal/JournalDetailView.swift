@@ -25,6 +25,9 @@ struct JournalDetailView: View {
     @State private var selectedImage: UIImage?
     @State private var showImageViewer = false
     
+    // 导出状态
+    @State private var exportItem: ExportItem?
+    
     private var entry: WingEntry? {
         entries.first { $0.id == entryId }
     }
@@ -70,12 +73,27 @@ struct JournalDetailView: View {
         }
         .navigationTitle("日记详情")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    Task {
+                        await exportEntry()
+                    }
+                } label: {
+                    Image(systemName: "square.and.arrow.up")
+                }
+            }
+        }
         .sheet(isPresented: $showImageViewer) {
             if let image = selectedImage {
                 ImageViewerView(image: image) {
                     showImageViewer = false
                 }
             }
+        }
+        .sheet(item: $exportItem) { item in
+            ShareSheet(activityItems: [item.url])
+                .presentationDetents([.medium, .large])
         }
     }
     
@@ -192,6 +210,21 @@ struct JournalDetailView: View {
         formatter.dateFormat = "yyyy年MM月dd日 EEEE"
         formatter.locale = Locale(identifier: "zh_CN")
         return formatter.string(from: date)
+    }
+    
+    // MARK: - Export Logic
+    
+    private func exportEntry() async {
+        guard let entry = entry else {
+            return
+        }
+        
+        do {
+            let fileURL = try await DataExportService.shared.exportMarkdown(for: entry)
+            exportItem = ExportItem(url: fileURL)
+        } catch {
+            print("Export entry failed: \(error)")
+        }
     }
 }
 

@@ -1,8 +1,8 @@
 # 🗺️ Wing iOS Native - Development Roadmap
 
-> **Current Status**: Phase 7 (Settings & Polish) - Ready to Start
+> **Current Status**: Phase 8 (AI Agent & Advanced Features) - Ready to Start
 > **Target**: iOS 26.2+ | Swift 6.2 | SwiftUI | SwiftData
-> **Last Updated**: 2026-01-30
+> **Last Updated**: 2026-02-01
 
 ## 📌 Project Overview
 Wing is an AI-powered diary application being refactored from React/TypeScript to Native iOS.
@@ -120,18 +120,34 @@ It uses **SwiftData** for local persistence, **SwiftUI** for the interface, and 
 
 ---
 
-## 📖 Phase 7: Settings & Polish
+## ✅ Phase 7: Settings & Polish (Completed)
 **Goal**: Complete settings UI and polish the app for release.
 
-- [ ] **7.1 Settings Views**
-    - [ ] AI Provider Configuration (API Key input -> Keychain).
-    - [ ] Personality/Prompt Settings.
-- [ ] **7.2 Data Management**
-    - [ ] Export/Backup logic (JSON export).
-- [ ] **7.3 Polish**
-    - [ ] App Icon & Launch Screen.
-    - [ ] Dark Mode refinements.
-    - [ ] Real device testing (haptics, performance).
+- [x] **7.1 Settings Views**
+    - [x] AI Provider Configuration (API Key input -> Keychain).
+    - [x] Settings UI Refactoring (Modular Sections).
+- [x] **7.2 Data Management**
+    - [x] Export/Backup logic (Full JSON export).
+    - [x] Single Entry Export (Markdown).
+- [x] **7.3 Polish**
+    - [x] App Icon & Assets Configuration.
+    - [x] Dark Mode refinements.
+    - [x] Haptic feedback integration.
+
+---
+
+## 📖 Phase 8: AI Agent & Advanced Features
+**Goal**: Deepen AI integration and personalization capabilities.
+
+- [ ] **8.1 Advanced Personalization**
+    - [ ] Settings UI for `WritingStyle` (Letter, Prose, Report).
+    - [ ] Custom Prompt Editors (`writingStylePrompt`, `insightPrompt`).
+- [ ] **8.2 AI Agent Capabilities**
+    - [ ] Long-term Memory (Semantic/Episodic/Procedural extraction).
+    - [ ] Context-aware Retrieval for journal synthesis.
+- [ ] **8.3 Advanced Data Data Features**
+    - [ ] Import Logic (Restore from JSON backup).
+    - [ ] iCloud Sync (CloudKit integration).
 
 ---
 

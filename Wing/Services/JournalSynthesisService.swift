@@ -32,6 +32,7 @@ final class JournalSynthesisService {
      *
      * @param session 当日的 DailySession
      * @param config AI 配置
+     * @param journalLanguage 日记语言设置
      * @param context SwiftData ModelContext
      * @param progressCallback 进度回调（用于 UI 更新）
      * @return 生成的 WingEntry ID
@@ -39,6 +40,7 @@ final class JournalSynthesisService {
     func synthesize(
         session: DailySession,
         config: AIConfig,
+        journalLanguage: JournalLanguage = .auto,
         context: ModelContext,
         progressCallback: @escaping (SynthesisProgress) -> Void
     ) async throws -> UUID {
@@ -60,7 +62,8 @@ final class JournalSynthesisService {
             
             let output = try await AIService.shared.synthesizeJournal(
                 fragments: session.fragments,
-                config: config
+                config: config,
+                journalLanguage: journalLanguage
             )
             
             // 4. 创建 WingEntry

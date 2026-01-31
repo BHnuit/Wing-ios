@@ -49,11 +49,106 @@ actor AIService {
     // MARK: - Constants
     
     private let openAIBaseURL = "https://api.openai.com/v1"
+    private let deepSeekBaseURL = "https://api.deepseek.com/v1"
     // Gemini 直接调用 REST API (通过 API Key)
     // pattern: https://generativelanguage.googleapis.com/v1beta/models/{model}:streamGenerateContent?key={apiKey}
     private let geminiBaseURL = "https://generativelanguage.googleapis.com/v1beta"
     
     // MARK: - Public API
+    
+    /**
+     * 验证 API Key 是否有效（最小 token 消耗）
+     *
+     * - Gemini: 调用 /models 接口 (免费，无 token 消耗)
+     * - OpenAI/DeepSeek: 发送 "Hi" 测试请求 (约 5 tokens)
+     *
+     * - Parameter config: AI 配置对象
+     * - Returns: 如果验证成功返回 true
+     * - Throws: 如果验证失败抛出 AIError
+     */
+    func validateConnection(config: AIConfig) async throws -> Bool {
+        guard !config.apiKey.isEmpty else {
+            throw AIError.missingAPIKey
+        }
+        
+        if config.provider == .gemini {
+            return try await validateGeminiConnection(config: config)
+        } else {
+            return try await validateOpenAIConnection(config: config)
+        }
+    }
+    
+    /// Gemini: 调用 /models 接口验证 (免费)
+    private func validateGeminiConnection(config: AIConfig) async throws -> Bool {
+        let urlString = "\(geminiBaseURL)/models?key=\(config.apiKey)"
+        guard let url = URL(string: urlString) else {
+            throw AIError.invalidURL
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.timeoutInterval = 15
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw AIError.networkError(URLError(.badServerResponse))
+        }
+        
+        guard (200...299).contains(httpResponse.statusCode) else {
+            let errorMsg = String(data: data, encoding: .utf8) ?? "Unknown error"
+            throw AIError.apiError(statusCode: httpResponse.statusCode, message: errorMsg)
+        }
+        
+        return true
+    }
+    
+    /// OpenAI/DeepSeek: 发送最小 prompt 验证 (约 5 tokens)
+    private func validateOpenAIConnection(config: AIConfig) async throws -> Bool {
+        // 根据 provider 选择正确的端点
+        let baseURL: String
+        if let customURL = config.baseURL, !customURL.isEmpty {
+            baseURL = customURL
+        } else if config.provider == .deepseek {
+            baseURL = deepSeekBaseURL
+        } else {
+            baseURL = openAIBaseURL
+        }
+        
+        let urlString = baseURL.trimmingCharacters(in: .init(charactersIn: "/")) + "/chat/completions"
+        guard let url = URL(string: urlString) else {
+            throw AIError.invalidURL
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(config.apiKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.timeoutInterval = 15
+        
+        let body: [String: Any] = [
+            "model": config.model,
+            "messages": [
+                ["role": "user", "content": "Hi"]
+            ],
+            "max_tokens": 1
+        ]
+        
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw AIError.networkError(URLError(.badServerResponse))
+        }
+        
+        guard (200...299).contains(httpResponse.statusCode) else {
+            let errorMsg = String(data: data, encoding: .utf8) ?? "Unknown error"
+            throw AIError.apiError(statusCode: httpResponse.statusCode, message: errorMsg)
+        }
+        
+        return true
+    }
     
     /**
      * 流式合成日记
@@ -81,15 +176,16 @@ actor AIService {
      * - Parameters:
      *   - fragments: 当日的碎片记录
      *   - config: AI 配置对象
+     *   - journalLanguage: 日记生成语言设置
      * - Returns: JournalOutput 结构化输出
      * - Note: 包含 Fallback 机制，解析失败时返回"无题日记"
      */
-    func synthesizeJournal(fragments: [RawFragment], config: AIConfig) async throws -> JournalOutput {
+    func synthesizeJournal(fragments: [RawFragment], config: AIConfig, journalLanguage: JournalLanguage = .auto) async throws -> JournalOutput {
         guard !config.apiKey.isEmpty else {
             throw AIError.missingAPIKey
         }
         
-        let systemInstruction = getJournalSystemInstruction()
+        let systemInstruction = getJournalSystemInstruction(language: journalLanguage)
         let userPrompt = buildUserPrompt(from: fragments)
         
         // 构建非流式请求
@@ -269,7 +365,14 @@ actor AIService {
         """
     }
     
-    private func getJournalSystemInstruction() -> String {
+    private func getJournalSystemInstruction(language: JournalLanguage = .auto) -> String {
+        let instruction: String
+        switch language {
+        case .auto: instruction = "Detect language from fragments and write in the same language."
+        case .zh: instruction = "Write the diary ONLY in Chinese (简体中文)."
+        case .en: instruction = "Write the diary ONLY in English."
+        }
+        
         return """
         Role: You are "Wing", an empathetic AI diary assistant.
         Task: Create a complete diary entry from the user's raw fragments.
@@ -289,7 +392,7 @@ actor AIService {
         - DO NOT include [Image] or [Photo] placeholders
         - Write a cohesive narrative weaving the fragments together
         
-        Language: Detect from fragments or default to Chinese.
+        Language: \(instruction)
         Tone: Warm, reflective, literary.
         
         CRITICAL: Output ONLY the JSON object. No markdown code blocks, no extra text.
@@ -319,7 +422,14 @@ actor AIService {
     // MARK: - Request Builders
     
     private func buildOpenAICompatibleRequest(config: AIConfig, system: String, user: String) throws -> URLRequest {
-        let baseURL = config.baseURL ?? openAIBaseURL
+        let baseURL: String
+        if let customURL = config.baseURL, !customURL.isEmpty {
+            baseURL = customURL
+        } else if config.provider == .deepseek {
+            baseURL = deepSeekBaseURL
+        } else {
+            baseURL = openAIBaseURL
+        }
         let urlString = baseURL.trimmingCharacters(in: .init(charactersIn: "/")) + "/chat/completions"
         guard let url = URL(string: urlString) else { throw AIError.invalidURL }
         
@@ -376,7 +486,14 @@ actor AIService {
     // MARK: - JSON Mode Request Builders
     
     private func buildOpenAIJSONRequest(config: AIConfig, system: String, user: String) throws -> URLRequest {
-        let baseURL = config.baseURL ?? openAIBaseURL
+        let baseURL: String
+        if let customURL = config.baseURL, !customURL.isEmpty {
+            baseURL = customURL
+        } else if config.provider == .deepseek {
+            baseURL = deepSeekBaseURL
+        } else {
+            baseURL = openAIBaseURL
+        }
         let urlString = baseURL.trimmingCharacters(in: .init(charactersIn: "/")) + "/chat/completions"
         guard let url = URL(string: urlString) else { throw AIError.invalidURL }
         

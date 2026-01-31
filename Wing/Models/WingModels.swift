@@ -115,6 +115,8 @@ enum ModelLanguage: String, Codable {
     case same = "same"
 }
 
+
+
 // MARK: - RawFragment
 
 /**
@@ -745,6 +747,9 @@ final class AppSettings {
     /// 是否在生成日记时检索记忆（向AI传递记忆内容，需记忆数≥100）
     var memoryRetrievalEnabled: Bool
     
+    /// 日记生成语言设置
+    var journalLanguage: JournalLanguage = JournalLanguage.auto
+    
     /// 按 AI 供应商分别存储的模型名称（计算属性）
     var aiModels: [AiProvider: String] {
         get {
@@ -785,7 +790,8 @@ final class AppSettings {
         insightPrompt: String? = nil,
         enableLongTermMemory: Bool = false,
         memoryExtractionAuto: Bool = false,
-        memoryRetrievalEnabled: Bool = false
+        memoryRetrievalEnabled: Bool = false,
+        journalLanguage: JournalLanguage = .auto
     ) {
         self.id = id
         self.aiProvider = aiProvider
@@ -803,6 +809,7 @@ final class AppSettings {
         self.enableLongTermMemory = enableLongTermMemory
         self.memoryExtractionAuto = memoryExtractionAuto
         self.memoryRetrievalEnabled = memoryRetrievalEnabled
+        self.journalLanguage = journalLanguage
         
         // 使用计算属性的 setter 来初始化
         self.aiModels = aiModels

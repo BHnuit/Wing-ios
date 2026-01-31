@@ -30,6 +30,9 @@ class SettingsManager {
     /// 注意：不要直接创建 AppSettings 实例，必须通过 fetchOrInitSettings 获取以确保只有一份
     var appSettings: AppSettings?
     
+    /// 已验证通过的 Provider（内存缓存，切换 tab 后保持状态）
+    var validatedProviders: Set<AiProvider> = []
+    
     private let keychain = KeychainHelper.shared
     
     private init() {
@@ -81,7 +84,8 @@ class SettingsManager {
                     writingStyle: .prose,
                     enableLongTermMemory: false,
                     memoryExtractionAuto: true,
-                    memoryRetrievalEnabled: false
+                    memoryRetrievalEnabled: false,
+                    journalLanguage: .auto
                 )
                 context.insert(defaultSettings)
                 try context.save()

@@ -229,10 +229,14 @@ struct ChatView: View {
             }
             
             do {
+                // 获取日记语言设置
+                let journalLanguage = settingsManager.appSettings?.journalLanguage ?? .auto
+                
                 // 调用合成服务
                 let entryId = try await JournalSynthesisService.shared.synthesize(
                     session: session,
                     config: config,
+                    journalLanguage: journalLanguage,
                     context: modelContext,
                     progressCallback: { progress in
                         synthesisProgress = progress
