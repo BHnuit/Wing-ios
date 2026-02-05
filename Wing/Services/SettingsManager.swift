@@ -131,6 +131,8 @@ class SettingsManager {
             return nil
         }
         
+        // ... (existing code)
+        
         let provider = settings.aiProvider
         let model = settings.aiModels[provider] ?? defaultModel(for: provider)
         let apiKey = await getApiKey(for: provider) ?? ""
@@ -146,6 +148,14 @@ class SettingsManager {
             apiKey: apiKey,
             baseURL: settings.aiBaseUrl
         )
+    }
+    
+    /**
+     * 安全获取日记语言设置 (避免通过 actor 边界传递 AppSettings)
+     */
+    @MainActor
+    func getJournalLanguage() -> JournalLanguage {
+        return appSettings?.journalLanguage ?? .auto
     }
     
     private func defaultModel(for provider: AiProvider) -> String {

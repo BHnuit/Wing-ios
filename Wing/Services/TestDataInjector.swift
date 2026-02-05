@@ -15,6 +15,7 @@ import UIKit
  * 用于在开发和测试阶段快速生成模拟数据
  */
 actor TestDataInjector {
+    static let shared = TestDataInjector()
     
     /**
      * 注入测试数据到 ModelContext
@@ -63,6 +64,22 @@ actor TestDataInjector {
         // 保存
         try? context.save()
         print("TestDataInjector: 测试数据注入完成")
+    }
+    
+    /**
+     * 清空所有数据（谨慎使用）
+     */
+    func clearAllData(context: ModelContext) {
+        // 删除所有 DailySession（会级联删除 RawFragment）
+        let descriptor = FetchDescriptor<DailySession>()
+        if let sessions = try? context.fetch(descriptor) {
+            for session in sessions {
+                context.delete(session)
+            }
+        }
+        
+        try? context.save()
+        print("TestDataInjector: 数据已清空")
     }
     
     // MARK: - Helper Methods
@@ -169,20 +186,5 @@ actor TestDataInjector {
             return Int64(date.timeIntervalSince1970 * 1000)
         }
         return Int64(Date().timeIntervalSince1970 * 1000)
-    }
-    
-    /**
-     * 清空所有数据（谨慎使用）
-     */
-    private func clearAllData(context: ModelContext) {
-        // 删除所有 DailySession（会级联删除 RawFragment）
-        let descriptor = FetchDescriptor<DailySession>()
-        if let sessions = try? context.fetch(descriptor) {
-            for session in sessions {
-                context.delete(session)
-            }
-        }
-        
-        try? context.save()
     }
 }

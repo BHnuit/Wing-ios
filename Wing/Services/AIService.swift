@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - Memory Extraction Types (Moved to WingModels.swift)
+
 /**
  * AI 服务错误枚举
  */
@@ -219,7 +221,54 @@ actor AIService {
         // 尝试解析 JSON
         return parseJournalOutput(rawContent)
     }
-
+    
+    /**
+     * 提取长期记忆（JSON 模式）
+     *
+     * - Parameters:
+     *   - content: 日记内容
+     *   - config: AI 配置对象
+     *   - language: 提取语言倾向 (默认为 auto)
+     * - Returns: MemoryExtractionResult 结构化输出
+     */
+    func extractMemories(content: String, config: AIConfig, language: JournalLanguage = .auto) async throws -> MemoryExtractionResult {
+        guard !config.apiKey.isEmpty else {
+            throw AIError.missingAPIKey
+        }
+        
+        let systemInstruction = getMemorySystemInstruction(language: language)
+        
+        // 构建非流式请求
+        var request: URLRequest
+        if config.provider == .gemini {
+            request = try buildGeminiJSONRequest(config: config, system: systemInstruction, user: content)
+        } else {
+            request = try buildOpenAIJSONRequest(config: config, system: systemInstruction, user: content)
+        }
+        
+        // 发送请求
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw AIError.networkError(URLError(.badServerResponse))
+        }
+        
+        guard (200...299).contains(httpResponse.statusCode) else {
+            let errorMsg = String(data: data, encoding: .utf8) ?? "Unknown error"
+            throw AIError.apiError(statusCode: httpResponse.statusCode, message: errorMsg)
+        }
+        
+        // 解析响应
+        let rawContent: String
+        if config.provider == .gemini {
+            rawContent = try parseGeminiJSONResponse(data)
+        } else {
+            rawContent = try parseOpenAIJSONResponse(data)
+        }
+        
+        // 尝试解析 JSON
+        return parseMemoryOutput(rawContent)
+    }
     
     // MARK: - Internal Logic
     
@@ -395,7 +444,52 @@ actor AIService {
         Language: \(instruction)
         Tone: Warm, reflective, literary.
         
-        CRITICAL: Output ONLY the JSON object. No markdown code blocks, no extra text.
+        """
+    }
+
+    private func getMemorySystemInstruction(language: JournalLanguage = .auto) -> String {
+        let languageInstruction: String
+        switch language {
+        case .auto: languageInstruction = "Output languages matching the input content."
+        case .zh: languageInstruction = "Ensure all values (except standardized keys) are in Chinese (简体中文)."
+        case .en: languageInstruction = "Ensure all values are in English."
+        }
+
+        return """
+        Role: You are an expert Memory Archivist for a personal diary AI.
+        Task: Extract structured memories from the user's diary entry to build a long-term knowledge base.
+        Input: A single diary entry.
+        Output: A JSON object with three categories of memories:
+
+        1. semantic (Facts): Static facts about the user (e.g., names, locations, relationships, preferences).
+           - key: Standardized attribute name (e.g., "user_name", "spouse_name", "current_city").
+           - value: The fact value.
+           - confidence: 0.8 to 1.0 (High confidence only).
+
+        2. episodic (Events): Significant life events found in the entry.
+           - event: Concise description of what happened.
+           - date: Date string (YYYY-MM-DD). If not explicit, interpret from context (today is the entry date).
+           - emotion: Dominant emotion (e.g., "Joyful", "Anxious").
+           - context: Brief context or significance.
+
+        3. procedural (Patterns): User behavioral patterns or interaction preferences inferred from the writing.
+           - pattern: E.g., "Late night writing", "Short sentence style".
+           - preference: E.g., "Likes harsh advice", "Prefers soothing tone".
+           - trigger: What triggers this pattern (optional).
+
+        Language Requirement: \(languageInstruction)
+        Format: JSON ONLY. No markdown blocks.
+        
+        Example Output:
+        {
+          "semantic": [
+            {"key": "user_name", "value": "Hans", "confidence": 0.9}
+          ],
+          "episodic": [
+            {"event": "Completed Phase 8 development", "date": "2026-02-05", "emotion": "Accomplished", "context": "Work achievement"}
+          ],
+          "procedural": []
+        }
         """
     }
 
@@ -620,6 +714,26 @@ actor AIService {
             // Fallback: 解析失败时返回"无题日记"
             print("⚠️ JSON 解析失败，使用 Fallback 模式")
             return JournalOutput.fallback(rawContent: cleanedContent)
+        }
+        
+        return output
+    }
+    
+    /// 解析记忆输出 JSON
+    nonisolated private func parseMemoryOutput(_ rawContent: String) -> MemoryExtractionResult {
+        // 清理可能的 Markdown 代码块包裹
+        var cleanedContent = rawContent.trimmingCharacters(in: .whitespacesAndNewlines)
+        if cleanedContent.hasPrefix("```json") {
+            cleanedContent = cleanedContent.replacingOccurrences(of: "```json", with: "")
+            cleanedContent = cleanedContent.replacingOccurrences(of: "```", with: "")
+            cleanedContent = cleanedContent.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        
+        // 尝试解析 JSON
+        guard let data = cleanedContent.data(using: .utf8),
+              let output = try? JSONDecoder().decode(MemoryExtractionResult.self, from: data) else {
+            print("⚠️ Memory JSON 解析失败")
+            return MemoryExtractionResult(semantic: [], episodic: [], procedural: [])
         }
         
         return output

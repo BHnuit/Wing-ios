@@ -42,9 +42,15 @@ struct ChatView: View {
         currentSession?.fragments.sorted { $0.timestamp < $1.timestamp } ?? []
     }
     
-    // 有记录的日期列表
+    // 有记录的日期列表 (始终包含今天，确保可导航)
     private var availableDates: [String] {
-        allSessions.map { $0.date }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let today = formatter.string(from: Date())
+        
+        var dates = Set(allSessions.map { $0.date })
+        dates.insert(today)
+        return Array(dates).sorted()
     }
     
     init() {
@@ -112,7 +118,7 @@ struct ChatView: View {
                     } label: {
                         Label("生成日记", systemImage: "wand.and.stars")
                     }
-                    .disabled(fragments.isEmpty || !isToday)
+                    .disabled(fragments.isEmpty)
                 }
             }
             .overlay {

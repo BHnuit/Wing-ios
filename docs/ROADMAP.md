@@ -1,8 +1,8 @@
 # 🗺️ Wing iOS Native - Development Roadmap
 
-> **Current Status**: Phase 8 (AI Agent & Advanced Features) - Ready to Start
+> **Current Status**: Phase 9 (UI Polish & Advanced Settings) - Planned
 > **Target**: iOS 26.2+ | Swift 6.2 | SwiftUI | SwiftData
-> **Last Updated**: 2026-02-01
+> **Last Updated**: 2026-02-05
 
 ## 📌 Project Overview
 Wing is an AI-powered diary application being refactored from React/TypeScript to Native iOS.
@@ -12,17 +12,17 @@ It uses **SwiftData** for local persistence, **SwiftUI** for the interface, and 
 
 ## 🏗️ Architecture Standards (For Cursor)
 
-* **Design Pattern**: MVVM (Model-View-ViewModel) + Services (Actor-based).
-* **Concurrency**: Strict `async/await`. Use `Task` and `Actor` for thread safety.
-* **Data Layer**:
-    * **SwiftData**: `@Model` for persistence.
-    * **Images**: Must use `@Attribute(.externalStorage) var data: Data?` to prevent DB bloat.
-    * **IDs**: Always use `UUID`.
-* **Security**: API Keys must be stored in **Keychain** (via `KeychainHelper`), NEVER in UserDefaults or code.
-* **UI**: Pure SwiftUI. Use `NavigationStack` for routing.
-* **Testing**:
-    * `@Test` (Swift Testing) for Logic/Models.
-    * `XCTest` for UI/Integration.
+*   **Design Pattern**: MVVM (Model-View-ViewModel) + Services (Actor-based).
+*   **Concurrency**: Strict `async/await`. Use `Task` and `Actor` for thread safety.
+*   **Data Layer**:
+    *   **SwiftData**: `@Model` for persistence.
+    *   **Images**: Must use `@Attribute(.externalStorage) var data: Data?` to prevent DB bloat.
+    *   **IDs**: Always use `UUID`.
+*   **Security**: API Keys must be stored in **Keychain** (via `KeychainHelper`), NEVER in UserDefaults or code.
+*   **UI**: Pure SwiftUI. Use `NavigationStack` for routing.
+*   **Testing**:
+    *   `@Test` (Swift Testing) for Logic/Models.
+    *   `XCTest` for UI/Integration.
 
 ---
 
@@ -136,22 +136,43 @@ It uses **SwiftData** for local persistence, **SwiftUI** for the interface, and 
 
 ---
 
-## 📖 Phase 8: AI Agent & Advanced Features
+## ✅ Phase 8: AI Agent & Advanced Features (Completed)
 **Goal**: Deepen AI integration and personalization capabilities.
 
-- [ ] **8.1 Advanced Personalization**
-    - [ ] Settings UI for `WritingStyle` (Letter, Prose, Report).
-    - [ ] Custom Prompt Editors (`writingStylePrompt`, `insightPrompt`).
-- [ ] **8.2 AI Agent Capabilities**
-    - [ ] Long-term Memory (Semantic/Episodic/Procedural extraction).
-    - [ ] Context-aware Retrieval for journal synthesis.
-- [ ] **8.3 Advanced Data Data Features**
-    - [ ] Import Logic (Restore from JSON backup).
-    - [ ] iCloud Sync (CloudKit integration).
+- [x] **8.1 Advanced Personalization**
+    - [x] Settings UI for `WritingStyle` (Letter, Prose, Report).
+    - [x] Custom Prompt Editors (`writingStylePrompt`, `insightPrompt`).
+- [x] **8.2 AI Agent Capabilities**
+    - [x] Long-term Memory (Semantic/Episodic/Procedural extraction).
+    - [x] Context-aware Retrieval for journal synthesis.
+- [x] **8.3 Advanced Data Features**
+    - [x] Import Logic (Restore from JSON backup)
+    - [x] Memory Consolidation & Management UI
+    - [ ] iCloud Sync (CloudKit integration) - *Deferred*
 
 ---
 
+## 🗺️ Phase 9: UI Polish & Advanced Settings (Planned)
+**Goal**: Implement comprehensive settings and visualization features defined in `docs/setting.md`.
+
+- [ ] **9.1 Data Visualization**
+    - [ ] Calendar Heatmap (Activity tracking by day).
+    - [ ] Statistics (Daily wing waves, total feathers).
+- [ ] **9.2 Advanced Display Settings**
+    - [ ] Font Selection (Source Han Sans/Serif, LXGW WenKai).
+    - [ ] Font Size Scaling (Large/Medium/Small).
+    - [ ] Bilingual UI Toggle.
+- [ ] **9.3 Advanced Data Management**
+    - [ ] Generic File Import/Replace (.json/.zip).
+    - [ ] Folder-based Import (iOS Files integration).
+    - [ ] "Clear All Data" with strict confirmation.
+- [ ] **9.4 Memory RAG Integration**
+    - [ ] "Retrieval on Synthesis" logic.
+    - [ ] Memory threshold checks.
+    - [ ] Manual "Merge Similar Memories" tool.
+
 ## 📝 Developer Guide
+
 
 ### Workflow
 1. **Read Context**: Check this roadmap for current phase.

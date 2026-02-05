@@ -11,6 +11,7 @@ import Foundation
 @testable import Wing
 
 @Suite("SettingsManager Tests")
+@MainActor
 struct SettingsManagerTests {
     
     // 用独特的 Key 防止污染真实 Keychain
@@ -73,9 +74,10 @@ struct SettingsManagerTests {
         let configObj = await manager.getAIConfig()
         
         // 4. Verify
-        #expect(configObj.provider == .openai)
-        #expect(configObj.model == "gpt-4o-test-model")
-        #expect(configObj.apiKey == openAIKey)
+        // 4. Verify
+        #expect(configObj?.provider == .openai)
+        #expect(configObj?.model == "gpt-4o-test-model")
+        #expect(configObj?.apiKey == openAIKey)
         
         // Cleanup
         await manager.setApiKey("", for: .openai)

@@ -19,6 +19,8 @@ import SwiftUI
  * 3. 跨 Tab 导航方法
  * 4. 导航栈操作
  */
+@Suite("NavigationManager Tests")
+@MainActor
 struct NavigationTests {
     
     // MARK: - 初始状态测试
