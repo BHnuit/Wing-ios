@@ -1,188 +1,223 @@
-# 🗺️ Wing iOS Native - Development Roadmap
+# 🗺️ Wing iOS Native - 开发路线图 (Roadmap)
 
-> **Current Status**: Phase 9 (UI Polish & Advanced Settings) - Planned
-> **Target**: iOS 26.2+ | Swift 6.2 | SwiftUI | SwiftData
-> **Last Updated**: 2026-02-05
+> **当前状态**: Phase 10 (发布准备) - 规划中
+> **目标环境**: iOS 26.2+ | Swift 6.2 | SwiftUI | SwiftData
+> **最后更新**: 2026-02-13
+> **Xcode**: 26.3
 
-## 📌 Project Overview
-Wing is an AI-powered diary application being refactored from React/TypeScript to Native iOS.
-It uses **SwiftData** for local persistence, **SwiftUI** for the interface, and **LLMs (Gemini/OpenAI)** for journal synthesis.
-
----
-
-## 🏗️ Architecture Standards (For Cursor)
-
-*   **Design Pattern**: MVVM (Model-View-ViewModel) + Services (Actor-based).
-*   **Concurrency**: Strict `async/await`. Use `Task` and `Actor` for thread safety.
-*   **Data Layer**:
-    *   **SwiftData**: `@Model` for persistence.
-    *   **Images**: Must use `@Attribute(.externalStorage) var data: Data?` to prevent DB bloat.
-    *   **IDs**: Always use `UUID`.
-*   **Security**: API Keys must be stored in **Keychain** (via `KeychainHelper`), NEVER in UserDefaults or code.
-*   **UI**: Pure SwiftUI. Use `NavigationStack` for routing.
-*   **Testing**:
-    *   `@Test` (Swift Testing) for Logic/Models.
-    *   `XCTest` for UI/Integration.
+## 📌 项目概述
+Wing 是一个从 React/TypeScript 重构为原生 iOS 的 AI 驱动日记应用。
+它利用 **SwiftData** 进行本地持久化，使用 **SwiftUI** 构建从零开始的界面，并集成 **LLM (Gemini/OpenAI)** 进行日记智能合成。
 
 ---
 
-## ✅ Phase 1: Environment & Setup (Completed)
-- [x] **Project Initialization**: Xcode 26.2, Swift 6.2.
-- [x] **Configuration**: `.cursorrules` established for iOS context.
-- [x] **Git**: Repository initialized and clean.
+## 🏗️ 架构规范 (Cursor 指南)
 
-## ✅ Phase 2: Data Layer Foundation (Completed)
-- [x] **Core Models (`WingModels.swift`)**:
-    - `RawFragment` (with external image storage).
-    - `DailySession` (cascade delete configured).
-    - `WingEntry` (computed properties for JSON structs).
-    - `AppSettings` & `Memory` models.
-- [x] **Model Container**: Configured in `WingApp.swift`.
-- [x] **Verification (`ModelTests.swift`)**:
-    - CRUD operations verified.
-    - Image external storage verified.
-    - Cascade deletion verified.
-    - Complex data types (JSON) verified.
+*   **设计模式**: MVVM (Model-View-ViewModel) + Services (基于 Actor)。
+*   **并发模型**: 严格使用 `async/await`。使用 `Task` 和 `Actor` 保证线程安全。
+*   **本地化**: 使用 `L()` 辅助函数 + `SettingsManager` 实现动态切换。
+*   **数据层**:
+    *   **SwiftData**: 使用 `@Model` 进行持久化。
+    *   **图片处理**: 必须使用 `@Attribute(.externalStorage) var data: Data?` 防止数据库膨胀。
+    *   **ID**: 始终使用 `UUID`。
+*   **安全性**: API Keys 必须存储在 **Keychain** 中（通过 `KeychainHelper`），严禁存储在 UserDefaults 或代码中。
+*   **UI**: 纯 SwiftUI。使用 `NavigationStack` 进行路由管理。
+*   **测试**:
+    *   `@Test` (Swift Testing) 用于逻辑/模型测试。
+    *   `XCTest` 用于 UI/集成测试。
 
 ---
 
-## ✅ Phase 3: Core Services (The Brain) (Completed)
-**Goal**: Port by migrating `aiService.ts` logic to Swift Actors and setting up secure preferences.
+## ✅ Phase 1: 环境与初始配置 (已完成)
+- [x] **项目初始化**: Xcode 26.2, Swift 6.2.
+- [x] **配置**: 建立 iOS 环境下的 `.cursorrules`.
+- [x] **Git**: 仓库初始化与清理.
 
-- [x] **3.1 Security Layer** (`Utils/KeychainHelper.swift`)
-    - [x] Create `KeychainHelper` class (Singleton/Static).
-    - [x] Implement `save`, `load`, `delete` using `kSecClassGenericPassword`.
-- [x] **3.2 AI Service Engine** (`Services/AIService.swift`)
-    - [x] Define `AIConfig` struct (API Key, Model, Provider).
-    - [x] Create `actor AIService`.
-    - [x] Implement `synthesizeJournalStream(fragments:config:) -> AsyncThrowingStream`.
-    - [x] Port Prompt Engineering logic (from `aiService.ts`).
-    - [x] Implement SSE (Server-Sent Events) manual parsing (OpenAI & Gemini).
-- [x] **3.3 User Preferences & UI**
-    - [x] Implement `SettingsManager` (SwiftData + Keychain).
-    - [x] Create `SettingsEntryView` for AI Configuration.
-    - [x] Verify persistence and security.
+## ✅ Phase 2: 数据层基础 (已完成)
+- [x] **核心模型 (`WingModels.swift`)**:
+    - `RawFragment` (含外部图片存储).
+    - `DailySession` (配置级联删除).
+    - `WingEntry` (包含用于 JSON 结构的计算属性).
+    - `AppSettings` & `Memory` 模型.
+- [x] **模型容器**: 在 `WingApp.swift` 中配置.
+- [x] **验证 (`ModelTests.swift`)**:
+    - CRUD 操作验证.
+    - 图片外部存储验证.
+    - 级联删除验证.
+    - 复杂数据类型 (JSON) 验证.
+
+---
+
+## ✅ Phase 3: 核心服务 (大脑) (已完成)
+**目标**: 将 `aiService.ts` 逻辑迁移到 Swift Actors，并建立安全的偏好设置。
+
+- [x] **3.1 安全层** (`Utils/KeychainHelper.swift`)
+    - [x] 创建 `KeychainHelper` 类 (Singleton/Static).
+    - [x] 实现基于 `kSecClassGenericPassword` 的增删改查.
+- [x] **3.2 AI 服务引擎** (`Services/AIService.swift`)
+    - [x] 定义 `AIConfig` 结构 (API Key, Model, Provider).
+    - [x] 创建 `actor AIService`.
+    - [x] 实现流式合成 `synthesizeJournalStream(fragments:config:) -> AsyncThrowingStream`.
+    - [x] 移植 Prompt Engineering 逻辑 (自 `aiService.ts`).
+    - [x] 实现 SSE (Server-Sent Events) 手动解析 (OpenAI & Gemini).
+- [x] **3.3 用户设置与 UI**
+    - [x] 实现 `SettingsManager` (SwiftData + Keychain).
+    - [x] 创建 `SettingsEntryView` 用于 AI 配置.
+    - [x] 验证持久化与安全性.
 
 > 📖 技术回顾: [phase3-retrospective.md](.agent/memories/phase3-retrospective.md)
 
 ---
 
-## ✅ Phase 4: UI Architecture (The Body) (Completed)
-**Goal**: Establish navigation and app structure.
+## ✅ Phase 4: UI 架构 (骨架) (已完成)
+**目标**: 建立导航系统和应用结构。
 
-- [x] **4.1 Navigation Infrastructure**
-    - [x] Define `AppRoute` enum (Chat, JournalDetail, Settings, etc.).
-    - [x] Create `NavigationManager` (`@Observable` class) for state management.
-- [x] **4.2 Main Tab View**
-    - [x] Tab 1: **Today (当下)** - Chat/Recording Interface.
-    - [x] Tab 2: **Journal (回忆)** - History List.
-    - [x] Tab 3: **Settings (设置)**.
+- [x] **4.1 导航基础设施**
+    - [x] 定义 `AppRoute` 枚举 (Chat, JournalDetail, Settings 等).
+    - [x] 创建 `NavigationManager` (`@Observable` class) 用于状态管理.
+- [x] **4.2 主 Tab 视图**
+    - [x] Tab 1: **当下 (Today)** - 聊天/记录界面.
+    - [x] Tab 2: **回忆 (Journal)** - 历史列表.
+    - [x] Tab 3: **设置 (Settings)**.
 
 > 📖 技术回顾: [phase4-retrospective.md](.agent/memories/phase4-retrospective.md)
 
 ---
 
-## ✅ Phase 5: Input Flow (The "Now") (Completed)
-**Goal**: Recreate the chat-like recording experience.
+## ✅ Phase 5: 输入工作流 (当下) (已完成)
+**目标**: 复刻类聊天式的记录体验。
 
-- [x] **5.1 Chat Interface** (`Views/Chat/ChatView.swift`)
-    - [x] Fetch today's `DailySession` using `@Query`.
-    - [x] Implement `ScrollView` with `LazyVStack` for performance.
-    - [x] Render `FragmentBubble` views (Text & Image).
-- [x] **5.2 Input Area**
-    - [x] Text Input Field (auto-expanding).
-    - [x] **Photo Picker**: Integrate `PhotosPicker` (SwiftUI Native).
-    - [x] **Haptics**: Add `UIImpactFeedbackGenerator` on send.
-    - [x] **Date Navigation**: Robust date switching & calendar (`DateNavigator.swift`).
+- [x] **5.1 聊天界面** (`Views/Chat/ChatView.swift`)
+    - [x] 使用 `@Query` 获取今日的 `DailySession`.
+    - [x] 实现 `ScrollView` + `LazyVStack` 以提升性能.
+    - [x] 渲染 `FragmentBubble` 视图 (文本 & 图片).
+- [x] **5.2 输入区域**
+    - [x] 文本输入框 (自适应高度).
+    - [ ] 输入体验优化 (光标位置、换行逻辑、键盘遮挡) - *遗留任务*.
+    - [x] **照片选择器**: 集成 `PhotosPicker` (SwiftUI Native).
+    - [x] **触感反馈**: 发送时增加 `UIImpactFeedbackGenerator`.
+    - [x] **日期导航**: 健壮的日期切换与日历 (`DateNavigator.swift`).
 
 > 📖 技术回顾: [phase5-retrospective.md](.agent/memories/phase5-retrospective.md)
 
 ---
 
-## ✅ Phase 6: Output Flow (The "Journal") (Completed)
-**Goal**: Render the AI-synthesized entries.
+## ✅ Phase 6: 输出工作流 (日记) (已完成)
+**目标**: 渲染 AI 合成的日记条目。
 
-- [x] **6.1 Markdown Rendering**
-    - [x] Implement native `AttributedString(markdown:)` parser with paragraph separation.
-    - [x] Style headers, lists, bold to match Wing's aesthetic.
-- [x] **6.2 Journal Detail** (`Views/Journal/JournalDetailView.swift`)
-    - [x] Cover photo section with tap-to-zoom.
-    - [x] Display Metadata: Title, Date (with fallback).
-    - [x] Display AI Insights ("Owl's Comment").
-    - [x] Render Main Content with Markdown.
-- [x] **6.3 Journal Synthesis**
-    - [x] `JournalSynthesisService`: Orchestrate synthesis flow.
-    - [x] `AIService.synthesizeJournal`: One-shot JSON mode.
-    - [x] `SynthesisProgressView`: rotating encouragements + time estimate.
-    - [x] **Fallback**: JSON parse failure → save as "无题日记".
+- [x] **6.1 Markdown 渲染**
+    - [x] 实现原生 `AttributedString(markdown:)` 解析器（含段落分割）.
+    - [x] 样式化标题、列表、加粗以匹配 Wing 的美学.
+- [x] **6.2 日记详情** (`Views/Journal/JournalDetailView.swift`)
+    - [x] 封面图区域（支持点击缩放）.
+    - [x] 显示元数据: 标题、日期 (含 Fallback).
+    - [x] 显示 AI 洞察 ("猫头鹰的评论").
+    - [x] 渲染 Markdown 正文.
+- [x] **6.3 日记合成**
+    - [x] `JournalSynthesisService`: 编排合成流程.
+    - [x] `AIService.synthesizeJournal`: 单次请求 JSON 模式.
+    - [x] `SynthesisProgressView`: 循环鼓励语 + 时间预估.
+    - [x] **Fallback**: JSON 解析失败时 → 保存为 "无题日记".
 
 > 📖 技术回顾: [phase6-retrospective.md](.agent/memories/phase6-retrospective.md)
 
 ---
 
-## ✅ Phase 7: Settings & Polish (Completed)
-**Goal**: Complete settings UI and polish the app for release.
+## ✅ Phase 7: 设置与打磨 (已完成)
+**目标**: 完成设置 UI 并进行发布前的打磨。
 
-- [x] **7.1 Settings Views**
-    - [x] AI Provider Configuration (API Key input -> Keychain).
-    - [x] Settings UI Refactoring (Modular Sections).
-- [x] **7.2 Data Management**
-    - [x] Export/Backup logic (Full JSON export).
-    - [x] Single Entry Export (Markdown).
-- [x] **7.3 Polish**
-    - [x] App Icon & Assets Configuration.
-    - [x] Dark Mode refinements.
-    - [x] Haptic feedback integration.
-
----
-
-## ✅ Phase 8: AI Agent & Advanced Features (Completed)
-**Goal**: Deepen AI integration and personalization capabilities.
-
-- [x] **8.1 Advanced Personalization**
-    - [x] Settings UI for `WritingStyle` (Letter, Prose, Report).
-    - [x] Custom Prompt Editors (`writingStylePrompt`, `insightPrompt`).
-- [x] **8.2 AI Agent Capabilities**
-    - [x] Long-term Memory (Semantic/Episodic/Procedural extraction).
-    - [x] Context-aware Retrieval for journal synthesis.
-- [x] **8.3 Advanced Data Features**
-    - [x] Import Logic (Restore from JSON backup)
-    - [x] Memory Consolidation & Management UI
-    - [ ] iCloud Sync (CloudKit integration) - *Deferred*
+- [x] **7.1 设置视图**
+    - [x] AI 服务商配置 (API Key 输入 -> Keychain).
+    - [ ] 完善模型列表与服务商配置 (OpenAI/Gemini/DeepSeek 预设列表) - *遗留任务*.
+    - [x] 设置 UI 重构 (模块化分区).
+- [x] **7.2 数据管理**
+    - [x] 导出/备份逻辑 (全量 JSON 导出).
+    - [x] 单篇导出 (Markdown).
+- [x] **7.3 细节打磨**
+    - [x] App 图标与资源配置.
+    - [x] 深色模式优化.
+    - [x] 触感反馈集成.
 
 ---
 
-## 🗺️ Phase 9: UI Polish & Advanced Settings (Planned)
-**Goal**: Implement comprehensive settings and visualization features defined in `docs/setting.md`.
+## ✅ Phase 8: AI Agent 与高级特性 (已完成)
+**目标**: 深化 AI 集成与个性化能力。
 
-- [ ] **9.1 Data Visualization**
-    - [ ] Calendar Heatmap (Activity tracking by day).
-    - [ ] Statistics (Daily wing waves, total feathers).
-- [ ] **9.2 Advanced Display Settings**
-    - [ ] Font Selection (Source Han Sans/Serif, LXGW WenKai).
-    - [ ] Font Size Scaling (Large/Medium/Small).
-    - [ ] Bilingual UI Toggle.
-- [ ] **9.3 Advanced Data Management**
-    - [ ] Generic File Import/Replace (.json/.zip).
-    - [ ] Folder-based Import (iOS Files integration).
-    - [ ] "Clear All Data" with strict confirmation.
-- [ ] **9.4 Memory RAG Integration**
-    - [ ] "Retrieval on Synthesis" logic.
-    - [ ] Memory threshold checks.
-    - [ ] Manual "Merge Similar Memories" tool.
+- [x] **8.1 高级个性化**
+    - [x] `WritingStyle` 设置 UI (书信、散文、报告).
+    - [ ] 自定义 Prompt 编辑器 (`writingStylePrompt`, `insightPrompt` - 文风与洞察支持自定义) - *遗留任务*
+- [x] **8.2 AI Agent 能力**
+    - [x] 长期记忆 (语义/情景/程序性记忆提取).
+    - [x] 上下文感知的 RAG 检索 (用于日记合成).
+- [x] **8.3 高级数据特性**
+    - [x] 导入逻辑 (从 JSON 备份恢复).
+    - [x] 记忆整合与管理 UI.
+    - [ ] iCloud 同步 (CloudKit 集成) - *暂缓*
 
-## 📝 Developer Guide
+---
 
+## ✅ Phase 9: UI 优化与高级设置 (已完成)
+**目标**: 实现完整的设置、可视化功能及多语言支持。
 
-### Workflow
-1. **Read Context**: Check this roadmap for current phase.
-2. **Reference Web Code**: Look at `Wing-main` files for logic, implement using Swift patterns.
-3. **Use Workflows**: Run `/add-service` for new services.
-4. **Verify**: Run tests after major changes.
+- [x] **9.1 本地化 (I18N)**
+    - [x] **多语言**: 中文 (简体)、英文、日文.
+    - [x] **动态切换**: 无需重启 App 即时刷新语言.
+    - [x] **深度集成**: AI Prompts, 错误信息, 导出内容均已本地化.
+    - [x] **线程安全**: 修复了 `L()` 在后台线程的并发问题 (自动回退).
+- [x] **9.2 数据可视化**
+    - [x] 日历热力图 (`CalendarHeatmapView`) - 按日追踪活跃度.
+    - [x] 统计仪表盘 (挥动次数, 羽毛总数).
+- [x] **9.3 高级显示设置**
+    - [ ] 字体选择 (已排除).
+    - [x] 字号缩放 (大/中/小).
+    - [x] 主题切换 (跟随系统 / 浅色 / 深色).
+- [x] **9.4 高级数据管理**
+    - [x] 通用文件导入/替换 (.json/.zip) - 严格区分流程.
+    - [x] 文件夹导入 (iOS Files 集成).
+    - [x] "清空所有数据" (带严格确认).
+- [x] **9.5 记忆集成**
+    - [x] RAG 集成: 合成时的检索逻辑.
+    - [x] 记忆手动管理 (删除/合并 UI).
 
-### Technical Retrospectives
-Each phase has a retrospective document in `.agent/memories/`:
+> 📖 技术回顾: [phase9-retrospective.md](.agent/memories/phase9-retrospective.md)
+
+---
+
+## 🗺️ Phase 10: 发布准备 (规划中)
+**目标**: App Store 提交前的最终准备与新用户引导。
+
+- [ ] **10.1 新用户引导 (Onboarding)**
+    - [ ] **欢迎日记 (Welcome Entry)**: 首次启动自动生成一篇介绍 Wing 功能的日记.
+    - [ ] **启动教程**: 简单的功能引导页 (Onboarding Slides).
+    - [ ] **高级个性化补全**: 实现自定义 Prompt 编辑器 (`writingStylePrompt`, `insightPrompt`).
+    - [ ] **AI 配置完善**: 补充各服务商的主流模型预设列表.
+    - [ ] **输入体验打磨**: 优化长文本输入时的滚动、光标及键盘交互体验.
+- [ ] **10.2 App Store 资源**
+    - [ ] App Icon (生产级品质).
+    - [ ] 商店截图 (EN/ZH/JA 多语言版本).
+    - [ ] 隐私政策 URL.
+- [ ] **10.3 最终打磨**
+    - [ ] 启动屏动画 (Launch Screen).
+    - [ ] 性能分析 (使用 Instruments).
+    - [ ] 内存泄漏检查.
+- [ ] **10.4 TestFlight**
+    - [ ] 构建与归档 (Archive).
+    - [ ] 上传至 App Store Connect.
+
+## 📝 开发者指南
+
+### 工作流
+1. **阅读上下文**: 检查此路线图确认当前阶段.
+2. **参考 Web 代码**: 查看 `Wing-main` 文件逻辑, 使用 Swift 模式重写.
+3. **使用工作流**: 运行 `/add-service` 添加新服务.
+4. **验证**: 重大变更后运行测试.
+
+### 技术回顾 (Retrospectives)
+每个阶段的回顾文档均位于 `.agent/memories/`:
 - `phase3-retrospective.md` - AI Service, Keychain, SSE
 - `phase4-retrospective.md` - Navigation, Tab Architecture
 - `phase5-retrospective.md` - DateNavigator, Image Compression
 - `phase6-retrospective.md` - Swift 6 Concurrency, SwiftData Isolation
+- `phase7-retrospective.md` - Settings Modularization, Dark Mode
+- `phase8-retrospective.md` - Memory RAG, Prompt Engineering
+- `phase9-retrospective.md` - Localization, Thread Safety, Advanced Settings

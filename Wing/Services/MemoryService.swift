@@ -66,6 +66,48 @@ actor MemoryService {
         print("MemoryService: Extraction completed and saved.")
     }
     
+    // MARK: - Retrieval
+    
+    /**
+     * 检索相关记忆以辅助生成
+     *
+     * - Parameter context: 当前上下文文本（用于通过关键词搜索，暂未完全实现向量搜索）
+     * - Returns: 格式化的记忆字符串列表
+     */
+    func retrieveRelevantMemories(for context: String) throws -> [String] {
+        var results: [String] = []
+        
+        // 1. 获取语义记忆 (Facts) - 取置信度最高的前 20 个
+        let semanticDesc = FetchDescriptor<SemanticMemory>(sortBy: [SortDescriptor(\.confidence, order: .reverse)])
+        let semantics = try modelContext.fetch(semanticDesc).prefix(20)
+        
+        if !semantics.isEmpty {
+            let text = "User Facts:\n" + semantics.map { "- \($0.key): \($0.value)" }.joined(separator: "\n")
+            results.append(text)
+        }
+        
+        // 2. 获取近期情景记忆 (Events) - 取最近 7 天的记录
+        // 计算7天前的日期字符串 (简单起见，取最近入库的 10 条)
+        let episodicDesc = FetchDescriptor<EpisodicMemory>(sortBy: [SortDescriptor(\.date, order: .reverse)])
+        let episodes = try modelContext.fetch(episodicDesc).prefix(10)
+        
+        if !episodes.isEmpty {
+            let text = "Recent Events:\n" + episodes.map { "- [\($0.date)] \($0.event) (\($0.emotion ?? "-"))" }.joined(separator: "\n")
+            results.append(text)
+        }
+        
+        // 3. 获取程序性记忆 (Patterns) - 取频率最高的前 5 个
+        let proceduralDesc = FetchDescriptor<ProceduralMemory>(sortBy: [SortDescriptor(\.frequency, order: .reverse)])
+        let patterns = try modelContext.fetch(proceduralDesc).prefix(5)
+        
+        if !patterns.isEmpty {
+            let text = "Writing Patterns:\n" + patterns.map { "- \($0.pattern) (Pref: \($0.preference))" }.joined(separator: "\n")
+            results.append(text)
+        }
+        
+        return results
+    }
+    
     // Internal for testing
     func save() throws {
         try modelContext.save()

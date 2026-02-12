@@ -18,13 +18,15 @@ struct SynthesisProgressView: View {
     // 自动轮换的鼓励语
     @State private var encouragementIndex = 0
     
-    private let encouragements = [
-        "正在编织日记...",
-        "猫头鹰正在思考...",
-        "正在整理今日的羽毛...",
-        "AI 正在创作中...",
-        "请稍候，马上就好..."
-    ]
+    private var encouragements: [String] {
+        [
+            L("synthesis.weaving"),
+            L("synthesis.owl.thinking"),
+            L("synthesis.organizing"),
+            L("synthesis.ai.creating"),
+            L("synthesis.wait")
+        ]
+    }
     
     var body: some View {
         VStack(spacing: 24) {
@@ -43,7 +45,7 @@ struct SynthesisProgressView: View {
                 
                 // 生成中时显示提示
                 if case .generating = progress {
-                    Text("通常需要 10-30 秒")
+                    Text(L("synthesis.time.hint"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -73,7 +75,7 @@ struct SynthesisProgressView: View {
         case .generating:
             return encouragements[encouragementIndex]
         default:
-            return progress.message
+            return progress.localizedMessage
         }
     }
     

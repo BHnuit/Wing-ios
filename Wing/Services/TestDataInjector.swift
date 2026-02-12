@@ -78,8 +78,32 @@ actor TestDataInjector {
             }
         }
         
+        // 删除所有 WingEntry
+        let entryDesc = FetchDescriptor<WingEntry>()
+        if let entries = try? context.fetch(entryDesc) {
+            for entry in entries {
+                context.delete(entry)
+            }
+        }
+        
+        // 删除所有记忆
+        let semanticDesc = FetchDescriptor<SemanticMemory>()
+        if let items = try? context.fetch(semanticDesc) {
+            for item in items { context.delete(item) }
+        }
+        
+        let episodicDesc = FetchDescriptor<EpisodicMemory>()
+        if let items = try? context.fetch(episodicDesc) {
+            for item in items { context.delete(item) }
+        }
+        
+        let proceduralDesc = FetchDescriptor<ProceduralMemory>()
+        if let items = try? context.fetch(proceduralDesc) {
+            for item in items { context.delete(item) }
+        }
+        
         try? context.save()
-        print("TestDataInjector: 数据已清空")
+        print("TestDataInjector: 所有数据（日记、碎片、记忆）已清空")
     }
     
     // MARK: - Helper Methods

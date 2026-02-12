@@ -109,14 +109,14 @@ struct ChatView: View {
                     }
                 }
             }
-            .navigationTitle("当下")
+            .navigationTitle(L("chat.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         handleSynthesizeJournal()
                     } label: {
-                        Label("生成日记", systemImage: "wand.and.stars")
+                        Label(L("chat.generate"), systemImage: "wand.and.stars")
                     }
                     .disabled(fragments.isEmpty)
                 }
@@ -132,8 +132,8 @@ struct ChatView: View {
                     }
                 }
             }
-            .alert("生成失败", isPresented: .constant(synthesisError != nil)) {
-                Button("确定") {
+            .alert(L("chat.generate.failed"), isPresented: .constant(synthesisError != nil)) {
+                Button(L("chat.ok")) {
                     synthesisError = nil
                 }
             } message: {
@@ -159,11 +159,11 @@ struct ChatView: View {
                 .font(.system(size: 60))
                 .foregroundStyle(.secondary)
             
-            Text(isToday ? "新的一天开始了..." : "这一天还没有记录")
+            Text(isToday ? L("chat.empty.today") : L("chat.empty.past"))
                 .font(.title3)
                 .fontWeight(.medium)
             
-            Text("记录此刻的想法、感受或灵感")
+            Text(L("chat.empty.hint"))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }

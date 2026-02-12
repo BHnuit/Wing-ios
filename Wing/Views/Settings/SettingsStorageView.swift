@@ -7,11 +7,21 @@
 
 import SwiftUI
 import SwiftData
+import UniformTypeIdentifiers
 
 struct SettingsStorageView: View {
     @Environment(\.modelContext) private var modelContext
+    @State private var showImportFilePicker: Bool = false
+    @State private var showImportFolderPicker: Bool = false
+    @State private var showReplaceFilePicker: Bool = false
+    @State private var showReplaceFolderPicker: Bool = false
+    @State private var showReplaceConfirmation: Bool = false
+    @State private var showClearConfirmation: Bool = false
+    
+    @State private var isImporting: Bool = false
+    @State private var importMessage: String? = nil
+    @State private var showImportAlert: Bool = false
     @State private var exportItem: ExportItem?
-    @State private var showResetConfirmation: Bool = false
     
     var body: some View {
         Form {
@@ -21,68 +31,173 @@ struct SettingsStorageView: View {
                         await exportJSON()
                     }
                 } label: {
-                    Label("导出完整备份 (.json)", systemImage: "square.and.arrow.up")
+                    Label(L("settings.storage.export.json"), systemImage: "square.and.arrow.up")
                         .foregroundStyle(.primary)
                 }
             } header: {
-                Text("备份与导出")
+                Text(L("settings.storage.section.export"))
             } footer: {
-                Text("完整备份包含所有的日记、碎片以及图片数据。")
+                Text(L("settings.storage.export.footer"))
+            }
+            
+            Section {
+                Button {
+                    showImportFilePicker = true
+                } label: {
+                    Label(L("settings.storage.import.json"), systemImage: "square.and.arrow.down")
+                }
+                .fileImporter(isPresented: $showImportFilePicker, allowedContentTypes: [.json, .plainText, .data]) { result in
+                    handleImport(result: result, isReplace: false)
+                }
+                
+                Button {
+                    showImportFolderPicker = true
+                } label: {
+                    Label(L("settings.storage.import.folder"), systemImage: "folder")
+                }
+                .fileImporter(isPresented: $showImportFolderPicker, allowedContentTypes: [.folder]) { result in
+                    handleImportFolder(result: result, isReplace: false)
+                }
+            } header: {
+                Text(L("settings.storage.section.import"))
+            } footer: {
+                Text(L("settings.storage.import.footer"))
             }
             
             Section {
                 Button(role: .destructive) {
-                    showResetConfirmation = true
+                    showReplaceConfirmation = true
                 } label: {
-                    Label("清空所有数据", systemImage: "trash")
+                    Label(L("settings.storage.replace"), systemImage: "arrow.triangle.2.circlepath")
+                }
+                .fileImporter(isPresented: $showReplaceFilePicker, allowedContentTypes: [.json, .plainText, .data]) { result in
+                    handleImport(result: result, isReplace: true)
+                }
+                
+                Button(role: .destructive) {
+                    showClearConfirmation = true
+                } label: {
+                    Label(L("settings.storage.clearAll"), systemImage: "trash")
                 }
             } header: {
-                Text("危险区域")
+                Text(L("settings.storage.section.danger"))
+            } footer: {
+                Text(L("settings.storage.danger.footer"))
             }
         }
-        .navigationTitle("存储管理")
+        .navigationTitle(L("settings.storage.title"))
         .navigationBarTitleDisplayMode(.inline)
         .sheet(item: $exportItem) { item in
             ShareSheet(activityItems: [item.url])
                 .presentationDetents([.medium, .large])
         }
-        .alert("确定要清空所有数据吗？", isPresented: $showResetConfirmation) {
-            Button("取消", role: .cancel) { }
-            Button("清空", role: .destructive) {
-                Task {
-                    await clearAllData()
-                }
+        // Replace Data Confirmation
+        .alert(L("settings.storage.replace.confirm"), isPresented: $showReplaceConfirmation) {
+            Button(L("common.cancel"), role: .cancel) { }
+            Button(L("settings.storage.replace.action"), role: .destructive) {
+                showReplaceFilePicker = true
             }
         } message: {
-            Text("此操作不可恢复，请谨慎操作。建议先进行备份。")
+            Text(L("settings.storage.replace.message"))
         }
-        .toolbar {
-            #if DEBUG
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("注入测试数据") {
-                    Task {
-                        await TestDataInjector.shared.injectTestData(context: modelContext)
-                    }
-                }
+        // Clear All Data Confirmation
+        .alert(L("settings.storage.clear.confirm"), isPresented: $showClearConfirmation) {
+            Button(L("common.cancel"), role: .cancel) { }
+            Button(L("settings.storage.clear.action"), role: .destructive) {
+                Task { await clearAllData() }
             }
-            #endif
+        } message: {
+            Text(L("settings.storage.clear.message"))
+        }
+        .alert(isImporting ? L("common.processing") : (importMessage ?? ""), isPresented: $showImportAlert) {
+            Button(L("common.ok"), role: .cancel) { }
+        }
+        .disabled(isImporting)
+        .overlay {
+            if isImporting {
+                ProgressView(L("settings.storage.processing"))
+                    .padding()
+                    .background(.regularMaterial)
+                    .cornerRadius(8)
+            }
         }
     }
     
     private func exportJSON() async {
+        isImporting = true
+        defer { isImporting = false }
         do {
             let fileURL = try await DataExportService.shared.exportJSON(context: modelContext)
             exportItem = ExportItem(url: fileURL)
         } catch {
             print("Export JSON failed: \(error)")
-            // TODO: Show Error Toast
+            importMessage = String(format: L("settings.storage.exportFailed"), error.localizedDescription)
+            showImportAlert = true
+        }
+    }
+    
+    private func handleImport(result: Result<URL, Error>, isReplace: Bool) {
+        switch result {
+        case .success(let url):
+            Task {
+                await performImport(url: url, isReplace: isReplace)
+            }
+        case .failure(let error):
+            importMessage = String(format: L("settings.storage.fileFailed"), error.localizedDescription)
+            showImportAlert = true
+        }
+    }
+    
+    private func handleImportFolder(result: Result<URL, Error>, isReplace: Bool) {
+        switch result {
+        case .success(let url):
+            Task {
+                await performImportFolder(url: url, isReplace: isReplace)
+            }
+        case .failure(let error):
+            importMessage = String(format: L("settings.storage.folderFailed"), error.localizedDescription)
+            showImportAlert = true
+        }
+    }
+    
+    private func performImport(url: URL, isReplace: Bool) async {
+        isImporting = true
+        defer { isImporting = false }
+        
+        do {
+            if isReplace {
+                try await DataImportService.shared.replaceData(from: url, context: modelContext)
+                importMessage = L("settings.storage.replaceSuccess")
+            } else {
+                try await DataImportService.shared.importJSON(from: url, context: modelContext)
+                importMessage = L("settings.storage.importSuccess")
+            }
+            showImportAlert = true
+        } catch {
+            importMessage = String(format: L("settings.storage.importFailed"), error.localizedDescription)
+            showImportAlert = true
+        }
+    }
+    
+    private func performImportFolder(url: URL, isReplace: Bool) async {
+        isImporting = true
+        defer { isImporting = false }
+        
+        do {
+            try await DataImportService.shared.importFromFolder(url: url, context: modelContext, replace: isReplace)
+            importMessage = L("settings.storage.folderSuccess")
+            showImportAlert = true
+        } catch {
+            importMessage = String(format: L("settings.storage.folderImportFailed"), error.localizedDescription)
+            showImportAlert = true
         }
     }
     
     private func clearAllData() async {
-        // Implement clear logic here, e.g. via TestDataInjector or direct context deletion
-        // For now, rely on clean uninstall or manual deletion in dev
-        print("Clear data requested")
+        isImporting = true
+        defer { isImporting = false }
         await TestDataInjector.shared.clearAllData(context: modelContext)
+        importMessage = L("settings.storage.cleared")
+        showImportAlert = true
     }
 }

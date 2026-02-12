@@ -35,9 +35,18 @@ enum FragmentType: String, Codable {
 /**
  * 语言类型
  */
-enum Language: String, Codable {
+enum Language: String, Codable, CaseIterable {
     case zh = "zh"
     case en = "en"
+    case ja = "ja"
+    
+    var displayName: String {
+        switch self {
+        case .zh: return "中文"
+        case .en: return "English"
+        case .ja: return "日本語"
+        }
+    }
 }
 
 /**
@@ -752,6 +761,9 @@ final class AppSettings {
     /// 日记生成语言设置
     var journalLanguage: JournalLanguage = JournalLanguage.auto
     
+    /// 双语界面模式（暂未完全启用）
+    var bilingualMode: Bool = false
+    
     /// 按 AI 供应商分别存储的模型名称（计算属性）
     var aiModels: [AiProvider: String] {
         get {
@@ -793,7 +805,8 @@ final class AppSettings {
         enableLongTermMemory: Bool = false,
         memoryExtractionAuto: Bool = false,
         memoryRetrievalEnabled: Bool = false,
-        journalLanguage: JournalLanguage = .auto
+        journalLanguage: JournalLanguage = .auto,
+        bilingualMode: Bool = false
     ) {
         self.id = id
         self.aiProvider = aiProvider

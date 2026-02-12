@@ -23,17 +23,17 @@ enum AIError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .missingAPIKey:
-            return "缺少 API Key，请在设置中配置。"
+            return L("ai.error.missingKey")
         case .invalidURL:
-            return "无效的 URL 地址。"
+            return L("ai.error.invalidURL")
         case .networkError(let error):
-            return "网络请求失败: \(error.localizedDescription)"
+            return String(format: L("ai.error.network"), error.localizedDescription)
         case .apiError(let statusCode, let message):
-            return "API 错误 (HTTP \(statusCode)): \(message)"
+            return String(format: L("ai.error.api"), statusCode, message)
         case .parsingError:
-            return "解析响应数据失败。"
+            return L("ai.error.parsing")
         case .emptyResponse:
-            return "服务器返回空数据。"
+            return L("ai.error.empty")
         }
     }
 }
@@ -157,14 +157,15 @@ actor AIService {
      *
      * - Parameters:
      *   - fragments: 当日的碎片记录
+     *   - memories: 相关记忆上下文
      *   - config: AI 配置对象
      * - Returns: 异步抛出流，yield 每一段增量文本（Markdown 正文片段）
      */
-    func synthesizeJournalStream(fragments: [RawFragment], config: AIConfig) -> AsyncThrowingStream<String, Error> {
+    func synthesizeJournalStream(fragments: [RawFragment], memories: [String] = [], config: AIConfig) -> AsyncThrowingStream<String, Error> {
         return AsyncThrowingStream { continuation in
             Task {
                 do {
-                    try await self.processStream(fragments: fragments, config: config, continuation: continuation)
+                    try await self.processStream(fragments: fragments, memories: memories, config: config, continuation: continuation)
                 } catch {
                     continuation.finish(throwing: error)
                 }
@@ -177,18 +178,19 @@ actor AIService {
      *
      * - Parameters:
      *   - fragments: 当日的碎片记录
+     *   - memories: 相关记忆上下文
      *   - config: AI 配置对象
      *   - journalLanguage: 日记生成语言设置
      * - Returns: JournalOutput 结构化输出
      * - Note: 包含 Fallback 机制，解析失败时返回"无题日记"
      */
-    func synthesizeJournal(fragments: [RawFragment], config: AIConfig, journalLanguage: JournalLanguage = .auto) async throws -> JournalOutput {
+    func synthesizeJournal(fragments: [RawFragment], memories: [String] = [], config: AIConfig, journalLanguage: JournalLanguage = .auto) async throws -> JournalOutput {
         guard !config.apiKey.isEmpty else {
             throw AIError.missingAPIKey
         }
         
         let systemInstruction = getJournalSystemInstruction(language: journalLanguage)
-        let userPrompt = buildUserPrompt(from: fragments)
+        let userPrompt = buildUserPrompt(from: fragments, memories: memories)
         
         // 构建非流式请求
         var request: URLRequest
@@ -274,6 +276,7 @@ actor AIService {
     
     private func processStream(
         fragments: [RawFragment],
+        memories: [String],
         config: AIConfig,
         continuation: AsyncThrowingStream<String, Error>.Continuation
     ) async throws {
@@ -283,7 +286,7 @@ actor AIService {
         }
         
         let systemInstruction = getSystemInstruction()
-        let userPrompt = buildUserPrompt(from: fragments)
+        let userPrompt = buildUserPrompt(from: fragments, memories: memories)
         
         var request: URLRequest
         
@@ -494,7 +497,7 @@ actor AIService {
     }
 
     
-    private func buildUserPrompt(from fragments: [RawFragment]) -> String {
+    private func buildUserPrompt(from fragments: [RawFragment], memories: [String] = []) -> String {
         // 按时间戳排序，确保先后顺序正确
         let sortedFragments = fragments.sorted { $0.timestamp < $1.timestamp }
         
@@ -504,13 +507,18 @@ actor AIService {
             return "[\(timeStr)] \(imageMarker) \(fragment.content)"
         }.joined(separator: "\n")
         
-        return """
+        var prompt = """
         User's fragments for today (in chronological order):
         
         \(fragmentTexts)
-        
-        Write the diary content now.
         """
+        
+        if !memories.isEmpty {
+            prompt += "\n\nRelevant Context via Memory RAG:\n\n" + memories.joined(separator: "\n\n")
+        }
+        
+        prompt += "\n\nWrite the diary content now."
+        return prompt
     }
     
     // MARK: - Request Builders

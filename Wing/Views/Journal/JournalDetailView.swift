@@ -65,13 +65,13 @@ struct JournalDetailView: View {
                 }
             } else {
                 ContentUnavailableView(
-                    "日记不存在",
+                    L("journal.detail.notFound"),
                     systemImage: "exclamationmark.triangle",
-                    description: Text("无法找到该日记")
+                    description: Text(L("journal.detail.notFound.desc"))
                 )
             }
         }
-        .navigationTitle("日记详情")
+        .navigationTitle(L("journal.detail.title"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -174,7 +174,7 @@ struct JournalDetailView: View {
     @ViewBuilder
     private func insightSection(_ entry: WingEntry) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("猫头鹰的洞察", systemImage: "brain.head.profile")
+            Label(L("journal.insight.title"), systemImage: "brain.head.profile")
                 .font(.headline)
                 .foregroundStyle(.blue)
             

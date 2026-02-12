@@ -1,0 +1,254 @@
+/* Wing iOS - English Localization */
+
+// MARK: - Tabs
+"tab.now" = "Now";
+"tab.journal" = "Journal";
+"tab.settings" = "Settings";
+
+// MARK: - Chat
+"chat.title" = "Now";
+"chat.empty.today" = "A new day begins...";
+"chat.empty.past" = "No records for this day";
+"chat.empty.hint" = "Capture your thoughts, feelings, or inspirations";
+"chat.input.placeholder" = "What's on your mind...";
+"chat.generate" = "Generate Journal";
+"chat.generate.failed" = "Generation Failed";
+"chat.ok" = "OK";
+"chat.image.failed" = "Image failed to load";
+"chat.edited" = "Edited %@";
+
+// MARK: - Synthesis Progress
+"synthesis.weaving" = "Weaving your journal...";
+"synthesis.owl.thinking" = "The owl is thinking...";
+"synthesis.organizing" = "Organizing today's feathers...";
+"synthesis.ai.creating" = "AI is creating...";
+"synthesis.wait" = "Almost done...";
+"synthesis.time.hint" = "Usually takes 10-30 seconds";
+"synthesis.started" = "Gathering today's feathers...";
+"synthesis.generating" = "Weaving your journal...";
+"synthesis.saving" = "Generating insights...";
+"synthesis.completed" = "Done ✨";
+"synthesis.failed" = "Failed: %@";
+"synthesis.error.noFragments" = "No fragments available";
+"synthesis.error.configMissing" = "AI configuration missing. Please set up your API Key in Settings.";
+
+// MARK: - Date Navigator
+"date.today" = "Today";
+"date.yesterday" = "Yesterday";
+"date.picker.title" = "Select Date";
+"date.picker.done" = "Done";
+"date.format.monthDay" = "MMM d";
+"date.format.yearMonth" = "MMM yyyy";
+"date.weekdays" = "Su,Mo,Tu,We,Th,Fr,Sa";
+
+// MARK: - Journal
+"journal.title" = "Journal";
+"journal.empty" = "No Journals Yet";
+"journal.empty.hint" = "Record your thoughts in \"Now\" to generate your first journal";
+"journal.detail.title" = "Journal Detail";
+"journal.detail.notFound" = "Journal Not Found";
+"journal.detail.notFound.desc" = "Unable to find this journal";
+"journal.insight.title" = "Owl's Insight";
+"journal.unknown.route" = "Unknown Route";
+
+// MARK: - Settings
+"settings.title" = "Settings";
+"settings.section.overview" = "Overview";
+"settings.section.features" = "Features";
+"settings.section.lab" = "Lab";
+"settings.stats.daysRecorded" = "Days Recorded";
+"settings.stats.todayFlaps" = "Today's Flaps";
+"settings.stats.totalFeathers" = "Total Feathers";
+
+// MARK: - Settings > AI
+"settings.ai.title" = "AI Configuration";
+"settings.ai.provider" = "AI Provider";
+"settings.ai.section.provider" = "Provider & Model";
+"settings.ai.section.credential" = "Credentials";
+"settings.ai.section.credential.footer" = "API Key is securely stored in Keychain and will not be uploaded to any third-party servers.";
+"settings.ai.section.advanced" = "Advanced";
+"settings.ai.section.advanced.footer" = "When enabled, Wing will extract long-term memories from your journals to enhance future conversations.";
+"settings.ai.longTermMemory" = "Long-term Memory";
+"settings.ai.model" = "Model";
+"settings.ai.modelName" = "Model Name";
+"settings.ai.custom" = "Custom...";
+"settings.ai.validate" = "Validate";
+"settings.ai.save" = "Save";
+"settings.ai.status.idle" = "Not verified";
+"settings.ai.status.validating" = "Verifying...";
+"settings.ai.status.valid" = "Connected";
+"settings.ai.status.failed" = "Validation failed";
+"settings.ai.status.networkError" = "Network error";
+
+// MARK: - Settings > Display
+"settings.display.title" = "Display";
+"settings.display.section.journalLang" = "Journal Language";
+"settings.display.journalLang" = "Journal Language";
+"settings.display.journalLang.footer" = "Language used when AI generates journals. 'Auto' follows the language of your fragments.";
+"settings.display.section.uiLang" = "Interface Language";
+"settings.display.uiLang" = "Interface Language";
+"settings.display.uiLang.footer" = "Set the display language of the app interface.";
+"settings.display.section.appearance" = "Appearance";
+"settings.display.theme" = "Theme";
+"settings.display.theme.system" = "System";
+"settings.display.theme.light" = "Light";
+"settings.display.theme.dark" = "Dark";
+"settings.display.fontSize" = "Font Size";
+"settings.display.fontSize.small" = "Small";
+"settings.display.fontSize.medium" = "Medium";
+"settings.display.fontSize.large" = "Large";
+"settings.display.label" = "Display";
+
+// MARK: - Settings > Storage
+"settings.storage.title" = "Storage";
+"settings.storage.section.export" = "Backup & Export";
+"settings.storage.export.json" = "Export Full Backup (.json)";
+"settings.storage.export.footer" = "Full backup includes all journals, fragments, and image data.";
+"settings.storage.section.import" = "Import Data";
+"settings.storage.import.json" = "Import from File (.json)";
+"settings.storage.import.folder" = "Import from Folder";
+"settings.storage.import.footer" = "Imported data will be merged with existing data.";
+"settings.storage.section.danger" = "Danger Zone";
+"settings.storage.replace" = "Replace Data (from File)";
+"settings.storage.clearAll" = "Clear All Data";
+"settings.storage.danger.footer" = "Replacing or clearing will permanently delete all current data and cannot be undone.";
+"settings.storage.replace.confirm" = "Replace all data?";
+"settings.storage.replace.action" = "Choose File to Replace";
+"settings.storage.replace.message" = "This will clear existing data and restore from file. Export a backup first.";
+"settings.storage.clear.confirm" = "Clear all data?";
+"settings.storage.clear.action" = "Clear Data";
+"settings.storage.clear.message" = "This will permanently delete all journals, fragments, and other data. Cannot be undone. Export a backup first.";
+"settings.storage.processing" = "Processing data...";
+"settings.storage.exportFailed" = "Export failed: %@";
+"settings.storage.fileFailed" = "Failed to select file: %@";
+"settings.storage.folderFailed" = "Failed to select folder: %@";
+"settings.storage.importSuccess" = "Data imported successfully";
+"settings.storage.replaceSuccess" = "Data replaced successfully";
+"settings.storage.folderSuccess" = "Folder data imported";
+"settings.storage.importFailed" = "Import failed: %@";
+"settings.storage.folderImportFailed" = "Folder import failed: %@";
+"settings.storage.cleared" = "All data cleared";
+"settings.storage.label" = "Storage";
+
+// MARK: - Settings > Memory
+"settings.memory.title" = "Long-term Memory";
+"settings.memory.type" = "Memory Type";
+"settings.memory.semantic" = "Facts";
+"settings.memory.episodic" = "Episodes";
+"settings.memory.procedural" = "Habits";
+"settings.memory.extractLatest" = "Extract from Latest Journal";
+"settings.memory.extractFrom" = "Extract from Journal...";
+"settings.memory.merge" = "Merge Similar Memories...";
+"settings.memory.clearAll" = "Clear All Memories";
+"settings.memory.clear.confirm" = "Clear all memories?";
+"settings.memory.clear.message" = "This will permanently delete all extracted facts, episodes, and habits. This cannot be undone, but your journal entries will not be affected.";
+"settings.memory.clear.action" = "Clear";
+"settings.memory.error" = "Operation Failed";
+"settings.memory.extracting" = "Extracting memories...";
+"settings.memory.semantic.empty" = "No Facts";
+"settings.memory.semantic.empty.desc" = "AI hasn't extracted any facts about you yet";
+"settings.memory.semantic.count" = "%d facts";
+"settings.memory.episodic.empty" = "No Episodes";
+"settings.memory.episodic.empty.desc" = "AI hasn't extracted any life events yet";
+"settings.memory.episodic.count" = "%d events";
+"settings.memory.procedural.empty" = "No Habits";
+"settings.memory.procedural.empty.desc" = "AI hasn't discovered your behavior patterns yet";
+"settings.memory.procedural.count" = "%d patterns";
+"settings.memory.edit" = "Edit";
+"settings.memory.label" = "Memory";
+
+// MARK: - Settings > Memory Edit
+"settings.memory.edit.semantic" = "Edit Fact";
+"settings.memory.edit.episodic" = "Edit Episode";
+"settings.memory.edit.procedural" = "Edit Habit";
+"settings.memory.edit.fact" = "Fact";
+"settings.memory.edit.key" = "Key";
+"settings.memory.edit.value" = "Value";
+"settings.memory.edit.confidence" = "Confidence";
+"settings.memory.edit.event" = "Event";
+"settings.memory.edit.date" = "Date (YYYY-MM-DD)";
+"settings.memory.edit.eventDesc" = "Event Description";
+"settings.memory.edit.detail" = "Details";
+"settings.memory.edit.emotion" = "Emotion";
+"settings.memory.edit.context" = "Context";
+"settings.memory.edit.pattern" = "Pattern";
+"settings.memory.edit.behaviorPattern" = "Behavior Pattern";
+"settings.memory.edit.preference" = "Preference";
+"settings.memory.edit.attribute" = "Attributes";
+"settings.memory.edit.trigger" = "Trigger";
+"settings.memory.edit.frequency" = "Frequency: %d";
+"settings.memory.preference.label" = "Preference: %@";
+"settings.memory.trigger.label" = "Trigger: %@";
+"settings.memory.frequency.label" = "%d occurrences";
+"settings.memory.pickJournal" = "Select Journal";
+"settings.memory.fetchError" = "Unable to find recent journal: %@";
+"settings.memory.extractError" = "Memory extraction failed: %@";
+
+// MARK: - Settings > Memory Merge
+"settings.memory.merge.analyzing" = "Analyzing...";
+"settings.memory.merge.noSimilar" = "No Similar Memories";
+"settings.memory.merge.noSimilar.desc" = "Your memory library is well organized";
+"settings.memory.merge.title" = "Merge Memories";
+"settings.memory.merge.close" = "Close";
+"settings.memory.merge.keepSelected" = "Keep Selected & Merge Others";
+"settings.memory.merge.suggestMerge" = "Suggested Merge: %@";
+"settings.memory.merge.confidence" = "Confidence: %@";
+"settings.memory.merge.frequency" = "Frequency: %d";
+
+// MARK: - Data Import
+"data.import.error.readFailed" = "Failed to read file";
+"data.import.error.jsonDecodeFailed" = "JSON decoding failed";
+"data.import.error.invalidFormat" = "Invalid data format";
+"data.import.error.unknown" = "Unknown error";
+
+// MARK: - Markdown Export
+"export.md.mood" = "Mood";
+"export.md.summary" = "Summary";
+"export.md.insight" = "🔮 Insight";
+"export.md.todo" = "✅ To-Do";
+"export.md.time" = "Exported at";
+
+// MARK: - Journal Language
+"journal.language.auto" = "Auto Detect";
+"journal.language.zh" = "中文";
+"journal.language.en" = "English";
+"journal.language.ja" = "日本語";
+
+// MARK: - AI Errors
+"ai.error.missingKey" = "Missing API Key. Please configure it in Settings.";
+"ai.error.invalidURL" = "Invalid URL address.";
+"ai.error.network" = "Network request failed: %@";
+"ai.error.api" = "API Error (HTTP %d): %@";
+"ai.error.parsing" = "Failed to parse response data.";
+"ai.error.empty" = "Server returned empty response.";
+
+// MARK: - Data Import & Export
+"data.import.error.readFailed" = "Failed to read file";
+"data.import.error.jsonDecodeFailed" = "JSON decoding failed";
+"data.import.error.invalidFormat" = "Invalid data format";
+"data.import.error.unknown" = "Unknown error";
+"export.md.mood" = "Mood";
+"export.md.summary" = "Summary";
+"export.md.insight" = "🔮 Insight";
+"export.md.todo" = "✅ To-Do";
+"export.md.time" = "Exported at";
+
+// MARK: - Journal Language
+"journal.language.auto" = "Auto Detect";
+"journal.language.zh" = "中文";
+"journal.language.en" = "English";
+"journal.language.ja" = "日本語";
+
+// MARK: - AI Errors
+"ai.error.missingKey" = "Missing API Key. Please configure it in Settings.";
+"ai.error.invalidURL" = "Invalid URL address.";
+"ai.error.network" = "Network request failed: %@";
+"ai.error.api" = "API Error (HTTP %d): %@";
+"ai.error.parsing" = "Failed to parse response data.";
+"ai.error.empty" = "Server returned empty response.";
+
+// MARK: - Common
+"common.cancel" = "Cancel";
+"common.done" = "Done";
+"common.ok" = "OK";
+"common.processing" = "Processing...";

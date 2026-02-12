@@ -1,0 +1,254 @@
+/* Wing iOS - 日本語 ローカライゼーション */
+
+// MARK: - Tabs
+"tab.now" = "いま";
+"tab.journal" = "日記";
+"tab.settings" = "設定";
+
+// MARK: - Chat
+"chat.title" = "いま";
+"chat.empty.today" = "新しい一日が始まった...";
+"chat.empty.past" = "この日の記録はありません";
+"chat.empty.hint" = "今の気持ちや考え、ひらめきを記録しよう";
+"chat.input.placeholder" = "今の気持ちを書こう...";
+"chat.generate" = "日記を生成";
+"chat.generate.failed" = "生成に失敗";
+"chat.ok" = "OK";
+"chat.image.failed" = "画像の読み込みに失敗";
+"chat.edited" = "編集済み %@";
+
+// MARK: - Synthesis Progress
+"synthesis.weaving" = "日記を編んでいます...";
+"synthesis.owl.thinking" = "フクロウが考えています...";
+"synthesis.organizing" = "今日の羽毛を整理しています...";
+"synthesis.ai.creating" = "AIが作成しています...";
+"synthesis.wait" = "もうすぐです...";
+"synthesis.time.hint" = "通常10〜30秒かかります";
+"synthesis.started" = "今日の羽毛を集めています...";
+"synthesis.generating" = "日記を編んでいます...";
+"synthesis.saving" = "気持ちを洞察しています...";
+"synthesis.completed" = "完了 ✨";
+"synthesis.failed" = "生成失敗: %@";
+"synthesis.error.noFragments" = "利用可能な断片がありません";
+"synthesis.error.configMissing" = "AI設定が不足しています。設定画面でAPI Keyを設定してください。";
+
+// MARK: - Date Navigator
+"date.today" = "今日";
+"date.yesterday" = "昨日";
+"date.picker.title" = "日付を選択";
+"date.picker.done" = "完了";
+"date.format.monthDay" = "M月d日";
+"date.format.yearMonth" = "yyyy年M月";
+"date.weekdays" = "日,月,火,水,木,金,土";
+
+// MARK: - Journal
+"journal.title" = "日記";
+"journal.empty" = "日記はありません";
+"journal.empty.hint" = "「いま」で思いを記録して、最初の日記を作りましょう";
+"journal.detail.title" = "日記の詳細";
+"journal.detail.notFound" = "日記が見つかりません";
+"journal.detail.notFound.desc" = "この日記は見つかりませんでした";
+"journal.insight.title" = "フクロウの洞察";
+"journal.unknown.route" = "不明なルート";
+
+// MARK: - Settings
+"settings.title" = "設定";
+"settings.section.overview" = "概要";
+"settings.section.features" = "機能";
+"settings.section.lab" = "ラボ";
+"settings.stats.daysRecorded" = "記録日数";
+"settings.stats.todayFlaps" = "今日の羽ばたき";
+"settings.stats.totalFeathers" = "累計の羽毛";
+
+// MARK: - Settings > AI
+"settings.ai.title" = "モデル設定";
+"settings.ai.provider" = "AIプロバイダー";
+"settings.ai.section.provider" = "プロバイダーとモデル";
+"settings.ai.section.credential" = "認証情報";
+"settings.ai.section.credential.footer" = "API KeyはKeychainに安全に保存され、第三者サーバーにはアップロードされません。";
+"settings.ai.section.advanced" = "高度な機能";
+"settings.ai.section.advanced.footer" = "有効にすると、Wingが日記から長期記憶を抽出し、以降の会話体験を向上させます。";
+"settings.ai.longTermMemory" = "長期記憶を有効にする";
+"settings.ai.model" = "モデル";
+"settings.ai.modelName" = "モデル名";
+"settings.ai.custom" = "カスタム...";
+"settings.ai.validate" = "接続を確認";
+"settings.ai.save" = "保存";
+"settings.ai.status.idle" = "未確認";
+"settings.ai.status.validating" = "確認中...";
+"settings.ai.status.valid" = "接続成功";
+"settings.ai.status.failed" = "認証に失敗";
+"settings.ai.status.networkError" = "ネットワークエラー";
+
+// MARK: - Settings > Display
+"settings.display.title" = "表示設定";
+"settings.display.section.journalLang" = "日記の言語";
+"settings.display.journalLang" = "日記の言語";
+"settings.display.journalLang.footer" = "AIが日記を生成する際の言語。「自動」を選択すると断片の言語に従います。";
+"settings.display.section.uiLang" = "インターフェース言語";
+"settings.display.uiLang" = "インターフェース言語";
+"settings.display.uiLang.footer" = "アプリの表示言語を設定します。";
+"settings.display.section.appearance" = "外観";
+"settings.display.theme" = "テーマ";
+"settings.display.theme.system" = "システムに従う";
+"settings.display.theme.light" = "ライト";
+"settings.display.theme.dark" = "ダーク";
+"settings.display.fontSize" = "文字サイズ";
+"settings.display.fontSize.small" = "小";
+"settings.display.fontSize.medium" = "中";
+"settings.display.fontSize.large" = "大";
+"settings.display.label" = "表示設定";
+
+// MARK: - Settings > Storage
+"settings.storage.title" = "ストレージ管理";
+"settings.storage.section.export" = "バックアップとエクスポート";
+"settings.storage.export.json" = "完全バックアップをエクスポート (.json)";
+"settings.storage.export.footer" = "完全バックアップにはすべての日記、断片、画像データが含まれます。";
+"settings.storage.section.import" = "データのインポート";
+"settings.storage.import.json" = "ファイルからインポート (.json)";
+"settings.storage.import.folder" = "フォルダからインポート";
+"settings.storage.import.footer" = "インポートされたデータは既存のデータと統合されます。";
+"settings.storage.section.danger" = "危険な操作";
+"settings.storage.replace" = "データを置換 (ファイルから)";
+"settings.storage.clearAll" = "すべてのデータを消去";
+"settings.storage.danger.footer" = "データの置換または消去は現在のすべてのデータを永久に削除し、元に戻すことはできません。";
+"settings.storage.replace.confirm" = "データを置換しますか？";
+"settings.storage.replace.action" = "ファイルを選択して置換";
+"settings.storage.replace.message" = "既存のデータを消去してファイルから復元します。先にバックアップをエクスポートすることをお勧めします。";
+"settings.storage.clear.confirm" = "すべてのデータを消去しますか？";
+"settings.storage.clear.action" = "データを消去";
+"settings.storage.clear.message" = "すべての日記、断片などのデータが永久に削除されます。元に戻すことはできません。先にバックアップをエクスポートすることをお勧めします。";
+"settings.storage.processing" = "データを処理中...";
+"settings.storage.exportFailed" = "エクスポート失敗: %@";
+"settings.storage.fileFailed" = "ファイルの選択に失敗: %@";
+"settings.storage.folderFailed" = "フォルダの選択に失敗: %@";
+"settings.storage.importSuccess" = "データのインポートに成功しました";
+"settings.storage.replaceSuccess" = "データの置換に成功しました";
+"settings.storage.folderSuccess" = "フォルダデータがインポートされました";
+"settings.storage.importFailed" = "インポート失敗: %@";
+"settings.storage.folderImportFailed" = "フォルダインポート失敗: %@";
+"settings.storage.cleared" = "すべてのデータが消去されました";
+"settings.storage.label" = "ストレージ管理";
+
+// MARK: - Settings > Memory
+"settings.memory.title" = "長期記憶";
+"settings.memory.type" = "記憶タイプ";
+"settings.memory.semantic" = "事実";
+"settings.memory.episodic" = "経験";
+"settings.memory.procedural" = "習慣";
+"settings.memory.extractLatest" = "最新の日記から抽出";
+"settings.memory.extractFrom" = "指定の日記から抽出...";
+"settings.memory.merge" = "類似の記憶を整理・統合...";
+"settings.memory.clearAll" = "すべての記憶を消去";
+"settings.memory.clear.confirm" = "すべての記憶を消去しますか？";
+"settings.memory.clear.message" = "抽出されたすべての事実、経験、習慣の記憶が永久に削除されます。元に戻すことはできません。ただし、日記の内容は削除されません。";
+"settings.memory.clear.action" = "消去";
+"settings.memory.error" = "操作に失敗";
+"settings.memory.extracting" = "記憶を抽出中...";
+"settings.memory.semantic.empty" = "事実なし";
+"settings.memory.semantic.empty.desc" = "AIはまだあなたに関する事実を抽出していません";
+"settings.memory.semantic.count" = "%d件の事実";
+"settings.memory.episodic.empty" = "経験なし";
+"settings.memory.episodic.empty.desc" = "AIはまだ重要なライフイベントを抽出していません";
+"settings.memory.episodic.count" = "%d件のイベント";
+"settings.memory.procedural.empty" = "習慣なし";
+"settings.memory.procedural.empty.desc" = "AIはまだあなたの行動パターンを発見していません";
+"settings.memory.procedural.count" = "%dつのパターン";
+"settings.memory.edit" = "編集";
+"settings.memory.label" = "記憶管理";
+
+// MARK: - Settings > Memory Edit
+"settings.memory.edit.semantic" = "事実を編集";
+"settings.memory.edit.episodic" = "経験を編集";
+"settings.memory.edit.procedural" = "習慣を編集";
+"settings.memory.edit.fact" = "事実";
+"settings.memory.edit.key" = "キー";
+"settings.memory.edit.value" = "値";
+"settings.memory.edit.confidence" = "確信度";
+"settings.memory.edit.event" = "イベント";
+"settings.memory.edit.date" = "日付 (YYYY-MM-DD)";
+"settings.memory.edit.eventDesc" = "イベントの説明";
+"settings.memory.edit.detail" = "詳細";
+"settings.memory.edit.emotion" = "感情";
+"settings.memory.edit.context" = "コンテキスト";
+"settings.memory.edit.pattern" = "パターン";
+"settings.memory.edit.behaviorPattern" = "行動パターン";
+"settings.memory.edit.preference" = "好み";
+"settings.memory.edit.attribute" = "属性";
+"settings.memory.edit.trigger" = "トリガー";
+"settings.memory.edit.frequency" = "出現頻度: %d";
+"settings.memory.preference.label" = "好み: %@";
+"settings.memory.trigger.label" = "トリガー: %@";
+"settings.memory.frequency.label" = "%d回出現";
+"settings.memory.pickJournal" = "日記を選択";
+"settings.memory.fetchError" = "最近の日記が見つかりません: %@";
+"settings.memory.extractError" = "記憶の抽出に失敗: %@";
+
+// MARK: - Settings > Memory Merge
+"settings.memory.merge.analyzing" = "分析中...";
+"settings.memory.merge.noSimilar" = "類似の記憶はありません";
+"settings.memory.merge.noSimilar.desc" = "記憶ライブラリはきちんと整理されています";
+"settings.memory.merge.title" = "記憶の統合";
+"settings.memory.merge.close" = "閉じる";
+"settings.memory.merge.keepSelected" = "選択を保持して他を統合";
+"settings.memory.merge.suggestMerge" = "統合の提案: %@";
+"settings.memory.merge.confidence" = "確信度: %@";
+"settings.memory.merge.frequency" = "頻度: %d";
+
+// MARK: - Data Import
+"data.import.error.readFailed" = "ファイルの読み込みに失敗しました";
+"data.import.error.jsonDecodeFailed" = "JSONのデコードに失敗しました";
+"data.import.error.invalidFormat" = "データ形式が正しくありません";
+"data.import.error.unknown" = "不明なエラー";
+
+// MARK: - Markdown Export
+"export.md.mood" = "気分";
+"export.md.summary" = "要約";
+"export.md.insight" = "🔮 洞察";
+"export.md.todo" = "✅ To-Do";
+"export.md.time" = "エクスポート時刻";
+
+// MARK: - Journal Language
+"journal.language.auto" = "自動検出";
+"journal.language.zh" = "中文";
+"journal.language.en" = "English";
+"journal.language.ja" = "日本語";
+
+// MARK: - AI Errors
+"ai.error.missingKey" = "APIキーがありません。設定で構成してください。";
+"ai.error.invalidURL" = "無効なURLアドレスです。";
+"ai.error.network" = "ネットワーク要求に失敗しました: %@";
+"ai.error.api" = "APIエラー (HTTP %d): %@";
+"ai.error.parsing" = "応答データの解析に失敗しました。";
+"ai.error.empty" = "サーバーが空のデータを返しました。";
+
+// MARK: - Data Import & Export
+"data.import.error.readFailed" = "ファイルの読み込みに失敗しました";
+"data.import.error.jsonDecodeFailed" = "JSONのデコードに失敗しました";
+"data.import.error.invalidFormat" = "データ形式が正しくありません";
+"data.import.error.unknown" = "不明なエラー";
+"export.md.mood" = "気分";
+"export.md.summary" = "要約";
+"export.md.insight" = "🔮 洞察";
+"export.md.todo" = "✅ To-Do";
+"export.md.time" = "エクスポート時刻";
+
+// MARK: - Journal Language
+"journal.language.auto" = "自動検出";
+"journal.language.zh" = "中文";
+"journal.language.en" = "English";
+"journal.language.ja" = "日本語";
+
+// MARK: - AI Errors
+"ai.error.missingKey" = "APIキーがありません。設定で構成してください。";
+"ai.error.invalidURL" = "無効なURLアドレスです。";
+"ai.error.network" = "ネットワーク要求に失敗しました: %@";
+"ai.error.api" = "APIエラー (HTTP %d): %@";
+"ai.error.parsing" = "応答データの解析に失敗しました。";
+"ai.error.empty" = "サーバーが空のデータを返しました。";
+
+// MARK: - Common
+"common.cancel" = "キャンセル";
+"common.done" = "完了";
+"common.ok" = "OK";
+"common.processing" = "処理中...";

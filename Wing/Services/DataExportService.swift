@@ -191,16 +191,16 @@ final class DataExportService {
         }
         
         var mdContent = "# \(dateStr) | \(entry.title)\n\n"
-        mdContent += "**心情**: \(entry.mood) | **摘要**: \(entry.summary)\n\n"
+        mdContent += "**\(L("export.md.mood"))**: \(entry.mood) | **\(L("export.md.summary"))**: \(entry.summary)\n\n"
         mdContent += "\(entry.markdownContent)\n\n"
         
         if !entry.aiInsights.isEmpty {
-            mdContent += "### 🔮 洞察\n"
+            mdContent += "### \(L("export.md.insight"))\n"
             mdContent += "\(entry.aiInsights)\n\n"
         }
         
         if !entry.todos.isEmpty {
-            mdContent += "### ✅ 待办\n"
+            mdContent += "### \(L("export.md.todo"))\n"
             for todo in entry.todos {
                 let mark = todo.completed ? "[x]" : "[ ]"
                 mdContent += "- \(mark) \(todo.title)\n"
@@ -210,7 +210,7 @@ final class DataExportService {
         
         // 导出时间
         mdContent += "---\n"
-        mdContent += "导出时间: \(Date().formatted())\n"
+        mdContent += "\(L("export.md.time")): \(Date().formatted())\n"
         
         let data = mdContent.data(using: .utf8) ?? Data()
         // 使用 entry ID 避免文件名冲突

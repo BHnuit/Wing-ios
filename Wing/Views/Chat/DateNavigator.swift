@@ -68,11 +68,11 @@ struct DateNavigator: View {
         let formatter = DateFormatter()
         
         if Calendar.current.isDateInToday(date) {
-            return "今天"
+            return L("date.today")
         } else if Calendar.current.isDateInYesterday(date) {
-            return "昨天"
+            return L("date.yesterday")
         } else {
-            formatter.dateFormat = "M月d日"
+            formatter.dateFormat = L("date.format.monthDay")
             return formatter.string(from: date)
         }
     }
@@ -155,11 +155,11 @@ private struct DatePickerSheet: View {
                 
                 Spacer()
             }
-            .navigationTitle("选择日期")
+            .navigationTitle(L("date.picker.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("完成") {
+                    Button(L("date.picker.done")) {
                         dismiss()
                     }
                 }
@@ -221,8 +221,9 @@ private struct DatePickerSheet: View {
     }
     
     private var weekdayHeaders: some View {
-        HStack(spacing: 0) {
-            ForEach(["日", "一", "二", "三", "四", "五", "六"], id: \.self) { weekday in
+        let weekdays = L("date.weekdays").components(separatedBy: ",")
+        return HStack(spacing: 0) {
+            ForEach(weekdays, id: \.self) { weekday in
                 Text(weekday)
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -313,7 +314,7 @@ private struct DatePickerSheet: View {
     
     private func monthYearString(for date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy年M月"
+        formatter.dateFormat = L("date.format.yearMonth")
         return formatter.string(from: date)
     }
     
@@ -343,7 +344,7 @@ private struct DatePickerSheet: View {
                 "2026-01-15"
             ]
         )
-        Text("选中日期: \(date)")
+        Text("Selected: \(date)")
             .font(.caption)
             .foregroundStyle(.secondary)
         Spacer()

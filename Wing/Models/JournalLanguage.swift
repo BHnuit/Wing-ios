@@ -17,9 +17,9 @@ enum JournalLanguage: String, Codable, CaseIterable, Sendable {
     
     var displayName: String {
         switch self {
-        case .auto: return "自动检测"
-        case .zh: return "中文"
-        case .en: return "English"
+        case .auto: return L("journal.language.auto")
+        case .zh: return L("journal.language.zh")
+        case .en: return L("journal.language.en")
         }
     }
     

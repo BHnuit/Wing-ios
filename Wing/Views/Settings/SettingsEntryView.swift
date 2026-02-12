@@ -18,6 +18,7 @@ struct SettingsEntryView: View {
     // Stats Queries
     @Query private var allSessions: [DailySession]
     @Query private var allEntries: [WingEntry]
+    @Query private var allFragments: [RawFragment]
     
     // Computed Stats
     private var daysRecorded: Int {
@@ -30,7 +31,9 @@ struct SettingsEntryView: View {
     }
     
     private var totalWings: Int {
-        allEntries.count
+        allFragments
+            .filter { $0.type == .text }
+            .reduce(0) { $0 + $1.content.count }
     }
     
     var body: some View {
@@ -42,29 +45,29 @@ struct SettingsEntryView: View {
                 // Section 2: Features
                 Section {
                     NavigationLink(destination: SettingsAIView()) {
-                        Label("模型配置", systemImage: "cpu")
+                        Label(L("settings.ai.title"), systemImage: "cpu")
                             .badge(settingsManager.appSettings?.aiProvider.rawValue.capitalized ?? "")
                     }
                     
                     NavigationLink(destination: SettingsDisplayView()) {
-                        Label("显示选项", systemImage: "textformat.size")
+                        Label(L("settings.display.label"), systemImage: "textformat.size")
                     }
                     
                     NavigationLink(destination: SettingsStorageView()) {
-                        Label("存储管理", systemImage: "externaldrive")
+                        Label(L("settings.storage.label"), systemImage: "externaldrive")
                     }
                 } header: {
-                    Text("功能")
+                    Text(L("settings.section.features"))
                 }
                 
                 // Section 3: Advanced
                 if settingsManager.appSettings?.enableLongTermMemory == true {
                     Section {
                         NavigationLink(destination: SettingsMemoryView()) {
-                            Label("记忆管理", systemImage: "brain.head.profile")
+                            Label(L("settings.memory.label"), systemImage: "brain.head.profile")
                         }
                     } header: {
-                        Text("实验室")
+                        Text(L("settings.section.lab"))
                     }
                 }
                 
@@ -88,19 +91,24 @@ struct SettingsEntryView: View {
                     .listRowBackground(Color.clear)
                 }
             }
-            .navigationTitle("设置")
+            .navigationTitle(L("settings.title"))
             .listStyle(.insetGrouped)
         }
     }
     
     private var statsSection: some View {
         Section {
+            // Heatmap
+            CalendarHeatmapView(sessions: allSessions)
+                .padding(.vertical, 8)
+                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+            
             HStack(spacing: 16) {
                 VStack(alignment: .leading) {
                     Text("\(daysRecorded)")
                         .font(.title2)
                         .fontWeight(.bold)
-                    Text("已记录天数")
+                    Text(L("settings.stats.daysRecorded"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -112,7 +120,7 @@ struct SettingsEntryView: View {
                     Text("\(todayFragments)")
                         .font(.title2)
                         .fontWeight(.bold)
-                    Text("今日碎片")
+                    Text(L("settings.stats.todayFlaps"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -124,15 +132,14 @@ struct SettingsEntryView: View {
                     Text("\(totalWings)")
                         .font(.title2)
                         .fontWeight(.bold)
-                    Text("累计日记")
+                    Text(L("settings.stats.totalFeathers"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(.vertical, 8)
         } header: {
-            Text("概览")
+            Text(L("settings.section.overview"))
         }
     }
 }

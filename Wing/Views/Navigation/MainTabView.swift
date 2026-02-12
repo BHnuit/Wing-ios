@@ -24,21 +24,21 @@ struct MainTabView: View {
             // Tab 1: 当下
             NowTabView()
                 .tabItem {
-                    Label("当下", systemImage: "sparkles")
+                    Label(L("tab.now"), systemImage: "sparkles")
                 }
                 .tag(AppTab.now)
             
             // Tab 2: 回忆
             JournalTabView()
                 .tabItem {
-                    Label("回忆", systemImage: "book.closed")
+                    Label(L("tab.journal"), systemImage: "book.closed")
                 }
                 .tag(AppTab.journal)
             
             // Tab 3: 设置
             SettingsTabView()
                 .tabItem {
-                    Label("设置", systemImage: "gearshape")
+                    Label(L("tab.settings"), systemImage: "gearshape")
                 }
                 .tag(AppTab.settings)
         }
@@ -76,9 +76,9 @@ private struct JournalTabView: View {
             List {
                 if entries.isEmpty {
                     ContentUnavailableView(
-                        "暂无日记",
+                        L("journal.empty"),
                         systemImage: "book.closed",
-                        description: Text("从\"当下\"记录你的想法，生成第一篇日记")
+                        description: Text(L("journal.empty.hint"))
                     )
                 } else {
                     ForEach(entries) { entry in
@@ -99,13 +99,13 @@ private struct JournalTabView: View {
                     }
                 }
             }
-            .navigationTitle("回忆")
+            .navigationTitle(L("journal.title"))
             .navigationDestination(for: AppRoute.self) { route in
                 switch route {
                 case .journalDetail(let entryId):
                     JournalDetailView(entryId: entryId)
                 default:
-                    Text("未知路由")
+                    Text(L("journal.unknown.route"))
                 }
             }
         }

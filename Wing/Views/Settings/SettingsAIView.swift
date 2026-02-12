@@ -24,7 +24,7 @@ struct SettingsAIView: View {
                     ProviderPicker(settings: settings, validationState: $validationState)
                     ModelPicker(settings: settings)
                 } header: {
-                    Text("服务商与模型")
+                    Text(L("settings.ai.section.provider"))
                 }
                 
                 Section {
@@ -36,13 +36,13 @@ struct SettingsAIView: View {
                         validationState: $validationState
                     )
                 } header: {
-                    Text("凭证配置")
+                    Text(L("settings.ai.section.credential"))
                 } footer: {
-                    Text("API Key 将安全存储在 Keychain 中，不会上传到任何第三方服务器。")
+                    Text(L("settings.ai.section.credential.footer"))
                 }
                 
                 Section {
-                    Toggle("启用长期记忆", isOn: Binding(
+                    Toggle(L("settings.ai.longTermMemory"), isOn: Binding(
                         get: { settingsManager.appSettings?.enableLongTermMemory ?? false },
                         set: { newValue in
                             settingsManager.appSettings?.enableLongTermMemory = newValue
@@ -51,13 +51,13 @@ struct SettingsAIView: View {
                         }
                     ))
                 } header: {
-                    Text("高级功能")
+                    Text(L("settings.ai.section.advanced"))
                 } footer: {
-                    Text("启用后，Wing 将从您的日记中提取长期记忆，用于增强后续的对话体验。")
+                    Text(L("settings.ai.section.advanced.footer"))
                 }
             }
         }
-        .navigationTitle("模型配置")
+        .navigationTitle(L("settings.ai.title"))
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             if let provider = settingsManager.appSettings?.aiProvider {
@@ -174,15 +174,15 @@ struct ValidationStatusView: View {
     private var statusText: some View {
         switch state {
         case .idle:
-            Text("未验证")
+            Text(L("settings.ai.status.idle"))
                 .font(.caption2)
                 .foregroundStyle(.secondary)
         case .validating:
-            Text("验证中...")
+            Text(L("settings.ai.status.validating"))
                 .font(.caption2)
                 .foregroundStyle(.orange)
         case .valid:
-            Text("连接成功")
+            Text(L("settings.ai.status.valid"))
                 .font(.caption2)
                 .foregroundStyle(.green)
         case .invalid(let message):
@@ -201,7 +201,7 @@ struct ProviderPicker: View {
     @Binding var validationState: ValidationState
     
     var body: some View {
-        Picker("AI 服务商", selection: Binding(
+        Picker(L("settings.ai.provider"), selection: Binding(
             get: { settings.aiProvider },
             set: { newProvider in
                 settings.aiProvider = newProvider
@@ -229,7 +229,7 @@ struct ModelPicker: View {
     
     var body: some View {
         if settings.aiProvider == .custom {
-            TextField("模型名称", text: Binding(
+            TextField(L("settings.ai.modelName"), text: Binding(
                 get: { currentModel },
                 set: { newValue in
                     var current = settings.aiModels
@@ -238,7 +238,7 @@ struct ModelPicker: View {
                 }
             ))
         } else {
-            Picker("模型", selection: Binding(
+            Picker(L("settings.ai.model"), selection: Binding(
                 get: { currentModel },
                 set: { newValue in
                     var current = settings.aiModels
@@ -251,7 +251,7 @@ struct ModelPicker: View {
                 }
                 
                 // 允许用户输入自定义模型名即使在非 Custom 模式下 (针对新模型)
-                Text("自定义...").tag("custom")
+                Text(L("settings.ai.custom")).tag("custom")
             }
         }
     }
@@ -290,14 +290,14 @@ struct APIKeyInput: View {
                 
                 Spacer()
                 
-                Button("验证连接") {
+                Button(L("settings.ai.validate")) {
                     Task {
                         await validateApiKey()
                     }
                 }
                 .disabled(apiKeyInput.isEmpty || validationState == .validating)
                 
-                Button("保存") {
+                Button(L("settings.ai.save")) {
                     Task {
                         await saveApiKey()
                     }
@@ -329,9 +329,9 @@ struct APIKeyInput: View {
             let generator = UIImpactFeedbackGenerator(style: .light)
             generator.impactOccurred()
         } catch let error as AIError {
-            validationState = .invalid(error.errorDescription ?? "验证失败")
+            validationState = .invalid(error.errorDescription ?? L("settings.ai.status.failed"))
         } catch {
-            validationState = .invalid("网络错误")
+            validationState = .invalid(L("settings.ai.status.networkError"))
         }
     }
     

@@ -57,8 +57,7 @@
 ### `#/settings/language`（显示选项）
 - **主题（Theme）**
   - system / light / dark
-- **页面字体（Page Font）**
-  - system / 思源黑体（source-han-sans）/ 思源宋体（source-han-serif）/ 霞鹜文楷（xlwk）
+
 - **字号（Font Size）**
   - large / medium / small（通过根字号缩放影响全站 rem）
 - **页面显示语言（UI Language）**

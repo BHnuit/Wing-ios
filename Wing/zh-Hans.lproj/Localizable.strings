@@ -1,0 +1,255 @@
+/* Wing iOS - 简体中文 本地化 */
+
+// MARK: - Tabs
+"tab.now" = "当下";
+"tab.journal" = "回忆";
+"tab.settings" = "设置";
+
+// MARK: - Chat
+"chat.title" = "当下";
+"chat.empty.today" = "新的一天开始了...";
+"chat.empty.past" = "这一天还没有记录";
+"chat.empty.hint" = "记录此刻的想法、感受或灵感";
+"chat.input.placeholder" = "记录此刻的想法...";
+"chat.generate" = "生成日记";
+"chat.generate.failed" = "生成失败";
+"chat.ok" = "确定";
+"chat.image.failed" = "图片加载失败";
+"chat.edited" = "已编辑 %@";
+
+// MARK: - Synthesis Progress
+"synthesis.weaving" = "正在编织日记...";
+"synthesis.owl.thinking" = "猫头鹰正在思考...";
+"synthesis.organizing" = "正在整理今日的羽毛...";
+"synthesis.ai.creating" = "AI 正在创作中...";
+"synthesis.wait" = "请稍候，马上就好...";
+"synthesis.time.hint" = "通常需要 10-30 秒";
+"synthesis.started" = "正在收拢今日羽毛...";
+"synthesis.generating" = "正在编织日记...";
+"synthesis.saving" = "正在洞察感受...";
+"synthesis.completed" = "完成 ✨";
+"synthesis.failed" = "生成失败: %@";
+"synthesis.error.noFragments" = "没有可用的碎片记录";
+"synthesis.error.configMissing" = "缺少 AI 配置，请在设置中配置 API Key";
+
+// MARK: - Date Navigator
+"date.today" = "今天";
+"date.yesterday" = "昨天";
+"date.picker.title" = "选择日期";
+"date.picker.done" = "完成";
+"date.format.monthDay" = "M月d日";
+"date.format.yearMonth" = "yyyy年M月";
+"date.weekdays" = "日,一,二,三,四,五,六";
+
+// MARK: - Journal
+"journal.title" = "回忆";
+"journal.empty" = "暂无日记";
+"journal.empty.hint" = "从\"当下\"记录你的想法，生成第一篇日记";
+"journal.detail.title" = "日记详情";
+"journal.detail.notFound" = "日记不存在";
+"journal.detail.notFound.desc" = "无法找到该日记";
+"journal.insight.title" = "猫头鹰的洞察";
+"journal.unknown.route" = "未知路由";
+
+// MARK: - Settings
+"settings.title" = "设置";
+"settings.section.overview" = "概览";
+"settings.section.features" = "功能";
+"settings.section.lab" = "实验室";
+"settings.stats.daysRecorded" = "已记录天数";
+"settings.stats.todayFlaps" = "今日挥动";
+"settings.stats.totalFeathers" = "累计羽毛";
+
+// MARK: - Settings > AI
+"settings.ai.title" = "模型配置";
+"settings.ai.provider" = "AI 服务商";
+"settings.ai.section.provider" = "服务商与模型";
+"settings.ai.section.credential" = "凭证配置";
+"settings.ai.section.credential.footer" = "API Key 将安全存储在 Keychain 中，不会上传到任何第三方服务器。";
+"settings.ai.section.advanced" = "高级功能";
+"settings.ai.section.advanced.footer" = "启用后，Wing 将从您的日记中提取长期记忆，用于增强后续的对话体验。";
+"settings.ai.longTermMemory" = "启用长期记忆";
+"settings.ai.model" = "模型";
+"settings.ai.modelName" = "模型名称";
+"settings.ai.custom" = "自定义...";
+"settings.ai.validate" = "验证连接";
+"settings.ai.save" = "保存";
+"settings.ai.status.idle" = "未验证";
+"settings.ai.status.validating" = "验证中...";
+"settings.ai.status.valid" = "连接成功";
+"settings.ai.status.failed" = "验证失败";
+"settings.ai.status.networkError" = "网络错误";
+
+// MARK: - Settings > Display
+"settings.display.title" = "显示选项";
+"settings.display.section.journalLang" = "日记语言";
+"settings.display.journalLang" = "日记语言";
+"settings.display.journalLang.footer" = "AI 生成日记时使用的语言。选择'自动'将跟随碎片内容的语言。";
+"settings.display.section.uiLang" = "界面语言";
+"settings.display.uiLang" = "界面语言";
+"settings.display.uiLang.footer" = "设置应用界面的显示语言。";
+"settings.display.section.appearance" = "外观样式";
+"settings.display.theme" = "主题模式";
+"settings.display.theme.system" = "跟随系统";
+"settings.display.theme.light" = "浅色";
+"settings.display.theme.dark" = "深色";
+"settings.display.fontSize" = "字号大小";
+"settings.display.fontSize.small" = "小";
+"settings.display.fontSize.medium" = "中";
+"settings.display.fontSize.large" = "大";
+"settings.display.label" = "显示选项";
+
+// MARK: - Settings > Storage
+"settings.storage.title" = "存储管理";
+"settings.storage.section.export" = "备份与导出";
+"settings.storage.export.json" = "导出完整备份 (.json)";
+"settings.storage.export.footer" = "完整备份包含所有的日记、碎片以及图片数据。";
+"settings.storage.section.import" = "导入数据";
+"settings.storage.import.json" = "从文件导入 (.json)";
+"settings.storage.import.folder" = "从文件夹导入";
+"settings.storage.import.footer" = "导入数据将与现有数据合并。";
+"settings.storage.section.danger" = "危险区域";
+"settings.storage.replace" = "替换数据 (从文件)";
+"settings.storage.clearAll" = "清空所有数据";
+"settings.storage.danger.footer" = "替换或清空将永久删除当前所有数据，无法恢复。";
+"settings.storage.replace.confirm" = "确定要替换数据吗？";
+"settings.storage.replace.action" = "选择文件替换";
+"settings.storage.replace.message" = "替换操作将清空现有数据并从文件恢复。建议先导出备份。";
+"settings.storage.clear.confirm" = "确定要清空所有数据吗？";
+"settings.storage.clear.action" = "清空数据";
+"settings.storage.clear.message" = "此操作将永久删除所有日记、碎片等数据，无法恢复。建议先导出备份。";
+"settings.storage.processing" = "正在处理数据...";
+"settings.storage.exportFailed" = "导出失败: %@";
+"settings.storage.fileFailed" = "选择文件失败: %@";
+"settings.storage.folderFailed" = "选择文件夹失败: %@";
+"settings.storage.importSuccess" = "数据已成功导入";
+"settings.storage.replaceSuccess" = "数据已成功替换";
+"settings.storage.folderSuccess" = "文件夹数据已导入";
+"settings.storage.importFailed" = "导入失败: %@";
+"settings.storage.folderImportFailed" = "文件夹导入失败: %@";
+"settings.storage.cleared" = "所有数据已清空";
+"settings.storage.label" = "存储管理";
+
+// MARK: - Settings > Memory
+"settings.memory.title" = "长期记忆";
+"settings.memory.type" = "记忆类型";
+"settings.memory.semantic" = "事实";
+"settings.memory.episodic" = "经历";
+"settings.memory.procedural" = "习惯";
+"settings.memory.extractLatest" = "从最新日记提取";
+"settings.memory.extractFrom" = "从指定日记提取...";
+"settings.memory.merge" = "整理合并相似记忆...";
+"settings.memory.clearAll" = "清空所有记忆";
+"settings.memory.clear.confirm" = "确认清空所有记忆？";
+"settings.memory.clear.message" = "此操作将永久删除所有已提取的事实、经历和习惯记忆。无法撤销。但不会删除您的日记内容。";
+"settings.memory.clear.action" = "清空";
+"settings.memory.error" = "操作失败";
+"settings.memory.extracting" = "正在提取记忆...";
+"settings.memory.semantic.empty" = "暂无事实";
+"settings.memory.semantic.empty.desc" = "AI 尚未提取到关于您的事实信息";
+"settings.memory.semantic.count" = "共有 %d 条事实";
+"settings.memory.episodic.empty" = "暂无经历";
+"settings.memory.episodic.empty.desc" = "AI 尚未提取到重要的生活事件";
+"settings.memory.episodic.count" = "共有 %d 个事件";
+"settings.memory.procedural.empty" = "暂无习惯";
+"settings.memory.procedural.empty.desc" = "AI 尚未发现您的行为模式";
+"settings.memory.procedural.count" = "共有 %d 个模式";
+"settings.memory.edit" = "编辑";
+"settings.memory.label" = "记忆管理";
+
+// MARK: - Settings > Memory Edit
+"settings.memory.edit.semantic" = "编辑事实";
+"settings.memory.edit.episodic" = "编辑经历";
+"settings.memory.edit.procedural" = "编辑习惯";
+"settings.memory.edit.fact" = "事实";
+"settings.memory.edit.key" = "键";
+"settings.memory.edit.value" = "值";
+"settings.memory.edit.confidence" = "置信度";
+"settings.memory.edit.event" = "事件";
+"settings.memory.edit.date" = "日期 (YYYY-MM-DD)";
+"settings.memory.edit.eventDesc" = "事件描述";
+"settings.memory.edit.detail" = "细节";
+"settings.memory.edit.emotion" = "情绪";
+"settings.memory.edit.context" = "上下文";
+"settings.memory.edit.pattern" = "模式";
+"settings.memory.edit.behaviorPattern" = "行为模式";
+"settings.memory.edit.preference" = "偏好";
+"settings.memory.edit.attribute" = "属性";
+"settings.memory.edit.trigger" = "触发条件";
+"settings.memory.edit.frequency" = "出现频率: %d";
+"settings.memory.preference.label" = "偏好: %@";
+"settings.memory.trigger.label" = "触发: %@";
+"settings.memory.frequency.label" = "出现 %d 次";
+"settings.memory.pickJournal" = "选择日记";
+"settings.memory.fetchError" = "无法查找最近日记: %@";
+"settings.memory.extractError" = "记忆提取失败: %@";
+
+// MARK: - Settings > Memory Merge
+"settings.memory.merge.analyzing" = "正在分析...";
+"settings.memory.merge.noSimilar" = "未发现相似记忆";
+"settings.memory.merge.noSimilar.desc" = "记忆库整理得井井有条";
+"settings.memory.merge.title" = "记忆合并";
+"settings.memory.merge.close" = "关闭";
+"settings.memory.merge.keepSelected" = "保留选中项并合并其他";
+"settings.memory.merge.suggestMerge" = "建议合并: %@";
+"settings.memory.merge.confidence" = "置信度: %@";
+"settings.memory.merge.frequency" = "频率: %d";
+
+// MARK: - Data Import
+"data.import.error.readFailed" = "无法读取文件";
+"data.import.error.jsonDecodeFailed" = "JSON 解析失败";
+"data.import.error.invalidFormat" = "数据格式不正确";
+"data.import.error.unknown" = "未知错误";
+
+// MARK: - Markdown Export
+"export.md.mood" = "心情";
+"export.md.summary" = "摘要";
+"export.md.insight" = "🔮 洞察";
+"export.md.todo" = "✅ 待办";
+"export.md.time" = "导出时间";
+
+// MARK: - Journal Language
+"journal.language.auto" = "自动检测";
+"journal.language.zh" = "中文";
+"journal.language.en" = "English";
+"journal.language.ja" = "日本語";
+
+// MARK: - AI Errors
+"ai.error.missingKey" = "缺少 API Key，请在设置中配置。";
+"ai.error.invalidURL" = "无效的 URL 地址。";
+"ai.error.network" = "网络请求失败: %@";
+"ai.error.api" = "API 错误 (HTTP %d): %@";
+"ai.error.parsing" = "解析响应数据失败。";
+"ai.error.empty" = "服务器返回空数据。";
+
+// MARK: - Data Import & Export
+"data.import.error.readFailed" = "无法读取文件";
+"data.import.error.jsonDecodeFailed" = "JSON 解析失败";
+"data.import.error.invalidFormat" = "数据格式不正确";
+"data.import.error.unknown" = "未知错误";
+"export.md.mood" = "心情";
+"export.md.summary" = "摘要";
+"export.md.insight" = "🔮 洞察";
+"export.md.todo" = "✅ 待办";
+"export.md.time" = "导出时间";
+
+// MARK: - Journal Language
+"journal.language.auto" = "自动检测";
+"journal.language.zh" = "中文";
+"journal.language.en" = "English";
+"journal.language.ja" = "日本語";
+
+// MARK: - AI Errors
+"ai.error.missingKey" = "缺少 API Key，请在设置中配置。";
+"ai.error.invalidURL" = "无效的 URL 地址。";
+"ai.error.network" = "网络请求失败: %@";
+"ai.error.api" = "API 错误 (HTTP %d): %@";
+"ai.error.parsing" = "解析响应数据失败。";
+"ai.error.empty" = "服务器返回空数据。";
+
+// MARK: - Common
+"common.cancel" = "取消";
+"common.done" = "完成";
+"common.ok" = "确定";
+"common.processing" = "正在处理...";
+

@@ -36,10 +36,10 @@ struct SettingsMemoryView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Type Segmented Control
-            Picker("记忆类型", selection: $selectedTab) {
-                Text("事实").tag(MemoryType.semantic)
-                Text("经历").tag(MemoryType.episodic)
-                Text("习惯").tag(MemoryType.procedural)
+            Picker(L("settings.memory.type"), selection: $selectedTab) {
+                Text(L("settings.memory.semantic")).tag(MemoryType.semantic)
+                Text(L("settings.memory.episodic")).tag(MemoryType.episodic)
+                Text(L("settings.memory.procedural")).tag(MemoryType.procedural)
             }
             .pickerStyle(.segmented)
             .padding()
@@ -56,7 +56,7 @@ struct SettingsMemoryView: View {
                 }
             }
         }
-        .navigationTitle("长期记忆")
+        .navigationTitle(L("settings.memory.title"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -64,19 +64,19 @@ struct SettingsMemoryView: View {
                     Button {
                         Task { await debugExtractFromLastJournal() }
                     } label: {
-                        Label("从最新日记提取", systemImage: "sparkles")
+                        Label(L("settings.memory.extractLatest"), systemImage: "sparkles")
                     }
                     
                     Button {
                         showJournalPicker = true
                     } label: {
-                        Label("从指定日记提取...", systemImage: "doc.text.magnifyingglass")
+                        Label(L("settings.memory.extractFrom"), systemImage: "doc.text.magnifyingglass")
                     }
                     
                     Button {
                         showMergeSheet = true
                     } label: {
-                        Label("整理合并相似记忆...", systemImage: "arrow.triangle.merge")
+                        Label(L("settings.memory.merge"), systemImage: "arrow.triangle.merge")
                     }
                     
                     Divider()
@@ -84,7 +84,7 @@ struct SettingsMemoryView: View {
                     Button(role: .destructive) {
                         showClearConfirmation = true
                     } label: {
-                        Label("清空所有记忆", systemImage: "trash")
+                        Label(L("settings.memory.clearAll"), systemImage: "trash")
                     }
                 } label: {
                     Image(systemName: "ellipsis.circle")
@@ -109,22 +109,22 @@ struct SettingsMemoryView: View {
         }
         .overlay {
             if isExtracting {
-                ProgressView("正在提取记忆...")
+                ProgressView(L("settings.memory.extracting"))
                     .padding()
                     .background(.regularMaterial)
                     .cornerRadius(8)
             }
         }
-        .alert("确认清空所有记忆？", isPresented: $showClearConfirmation) {
-            Button("取消", role: .cancel) { }
-            Button("清空", role: .destructive) {
+        .alert(L("settings.memory.clear.confirm"), isPresented: $showClearConfirmation) {
+            Button(L("common.cancel"), role: .cancel) { }
+            Button(L("settings.memory.clear.action"), role: .destructive) {
                 Task { await clearAllMemories() }
             }
         } message: {
-            Text("此操作将永久删除所有已提取的事实、经历和习惯记忆。无法撤销。但不会删除您的日记内容。")
+            Text(L("settings.memory.clear.message"))
         }
-        .alert("操作失败", isPresented: $showErrorAlert) {
-            Button("确定", role: .cancel) { }
+        .alert(L("settings.memory.error"), isPresented: $showErrorAlert) {
+            Button(L("common.ok"), role: .cancel) { }
         } message: {
             Text(errorMessage)
         }
@@ -135,7 +135,7 @@ struct SettingsMemoryView: View {
     private var semanticList: some View {
         Section {
             if semanticMemories.isEmpty {
-                 ContentUnavailableView("暂无事实", systemImage: "brain", description: Text("AI 尚未提取到关于您的事实信息"))
+                 ContentUnavailableView(L("settings.memory.semantic.empty"), systemImage: "brain", description: Text(L("settings.memory.semantic.empty.desc")))
             } else {
                 ForEach(semanticMemories) { memory in
                     VStack(alignment: .leading) {
@@ -161,7 +161,7 @@ struct SettingsMemoryView: View {
                         editingSemantic = memory
                     }
                     .swipeActions(edge: .leading) {
-                        Button("编辑") {
+                        Button(L("settings.memory.edit")) {
                             editingSemantic = memory
                         }
                         .tint(.orange)
@@ -172,14 +172,14 @@ struct SettingsMemoryView: View {
                 }
             }
         } header: {
-            Text("共有 \(semanticMemories.count) 条事实")
+            Text(String(format: L("settings.memory.semantic.count"), semanticMemories.count))
         }
     }
     
     private var episodicList: some View {
         Section {
             if episodicMemories.isEmpty {
-                ContentUnavailableView("暂无经历", systemImage: "clock.arrow.circlepath", description: Text("AI 尚未提取到重要的生活事件"))
+                ContentUnavailableView(L("settings.memory.episodic.empty"), systemImage: "clock.arrow.circlepath", description: Text(L("settings.memory.episodic.empty.desc")))
             } else {
                 ForEach(episodicMemories) { memory in
                     VStack(alignment: .leading, spacing: 6) {
@@ -214,7 +214,7 @@ struct SettingsMemoryView: View {
                         editingEpisodic = memory
                     }
                     .swipeActions(edge: .leading) {
-                        Button("编辑") {
+                        Button(L("settings.memory.edit")) {
                             editingEpisodic = memory
                         }
                         .tint(.orange)
@@ -225,30 +225,30 @@ struct SettingsMemoryView: View {
                 }
             }
         } header: {
-            Text("共有 \(episodicMemories.count) 个事件")
+            Text(String(format: L("settings.memory.episodic.count"), episodicMemories.count))
         }
     }
     
     private var proceduralList: some View {
         Section {
             if proceduralMemories.isEmpty {
-                 ContentUnavailableView("暂无习惯", systemImage: "figure.walk", description: Text("AI 尚未发现您的行为模式"))
+                 ContentUnavailableView(L("settings.memory.procedural.empty"), systemImage: "figure.walk", description: Text(L("settings.memory.procedural.empty.desc")))
             } else {
                 ForEach(proceduralMemories) { memory in
                     VStack(alignment: .leading) {
                         Text(memory.pattern)
                             .font(.headline)
                         
-                        Text("偏好: \(memory.preference)")
+                        Text(String(format: L("settings.memory.preference.label"), memory.preference))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                         
                         HStack {
                             if let trigger = memory.trigger {
-                                Text("触发: \(trigger)")
+                                Text(String(format: L("settings.memory.trigger.label"), trigger))
                             }
                             Spacer()
-                            Text("出现 \(memory.frequency) 次")
+                            Text(String(format: L("settings.memory.frequency.label"), memory.frequency))
                                 .fontWeight(.bold)
                         }
                         .font(.caption)
@@ -261,7 +261,7 @@ struct SettingsMemoryView: View {
                         editingProcedural = memory
                     }
                     .swipeActions(edge: .leading) {
-                        Button("编辑") {
+                        Button(L("settings.memory.edit")) {
                             editingProcedural = memory
                         }
                         .tint(.orange)
@@ -272,7 +272,7 @@ struct SettingsMemoryView: View {
                 }
             }
         } header: {
-            Text("共有 \(proceduralMemories.count) 个模式")
+            Text(String(format: L("settings.memory.procedural.count"), proceduralMemories.count))
         }
     }
     
@@ -300,11 +300,11 @@ struct SettingsMemoryView: View {
                 }
                 .foregroundStyle(.primary)
             }
-            .navigationTitle("选择日记")
+            .navigationTitle(L("settings.memory.pickJournal"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("取消") { showJournalPicker = false }
+                    Button(L("common.cancel")) { showJournalPicker = false }
                 }
             }
         }
@@ -339,7 +339,7 @@ struct SettingsMemoryView: View {
         } catch {
             print("Extraction failed: \(error)")
             await MainActor.run {
-                errorMessage = "无法查找最近日记: \(error.localizedDescription)"
+                errorMessage = String(format: L("settings.memory.fetchError"), error.localizedDescription)
                 showErrorAlert = true
             }
         }
@@ -359,7 +359,7 @@ struct SettingsMemoryView: View {
         } catch {
             print("Extraction failed: \(error)")
             await MainActor.run {
-                errorMessage = "记忆提取失败: \(error.localizedDescription)"
+                errorMessage = String(format: L("settings.memory.extractError"), error.localizedDescription)
                 showErrorAlert = true
             }
         }
@@ -393,23 +393,23 @@ struct EditSemanticSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("事实") {
-                    TextField("键", text: $memory.key)
-                    TextField("值", text: $memory.value)
+                Section(L("settings.memory.edit.fact")) {
+                    TextField(L("settings.memory.edit.key"), text: $memory.key)
+                    TextField(L("settings.memory.edit.value"), text: $memory.value)
                 }
                 
-                Section("置信度") {
+                Section(L("settings.memory.edit.confidence")) {
                     Slider(value: $memory.confidence, in: 0...1) {
-                        Text("置信度")
+                        Text(L("settings.memory.edit.confidence"))
                     }
                     Text(String(format: "%.2f", memory.confidence))
                 }
             }
-            .navigationTitle("编辑事实")
+            .navigationTitle(L("settings.memory.edit.semantic"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("完成") { dismiss() }
+                    Button(L("common.done")) { dismiss() }
                 }
             }
         }
@@ -424,27 +424,27 @@ struct EditEpisodicSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("事件") {
-                    TextField("日期 (YYYY-MM-DD)", text: $memory.date)
-                    TextField("事件描述", text: $memory.event, axis: .vertical)
+                Section(L("settings.memory.edit.event")) {
+                    TextField(L("settings.memory.edit.date"), text: $memory.date)
+                    TextField(L("settings.memory.edit.eventDesc"), text: $memory.event, axis: .vertical)
                 }
                 
-                Section("细节") {
-                    TextField("情绪", text: Binding(
+                Section(L("settings.memory.edit.detail")) {
+                    TextField(L("settings.memory.edit.emotion"), text: Binding(
                         get: { memory.emotion ?? "" },
                         set: { memory.emotion = $0.isEmpty ? nil : $0 }
                     ))
-                    TextField("上下文", text: Binding(
+                    TextField(L("settings.memory.edit.context"), text: Binding(
                         get: { memory.context ?? "" },
                         set: { memory.context = $0.isEmpty ? nil : $0 }
                     ), axis: .vertical)
                 }
             }
-            .navigationTitle("编辑经历")
+            .navigationTitle(L("settings.memory.edit.episodic"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("完成") { dismiss() }
+                    Button(L("common.done")) { dismiss() }
                 }
             }
         }
@@ -459,28 +459,27 @@ struct EditProceduralSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("模式") {
-                    TextField("行为模式", text: $memory.pattern)
-                    TextField("偏好", text: $memory.preference, axis: .vertical)
+                Section(L("settings.memory.edit.pattern")) {
+                    TextField(L("settings.memory.edit.behaviorPattern"), text: $memory.pattern)
+                    TextField(L("settings.memory.edit.preference"), text: $memory.preference, axis: .vertical)
                 }
                 
-                Section("属性") {
-                    TextField("触发条件", text: Binding(
+                Section(L("settings.memory.edit.attribute")) {
+                    TextField(L("settings.memory.edit.trigger"), text: Binding(
                         get: { memory.trigger ?? "" },
                         set: { memory.trigger = $0.isEmpty ? nil : $0 }
                     ))
-                    Stepper("出现频率: \(memory.frequency)", value: $memory.frequency)
+                    Stepper(String(format: L("settings.memory.edit.frequency"), memory.frequency), value: $memory.frequency)
                 }
             }
-            .navigationTitle("编辑习惯")
+            .navigationTitle(L("settings.memory.edit.procedural"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("完成") { dismiss() }
+                    Button(L("common.done")) { dismiss() }
                 }
             }
         }
         .presentationDetents([.medium])
     }
 }
-

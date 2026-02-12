@@ -74,7 +74,7 @@ struct FragmentBubble: View {
                 HStack {
                     Image(systemName: "photo")
                         .foregroundStyle(.secondary)
-                    Text("图片加载失败")
+                    Text(L("chat.image.failed"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -92,7 +92,7 @@ struct FragmentBubble: View {
         
         return Group {
             if fragment.editedAt != nil {
-                Text("已编辑 \(timeString)")
+                Text(String(format: L("chat.edited"), timeString))
             } else {
                 Text(timeString)
             }

@@ -57,11 +57,27 @@ final class JournalSynthesisService {
         session.gatherStartedAt.append(startTimestamp)
         
         do {
+            // 2.1 检索相关记忆 (RAG)
+            var memories: [String] = []
+            let isRAGEnabled = SettingsManager.shared.appSettings?.memoryRetrievalEnabled ?? false
+            
+            if isRAGEnabled {
+                do {
+                    let memoryService = MemoryService(container: context.container)
+                    let combinedContext = session.fragments.map { $0.content }.joined(separator: "\n")
+                    memories = try await memoryService.retrieveRelevantMemories(for: combinedContext)
+                } catch {
+                    // RAG 检索失败不应阻断日记生成
+                    print("JournalSynthesisService: Memory retrieval failed, continuing without RAG: \(error)")
+                }
+            }
+            
             // 3. 调用 AI 服务
             progressCallback(.generating)
             
             let output = try await AIService.shared.synthesizeJournal(
                 fragments: session.fragments,
+                memories: memories,
                 config: config,
                 journalLanguage: journalLanguage
             )
@@ -135,17 +151,22 @@ enum SynthesisProgress: Sendable {
     case failed(error: Error)
     
     var message: String {
+        localizedMessage
+    }
+    
+    
+    var localizedMessage: String {
         switch self {
         case .started:
-            return "正在收拢今日羽毛..."
+            return L("synthesis.started")
         case .generating:
-            return "正在编织日记..."
+            return L("synthesis.generating")
         case .saving:
-            return "正在洞察感受..."
+            return L("synthesis.saving")
         case .completed:
-            return "完成 ✨"
+            return L("synthesis.completed")
         case .failed(let error):
-            return "生成失败: \(error.localizedDescription)"
+            return String(format: L("synthesis.failed"), error.localizedDescription)
         }
     }
 }
@@ -160,9 +181,9 @@ enum SynthesisError: Error, LocalizedError, Sendable {
     var errorDescription: String? {
         switch self {
         case .noFragments:
-            return "没有可用的碎片记录"
+            return L("synthesis.error.noFragments")
         case .configurationMissing:
-            return "缺少 AI 配置，请在设置中配置 API Key"
+            return L("synthesis.error.configMissing")
         }
     }
 }

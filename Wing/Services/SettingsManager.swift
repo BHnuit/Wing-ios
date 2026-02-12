@@ -96,6 +96,42 @@ class SettingsManager {
         }
     }
     
+    // MARK: - Persistence
+    
+    /**
+     * 显式保存设置变更到 SwiftData
+     * 在用户修改设置后调用，确保退出应用后不丢失
+     */
+    @MainActor
+    func saveSettings() {
+        guard let context = modelContext else { return }
+        do {
+            try context.save()
+        } catch {
+            print("SettingsManager Error: Failed to save settings: \(error)")
+        }
+    }
+    
+    /// 根据当前主题设置返回 ColorScheme（nil 表示跟随系统）
+    var resolvedColorScheme: ColorScheme? {
+        guard let theme = appSettings?.theme else { return nil }
+        switch theme {
+        case .system: return nil
+        case .light: return .light
+        case .dark: return .dark
+        }
+    }
+    
+    /// 根据当前界面语言返回 Locale
+    var resolvedLocale: Locale {
+        guard let language = appSettings?.language else { return Locale.current }
+        switch language {
+        case .zh: return Locale(identifier: "zh-Hans")
+        case .en: return Locale(identifier: "en")
+        case .ja: return Locale(identifier: "ja")
+        }
+    }
+    
     // MARK: - API Key Management (Keychain)
     
     /**

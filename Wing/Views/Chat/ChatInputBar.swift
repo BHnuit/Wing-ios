@@ -45,7 +45,7 @@ struct ChatInputBar: View {
             }
             
             // 文本输入框
-            TextField("记录此刻的想法...", text: $text, axis: .vertical)
+            TextField(L("chat.input.placeholder"), text: $text, axis: .vertical)
                 .textFieldStyle(.roundedBorder)
                 .lineLimit(1...5)
                 .focused($isFocused)

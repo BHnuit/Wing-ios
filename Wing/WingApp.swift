@@ -49,9 +49,14 @@ struct WingApp: App {
         #endif
     }
 
+    @Bindable private var settingsManager = SettingsManager.shared
+    
     var body: some Scene {
         WindowGroup {
             MainTabView()
+                .appFont()
+                .preferredColorScheme(settingsManager.resolvedColorScheme)
+                .environment(\.locale, settingsManager.resolvedLocale)
         }
         .modelContainer(sharedModelContainer)
     }
