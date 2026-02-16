@@ -70,13 +70,13 @@ struct SettingsMemoryView: View {
                     Button {
                         showJournalPicker = true
                     } label: {
-                        Label(L("settings.memory.extractFrom"), systemImage: "doc.text.magnifyingglass")
+                        Label(L("settings.memory.extractFrom"), systemImage: "doc.text.magnifyingglass") // Revert
                     }
                     
                     Button {
                         showMergeSheet = true
                     } label: {
-                        Label(L("settings.memory.merge"), systemImage: "arrow.triangle.merge")
+                        Label(L("settings.memory.merge"), systemImage: "arrow.triangle.merge") // Revert
                     }
                     
                     Divider()
@@ -84,10 +84,10 @@ struct SettingsMemoryView: View {
                     Button(role: .destructive) {
                         showClearConfirmation = true
                     } label: {
-                        Label(L("settings.memory.clearAll"), systemImage: "trash")
+                        Label(L("settings.memory.clearAll"), systemImage: "trash") // Revert
                     }
                 } label: {
-                    Image(systemName: "ellipsis.circle")
+                    Image(systemName: "ellipsis.circle") // Revert
                 }
             }
         }
@@ -135,7 +135,7 @@ struct SettingsMemoryView: View {
     private var semanticList: some View {
         Section {
             if semanticMemories.isEmpty {
-                 ContentUnavailableView(L("settings.memory.semantic.empty"), systemImage: "brain", description: Text(L("settings.memory.semantic.empty.desc")))
+                 ContentUnavailableView(L("settings.memory.semantic.empty"), systemImage: "brain", description: Text(L("settings.memory.semantic.empty.desc"))) // Revert
             } else {
                 ForEach(semanticMemories) { memory in
                     VStack(alignment: .leading) {

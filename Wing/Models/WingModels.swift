@@ -67,6 +67,25 @@ enum WritingStyle: String, Codable {
     case prose = "prose"
     case report = "report"
     case custom = "custom"
+    
+    nonisolated var defaultPrompt: String {
+        switch self {
+        case .letter:
+            return NSLocalizedString("prompt.tone.letter", value: "Tone: Write as a warm personal letter to the reader, using intimate and conversational style.", comment: "Letter writing style prompt")
+        case .prose:
+            return NSLocalizedString("prompt.tone.prose", value: "Tone: Warm, reflective, literary prose.", comment: "Prose writing style prompt")
+        case .report:
+            return NSLocalizedString("prompt.tone.report", value: "Tone: Structured and objective, like a daily report with clear sections.", comment: "Report writing style prompt")
+        case .custom:
+            return ""
+        }
+    }
+}
+
+extension AppSettings {
+    static var defaultInsightPrompt: String {
+        String(localized: "prompt.insight.default", defaultValue: "Psychological insights and encouragement (2-3 sentences)")
+    }
 }
 
 /**
@@ -155,6 +174,10 @@ final class RawFragment {
     /// 编辑时间戳（Unix 毫秒），若存在则表示消息已被编辑
     var editedAt: Int64?
     
+    /// 是否正在处理中（例如图片上传/压缩）
+    /// 默认为 false。若为 true，UI 应显示加载态
+    var isProcessing: Bool
+    
     /// 关联的每日会话（反向关系）
     var dailySession: DailySession?
     
@@ -164,7 +187,8 @@ final class RawFragment {
         imageData: Data? = nil,
         timestamp: Int64,
         type: FragmentType,
-        editedAt: Int64? = nil
+        editedAt: Int64? = nil,
+        isProcessing: Bool = false
     ) {
         self.id = id
         self.content = content
@@ -172,6 +196,7 @@ final class RawFragment {
         self.timestamp = timestamp
         self.type = type
         self.editedAt = editedAt
+        self.isProcessing = isProcessing
     }
 }
 

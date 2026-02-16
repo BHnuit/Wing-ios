@@ -22,8 +22,6 @@ struct WingApp: App {
             ProceduralMemory.self,
             // 应用设置
             AppSettings.self,
-            // 示例模型（可后续移除）
-            Item.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -47,6 +45,16 @@ struct WingApp: App {
             await injector.injectTestData(context: context)
         }
         #endif
+        
+        // 强制隐藏原生 TabBar 背景，防止“鬼影”
+        let appearance = UITabBarAppearance()
+        appearance.configureWithTransparentBackground()
+        // 同时移除阴影
+        appearance.shadowImage = UIImage()
+        appearance.backgroundImage = UIImage()
+        
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
     }
 
     @Bindable private var settingsManager = SettingsManager.shared

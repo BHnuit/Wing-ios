@@ -5,6 +5,12 @@
 "tab.journal" = "Journal";
 "tab.settings" = "Settings";
 
+// MARK: - Composer
+"composer.title" = "Capture Now";
+"composer.new" = "Record";
+"composer.placeholder" = "Write your thoughts...";
+"composer.close" = "Close";
+
 // MARK: - Chat
 "chat.title" = "Now";
 "chat.empty.today" = "A new day begins...";
@@ -79,6 +85,26 @@
 "settings.ai.status.valid" = "Connected";
 "settings.ai.status.failed" = "Validation failed";
 "settings.ai.status.networkError" = "Network error";
+
+// MARK: - Settings > AI > Personalization
+"settings.ai.section.personalization" = "Personalization";
+"settings.ai.section.personalization.footer" = "Customize writing style and insight perspective for AI-generated journals.";
+"settings.ai.writingStyle" = "Writing Style";
+"settings.ai.writingStyle.letter" = "Letter";
+"settings.ai.writingStyle.prose" = "Prose";
+"settings.ai.writingStyle.report" = "Report";
+"settings.ai.writingStyle.custom" = "Custom";
+"settings.ai.writingStyle.preview" = "Style Prompt Preview";
+"settings.ai.writingStylePrompt" = "Custom Style Prompt";
+"settings.ai.writingStylePrompt.placeholder" = "e.g. Write in a warm, healing tone, like a letter from a friend...";
+"settings.ai.insightPrompt" = "Insight Prompt (Optional)";
+"settings.ai.insightPrompt.placeholder" = "e.g. Encourage from a positive psychology perspective...";
+
+// AI Prompts (Localized)
+"prompt.tone.letter" = "Tone: Journal body uses epistolary style: As if writing a private letter to someone or your future self. You may use the second person 'You' or an address. The tone should be intimate and personal, possibly starting with a salutation and ending with a signature.";
+"prompt.tone.prose" = "Tone: Journal body uses prose style: Free-flowing and rhythmic writing that mixes narration with commentary. Focus on the natural flow of mood and imagery. Use beautiful language with moderate use of white space.";
+"prompt.tone.report" = "Tone: Journal body uses report style: Clear organization and hierarchy. May use subheadings or bullet points. Combines objective description with brief comments. Concise and restrained.";
+"prompt.insight.default" = "Psychological insights and encouragement (2-3 sentences)";
 
 // MARK: - Settings > Display
 "settings.display.title" = "Display";
@@ -252,3 +278,14 @@
 "common.done" = "Done";
 "common.ok" = "OK";
 "common.processing" = "Processing...";
+
+// MARK: - Voice Input
+"voice.input.listening" = "Listening...";
+"voice.input.permission.denied" = "Please enable Microphone and Speech Recognition access in Settings";
+
+// MARK: - Context Menu
+"menu.edit" = "Edit";
+"menu.delete" = "Delete";
+"menu.delete.confirm" = "Confirm delete?";
+"menu.save" = "Save";
+"menu.cancel" = "Cancel";

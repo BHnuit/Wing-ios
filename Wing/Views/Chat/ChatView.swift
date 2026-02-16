@@ -17,6 +17,11 @@ import SwiftData
  * - 发送文本和图片消息
  * - 自动滚动到底部
  */
+struct ImagePreviewItem: Identifiable {
+    let id = UUID()
+    let image: UIImage
+}
+
 struct ChatView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(NavigationManager.self) private var navigationManager
@@ -24,12 +29,10 @@ struct ChatView: View {
     @Query private var allSessions: [DailySession]
     
     @State private var selectedDate: String
-    @State private var inputText = ""
     @State private var sessionService = SessionService()
+    @State private var selectedImageItem: ImagePreviewItem?
     
     // 日记合成状态
-    @State private var isSynthesizing = false
-    @State private var synthesisProgress: SynthesisProgress = .started
     @State private var synthesisError: Error?
     
     // 当前查看的 Session
@@ -62,92 +65,103 @@ struct ChatView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                // 顶部日期导航
-                DateNavigator(
-                    selectedDate: $selectedDate,
-                    availableDates: availableDates
-                )
-                .padding(.horizontal)
-                
-                Divider()
-                
-                // 消息列表
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        LazyVStack(spacing: 8) {
-                            if fragments.isEmpty {
-                                emptyStateView
-                            } else {
-                                ForEach(Array(fragments.enumerated()), id: \.element.id) { index, fragment in
-                                    let nextFragment = index < fragments.count - 1 ? fragments[index + 1] : nil
-                                    let showTimestamp = shouldShowTimestamp(
-                                        current: fragment,
-                                        next: nextFragment
-                                    )
-                                    
-                                    FragmentBubble(
-                                        fragment: fragment,
-                                        showTimestamp: showTimestamp
-                                    )
+            GeometryReader { geometry in
+                VStack(spacing: 0) {
+                    // 顶部日期导航
+                    DateNavigator(
+                        selectedDate: $selectedDate,
+                        availableDates: availableDates
+                    )
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+                    
+                    Divider()
+                        .padding(.top, 8)
+                    
+                    ZStack {
+                        // 背景
+                        Color(uiColor: .systemGroupedBackground)
+                            .ignoresSafeArea()
+                        
+                        ScrollViewReader { proxy in
+                            ScrollView {
+                                LazyVStack(spacing: 0) {
+                                    if fragments.isEmpty {
+                                        emptyStateView
+                                    } else {
+                                        ForEach(Array(fragments.enumerated()), id: \.element.id) { index, fragment in
+                                            let nextFragment = index < fragments.count - 1 ? fragments[index + 1] : nil
+                                            let showTimestamp = shouldShowTimestamp(
+                                                current: fragment,
+                                                next: nextFragment
+                                            )
+                                            
+                                            // 相同时间段内的气泡间距减半 (6pt)，否则保持标准间距 (12pt)
+                                            let bottomSpacing: CGFloat = showTimestamp ? 12 : 6
+                                            
+                                            FragmentBubble(
+                                                fragment: fragment,
+                                                showTimestamp: showTimestamp,
+                                                onImageTap: { image in
+                                                    selectedImageItem = ImagePreviewItem(image: image)
+                                                }
+                                            )
+                                            .id(fragment.id)
+                                            .padding(.bottom, bottomSpacing)
+                                        }
+                                    }
+                                }
+                                .padding(.top, 8)
+                                .padding(.bottom, bottomPadding(in: geometry)) // Dynamic padding for composer
+                                
+                                // 底部锚点
+                                Color.clear
+                                    .frame(height: 1)
+                                    .id("bottom")
+                            }
+                            .scrollDismissesKeyboard(.interactively)
+                            .onChange(of: fragments.count) { _, _ in
+                                scrollToBottom(proxy: proxy)
+                            }
+                            // 监听 Composer 状态变化，调整滚动
+                            .onChange(of: navigationManager.showComposer) { _, shown in
+                                if shown {
+                                    // 延迟一点滚动，等待键盘或 Sheet 动画
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                        scrollToBottom(proxy: proxy)
+                                    }
+                                }
+                            }
+                            .onChange(of: navigationManager.composerDetent) { _, _ in
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    scrollToBottom(proxy: proxy)
                                 }
                             }
                         }
-                        .padding(.top, 8)
-                        
-                        // 底部锚点
-                        Color.clear
-                            .frame(height: 1)
-                            .id("bottom")
                     }
-                    .scrollDismissesKeyboard(.interactively)
-                    .onChange(of: fragments.count) { _, _ in
-                        // 新消息时滚动到底部
-                        withAnimation(.easeOut(duration: 0.2)) {
-                            proxy.scrollTo("bottom", anchor: .bottom)
+                    .alert(L("chat.generate.failed"), isPresented: .constant(synthesisError != nil)) {
+                        Button(L("chat.ok")) {
+                            synthesisError = nil
+                        }
+                    } message: {
+                        if let error = synthesisError {
+                            Text(error.localizedDescription)
                         }
                     }
                 }
             }
-            .navigationTitle(L("chat.title"))
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        handleSynthesizeJournal()
-                    } label: {
-                        Label(L("chat.generate"), systemImage: "wand.and.stars")
-                    }
-                    .disabled(fragments.isEmpty)
+            .toolbar(.hidden, for: .navigationBar)
+            .fullScreenCover(item: $selectedImageItem) { item in
+                FullScreenImageViewer(image: item.image) {
+                    selectedImageItem = nil
                 }
             }
-            .overlay {
-                // 合成进度 UI
-                if isSynthesizing {
-                    ZStack {
-                        Color.black.opacity(0.3)
-                            .ignoresSafeArea()
-                        
-                        SynthesisProgressView(progress: synthesisProgress)
-                    }
-                }
-            }
-            .alert(L("chat.generate.failed"), isPresented: .constant(synthesisError != nil)) {
-                Button(L("chat.ok")) {
-                    synthesisError = nil
-                }
-            } message: {
-                if let error = synthesisError {
-                    Text(error.localizedDescription)
-                }
-            }
-            .safeAreaInset(edge: .bottom) {
-                ChatInputBar(
-                    text: $inputText,
-                    onSend: handleSendText,
-                    onImageSelected: handleImageSelected
-                )
-            }
+        }
+    }
+    
+    private func scrollToBottom(proxy: ScrollViewProxy) {
+        withAnimation(.easeOut(duration: 0.2)) {
+            proxy.scrollTo("bottom", anchor: .bottom)
         }
     }
     
@@ -155,6 +169,9 @@ struct ChatView: View {
     
     private var emptyStateView: some View {
         VStack(spacing: 16) {
+            Image(systemName: "sparkles")
+            // ... (rest of emptyStateView)
+            
             Image(systemName: "sparkles")
                 .font(.system(size: 60))
                 .foregroundStyle(.secondary)
@@ -181,97 +198,27 @@ struct ChatView: View {
     
     // MARK: - Actions
     
-    private func handleSendText() {
-        guard !inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            return
-        }
-        
-        Task {
-            let session = await sessionService.getOrCreateSession(
-                for: selectedDate,
-                context: modelContext
-            )
-            
-            await sessionService.addTextFragment(
-                inputText,
-                to: session,
-                context: modelContext
-            )
-            
-            // 清空输入
-            await MainActor.run {
-                inputText = ""
-            }
-        }
-    }
-    
-    private func handleImageSelected(_ data: Data) async {
-        let session = await sessionService.getOrCreateSession(
-            for: selectedDate,
-            context: modelContext
-        )
-        
-        await sessionService.addImageFragment(
-            data,
-            to: session,
-            context: modelContext
-        )
-    }
-    
-    private func handleSynthesizeJournal() {
-        guard let session = currentSession else { return }
-        
-        Task {
-            // 获取 AI 配置
-            guard let config = await settingsManager.getAIConfig() else {
-                synthesisError = SynthesisError.configurationMissing
-                return
-            }
-            
-            // 显示进度 UI
-            await MainActor.run {
-                isSynthesizing = true
-                synthesisProgress = .started
-            }
-            
-            do {
-                // 获取日记语言设置
-                let journalLanguage = settingsManager.appSettings?.journalLanguage ?? .auto
-                
-                // 调用合成服务
-                let entryId = try await JournalSynthesisService.shared.synthesize(
-                    session: session,
-                    config: config,
-                    journalLanguage: journalLanguage,
-                    context: modelContext,
-                    progressCallback: { progress in
-                        synthesisProgress = progress
-                    }
-                )
-                
-                // 等待一下让用户看到完成状态
-                try await Task.sleep(for: .seconds(1))
-                
-                // 关闭进度 UI
-                await MainActor.run {
-                    isSynthesizing = false
-                }
-                
-                // 跳转到日记详情
-                await MainActor.run {
-                    navigationManager.navigateToJournalDetail(entryId: entryId)
-                }
-                
-            } catch {
-                await MainActor.run {
-                    isSynthesizing = false
-                    synthesisError = error
-                }
-            }
-        }
-    }
-    
     // MARK: - Helper Methods
+    
+    private func bottomPadding(in geometry: GeometryProxy) -> CGFloat {
+        guard navigationManager.showComposer else { return 0 }
+        
+        // 当 Composer 展开时，计算遮挡高度
+        // .fraction(0.25) 对应 1/4 屏
+        // .medium 对应 1/2 屏
+        // .large 对应全屏 (虽然全屏时看不到 ChatView，但保持逻辑一致)
+        
+        if navigationManager.composerDetent == .fraction(0.25) {
+            return geometry.size.height * 0.25 - 20 // Reduce gap further
+        } else if navigationManager.composerDetent == .medium {
+            return geometry.size.height * 0.5 + 40
+        } else if navigationManager.composerDetent == .large {
+            return geometry.size.height * 0.9
+        }
+        
+        // Default fallback
+        return 0
+    }
     
     /**
      * 判断是否显示时间戳（5分钟内合并）

@@ -55,15 +55,114 @@ struct SettingsAIView: View {
                 } footer: {
                     Text(L("settings.ai.section.advanced.footer"))
                 }
+                
+                // 文风与自定义 Prompt
+                Section {
+                    // 文风选择
+                    Picker(L("settings.ai.writingStyle"), selection: Binding(
+                        get: { settings.writingStyle },
+                        set: { newValue in
+                            settings.writingStyle = newValue
+                            try? settingsManager.modelContext?.save()
+                        }
+                    )) {
+                        Text(L("settings.ai.writingStyle.letter")).tag(WritingStyle.letter)
+                        Text(L("settings.ai.writingStyle.prose")).tag(WritingStyle.prose)
+                        Text(L("settings.ai.writingStyle.report")).tag(WritingStyle.report)
+                        Text(L("settings.ai.writingStyle.custom")).tag(WritingStyle.custom)
+                    }
+                    
+                    // 文风 Prompt 显示
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(settings.writingStyle == .custom ? L("settings.ai.writingStylePrompt") : L("settings.ai.writingStyle.preview"))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        
+                        if settings.writingStyle == .custom {
+                            // 自定义模式：可编辑
+                            TextEditor(text: Binding(
+                                get: { settings.writingStylePrompt ?? "" },
+                                set: { newValue in
+                                    settings.writingStylePrompt = newValue
+                                    try? settingsManager.modelContext?.save()
+                                }
+                            ))
+                            .frame(minHeight: 80)
+                            .font(.body)
+                            .overlay(
+                                Group {
+                                    if (settings.writingStylePrompt ?? "").isEmpty {
+                                        Text(L("settings.ai.writingStylePrompt.placeholder"))
+                                            .foregroundStyle(.tertiary)
+                                            .padding(.horizontal, 5)
+                                            .padding(.vertical, 8)
+                                            .allowsHitTesting(false)
+                                    }
+                                },
+                                alignment: .topLeading
+                            )
+                        } else {
+                            // 预设模式：只读预览
+                            Text(settings.writingStyle.defaultPrompt)
+                                .font(.callout)
+                                .foregroundStyle(.secondary)
+                                .padding()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(Color(uiColor: .secondarySystemBackground))
+                                .cornerRadius(8)
+                        }
+                    }
+                    
+                    // 洞察自定义 Prompt — 始终可编辑
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(L("settings.ai.insightPrompt"))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        TextEditor(text: Binding(
+                            get: { settings.insightPrompt ?? "" },
+                            set: { newValue in
+                                settings.insightPrompt = newValue.isEmpty ? nil : newValue
+                                try? settingsManager.modelContext?.save()
+                            }
+                        ))
+                        .frame(minHeight: 60)
+                        .font(.body)
+                        .overlay(
+                            Group {
+                                if (settings.insightPrompt ?? "").isEmpty {
+                                    Text(L("settings.ai.insightPrompt.placeholder"))
+                                        .foregroundStyle(.tertiary)
+                                        .padding(.horizontal, 5)
+                                        .padding(.vertical, 8)
+                                        .allowsHitTesting(false)
+                                }
+                            },
+                            alignment: .topLeading
+                        )
+                    }
+                } header: {
+                    Text(L("settings.ai.section.personalization"))
+                } footer: {
+                    Text(L("settings.ai.section.personalization.footer"))
+                }
             }
         }
         .navigationTitle(L("settings.ai.title"))
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             if let provider = settingsManager.appSettings?.aiProvider {
+                isUpdatingProvider = true // 防止加载 Key 时触发 onChange 重置验证状态
                 Task {
                     apiKeyInput = await SettingsManager.shared.getApiKey(for: provider) ?? ""
                     checkValidationState(for: provider)
+                    
+                    // 如果 insightPrompt 为空，预填默认值以便用户编辑
+                    if settingsManager.appSettings?.insightPrompt == nil {
+                        settingsManager.appSettings?.insightPrompt = AppSettings.defaultInsightPrompt
+                    }
+                    
+                    try? await Task.sleep(nanoseconds: 100_000_000)
+                    isUpdatingProvider = false
                 }
             }
         }
@@ -107,8 +206,8 @@ enum ValidationState: Equatable {
     
     var icon: String {
         switch self {
-        case .idle: return "questionmark.circle"
-        case .validating: return "arrow.clockwise"
+        case .idle: return "questionmark.circle" // Revert
+        case .validating: return "arrow.clockwise" // Revert
         case .valid: return "checkmark.circle.fill"
         case .invalid: return "xmark.circle.fill"
         }
@@ -140,8 +239,8 @@ enum ValidationState: Equatable {
  */
 enum PresetModels {
     static let models: [AiProvider: [String]] = [
-        .gemini: ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"],
-        .openai: ["gpt-4o", "gpt-4o-mini", "o1", "o3-mini"],
+        .gemini: ["gemini-3-pro", "gemini-3-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"],
+        .openai: ["gpt-5.2", "gpt-5", "gpt-4o"],
         .deepseek: ["deepseek-chat", "deepseek-reasoner"],
         .custom: []
     ]
@@ -206,6 +305,8 @@ struct ProviderPicker: View {
             set: { newProvider in
                 settings.aiProvider = newProvider
                 validationState = .idle
+                // 显式保存更改
+                try? SettingsManager.shared.modelContext?.save()
             }
         )) {
             Text("Gemini").tag(AiProvider.gemini)
@@ -235,6 +336,7 @@ struct ModelPicker: View {
                     var current = settings.aiModels
                     current[settings.aiProvider] = newValue
                     settings.aiModels = current
+                    try? SettingsManager.shared.modelContext?.save()
                 }
             ))
         } else {
@@ -244,6 +346,7 @@ struct ModelPicker: View {
                     var current = settings.aiModels
                     current[settings.aiProvider] = newValue
                     settings.aiModels = current
+                    try? SettingsManager.shared.modelContext?.save()
                 }
             )) {
                 ForEach(availableModels, id: \.self) { model in
@@ -280,7 +383,7 @@ struct APIKeyInput: View {
                 Button {
                     showApiKey.toggle()
                 } label: {
-                    Image(systemName: showApiKey ? "eye.slash" : "eye")
+                    Image(systemName: showApiKey ? "eye.slash" : "eye") // Revert
                         .foregroundStyle(.secondary)
                 }
             }
@@ -307,6 +410,8 @@ struct APIKeyInput: View {
             }
         }
         .padding(.vertical, 4)
+        // 使用 borderless 样式避免在 Form 中点击冲突
+        .buttonStyle(.borderless)
     }
     
     private func validateApiKey() async {

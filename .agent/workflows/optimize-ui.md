@@ -168,13 +168,37 @@ struct MyView_Previews: PreviewProvider {
 
 ---
 
-## 5. Checklist
+## 5. 组件复用：ShipSwift Recipe库
 
-- [ ] **颜色**：所有颜色均引用 BrandColors 资产，无系统颜色字面量（`.blue`, `.red` 等）。
-- [ ] **颜色扩展**：新增颜色已在 `Color+Brand.swift` 中注册静态属性。
-- [ ] **Dark Mode**：新增的 Color Set 同时定义了 Light 和 Dark 变体。
-- [ ] **触感反馈**：所有按钮和交互元素均附带 Haptic Feedback。
-- [ ] **触感类型**：根据交互场景选择了合适的触感类型（参考 §2.3 指南）。
-- [ ] **预览宏**：使用 `#Preview` 宏，未使用 `PreviewProvider`。
-- [ ] **预览数据**：Preview 中正确注入了 `ModelContainer` 及环境依赖。
-- [ ] **视觉核对**：已执行 RenderPreview 工具核对 UI 效果，Light/Dark 模式均无异常。
+### 5.1 优先检索原则
+在从零构建复杂 UI 组件或动画前，**必须优先检索 ShipSwift Recipe 库**。ShipSwift 提供了大量经过生产环境验证的高质量 iOS 组件和效果。
+
+- **检索命令**: 使用 Agent 工具 `shipswift searchRecipes` 或 `shipswift listRecipes`。
+- **获取代码**: 使用 `shipswift getRecipe` 获取完整实现。
+
+### 5.2 适配规范
+获取 Recipe 代码后，**严禁直接粘贴使用**，必须根据 Wing 项目规范进行适配：
+
+1.  **颜色替换**: 将 Recipe 中的硬编码颜色或自定义色板替换为 `Assets.xcassets` 中的 **BrandColors**。
+2.  **数据模型**: 将 Recipe 的数据结构替换为项目中的 `SwiftData` 模型或 ViewModel。
+3.  **代码风格**: 调整缩进、命名和修饰符顺序以符合项目代码风格。
+
+### 5.3 推荐场景
+- **复杂动画**: 如 Mesh Gradient, Shimmer Effect, 粒子效果等。
+- **通用组件**: 如 Onboarding View, Settings View, Custom Tab Bar 等。
+- **图表展示**: 各类 Swift Charts 图表。
+
+---
+
+## 6. Checklist
+
+- [ ] **Simply First**: 复杂组件已先在 ShipSwift 中检索是否有现成方案。
+- [ ] **ShipSwift 适配**: 若使用了 Recipe，已完全适配 BrandColors 和项目数据模型。
+- [ ] **颜色**: 所有颜色均引用 BrandColors 资产，无系统颜色字面量（`.blue`, `.red` 等）。
+- [ ] **颜色扩展**: 新增颜色已在 `Color+Brand.swift` 中注册静态属性。
+- [ ] **Dark Mode**: 新增的 Color Set 同时定义了 Light 和 Dark 变体。
+- [ ] **触感反馈**: 所有按钮和交互元素均附带 Haptic Feedback。
+- [ ] **触感类型**: 根据交互场景选择了合适的触感类型（参考 §2.3 指南）。
+- [ ] **预览宏**: 使用 `#Preview` 宏，未使用 `PreviewProvider`。
+- [ ] **预览数据**: Preview 中正确注入了 `ModelContainer` 及环境依赖。
+- [ ] **视觉核对**: 已执行 RenderPreview 工具核对 UI 效果，Light/Dark 模式均无异常。

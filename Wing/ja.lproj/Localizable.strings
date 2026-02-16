@@ -5,6 +5,12 @@
 "tab.journal" = "日記";
 "tab.settings" = "設定";
 
+// MARK: - Composer
+"composer.title" = "いま記録";
+"composer.new" = "記録";
+"composer.placeholder" = "思いを書こう...";
+"composer.close" = "閉じる";
+
 // MARK: - Chat
 "chat.title" = "いま";
 "chat.empty.today" = "新しい一日が始まった...";
@@ -79,6 +85,26 @@
 "settings.ai.status.valid" = "接続成功";
 "settings.ai.status.failed" = "認証に失敗";
 "settings.ai.status.networkError" = "ネットワークエラー";
+
+// MARK: - Settings > AI > Personalization
+"settings.ai.section.personalization" = "パーソナライズ";
+"settings.ai.section.personalization.footer" = "AI日記の文体とインサイトの視点をカスタマイズします。";
+"settings.ai.writingStyle" = "文体";
+"settings.ai.writingStyle.letter" = "書簡体";
+"settings.ai.writingStyle.prose" = "散文体";
+"settings.ai.writingStyle.report" = "レポート体";
+"settings.ai.writingStyle.custom" = "カスタム";
+"settings.ai.writingStyle.preview" = "文体プロンプト（プレビュー）";
+"settings.ai.writingStylePrompt" = "カスタム文体プロンプト";
+"settings.ai.writingStylePrompt.placeholder" = "例：優しく癒しのある口調で、友人からの手紙のように...";
+"settings.ai.insightPrompt" = "インサイトプロンプト（任意）";
+"settings.ai.insightPrompt.placeholder" = "例：ポジティブ心理学の視点から励ましを...";
+
+// AI Prompts (Localized)
+"prompt.tone.letter" = "トーン：日記の本文は手紙形式で：誰か、あるいは未来の自分に宛てた私信のように。二人称「あなた」や呼びかけを使用し、親密でプライベートな口調で。冒頭の呼びかけや結びの言葉を含めてもよい。";
+"prompt.tone.prose" = "トーン：日記の本文は散文形式で：自由な筆致でリズム感を持たせる。叙述と議論を織り交ぜ、意境と感情の自然な流れを重視する。美しい言葉遣いで、適度な余白を持たせる。";
+"prompt.tone.report" = "トーン：日記の本文はレポート形式で：論理的で階層が明確。小見出しや箇条書きを適切に使用する。客観的な記述と簡潔なコメントを組み合わせ、抑制された表現にする。";
+"prompt.insight.default" = "インサイト：ポジティブ心理学に基づいた励ましと深い洞察（2-3文）。";
 
 // MARK: - Settings > Display
 "settings.display.title" = "表示設定";
@@ -252,3 +278,14 @@
 "common.done" = "完了";
 "common.ok" = "OK";
 "common.processing" = "処理中...";
+
+// MARK: - Voice Input
+"voice.input.listening" = "聞き取り中...";
+"voice.input.permission.denied" = "設定でマイクと音声認識のアクセスを許可してください";
+
+// MARK: - Context Menu
+"menu.edit" = "編集";
+"menu.delete" = "削除";
+"menu.delete.confirm" = "削除しますか？";
+"menu.save" = "保存";
+"menu.cancel" = "キャンセル";

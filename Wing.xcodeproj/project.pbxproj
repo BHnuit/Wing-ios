@@ -24,6 +24,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3A50CC182F42F9BA0018B930 /* Wing.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Wing.xctestplan; sourceTree = "<group>"; };
 		3A745E912F291E950000D6E3 /* Wing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wing.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A745EA02F291E960000D6E3 /* WingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A745EAA2F291E960000D6E3 /* WingUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WingUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,6 +76,7 @@
 		3A745E882F291E950000D6E3 = {
 			isa = PBXGroup;
 			children = (
+				3A50CC182F42F9BA0018B930 /* Wing.xctestplan */,
 				3A745E932F291E950000D6E3 /* Wing */,
 				3A745EA32F291E960000D6E3 /* WingTests */,
 				3A745EAD2F291E960000D6E3 /* WingUITests */,
@@ -402,6 +404,8 @@
 				DEVELOPMENT_TEAM = UMWZ2C43N9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Wing needs microphone access to record your voice notes.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Wing uses speech recognition to convert your voice to text.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -434,6 +438,8 @@
 				DEVELOPMENT_TEAM = UMWZ2C43N9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Wing needs microphone access to record your voice notes.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Wing uses speech recognition to convert your voice to text.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

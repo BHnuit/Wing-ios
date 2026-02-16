@@ -31,7 +31,7 @@ struct SettingsStorageView: View {
                         await exportJSON()
                     }
                 } label: {
-                    Label(L("settings.storage.export.json"), systemImage: "square.and.arrow.up")
+                    Label(L("settings.storage.export.json"), systemImage: "square.and.arrow.up") // Revert
                         .foregroundStyle(.primary)
                 }
             } header: {
@@ -44,7 +44,7 @@ struct SettingsStorageView: View {
                 Button {
                     showImportFilePicker = true
                 } label: {
-                    Label(L("settings.storage.import.json"), systemImage: "square.and.arrow.down")
+                    Label(L("settings.storage.import.json"), systemImage: "square.and.arrow.down") // Revert
                 }
                 .fileImporter(isPresented: $showImportFilePicker, allowedContentTypes: [.json, .plainText, .data]) { result in
                     handleImport(result: result, isReplace: false)
@@ -53,7 +53,7 @@ struct SettingsStorageView: View {
                 Button {
                     showImportFolderPicker = true
                 } label: {
-                    Label(L("settings.storage.import.folder"), systemImage: "folder")
+                    Label(L("settings.storage.import.folder"), systemImage: "folder") // Revert
                 }
                 .fileImporter(isPresented: $showImportFolderPicker, allowedContentTypes: [.folder]) { result in
                     handleImportFolder(result: result, isReplace: false)
@@ -68,7 +68,7 @@ struct SettingsStorageView: View {
                 Button(role: .destructive) {
                     showReplaceConfirmation = true
                 } label: {
-                    Label(L("settings.storage.replace"), systemImage: "arrow.triangle.2.circlepath")
+                    Label(L("settings.storage.replace"), systemImage: "arrow.triangle.2.circlepath") // Revert font
                 }
                 .fileImporter(isPresented: $showReplaceFilePicker, allowedContentTypes: [.json, .plainText, .data]) { result in
                     handleImport(result: result, isReplace: true)
@@ -77,7 +77,7 @@ struct SettingsStorageView: View {
                 Button(role: .destructive) {
                     showClearConfirmation = true
                 } label: {
-                    Label(L("settings.storage.clearAll"), systemImage: "trash")
+                    Label(L("settings.storage.clearAll"), systemImage: "trash") // Revert
                 }
             } header: {
                 Text(L("settings.storage.section.danger"))

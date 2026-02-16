@@ -31,3 +31,9 @@ Your goal is to rewrite an existing React/TypeScript web application ("Wing") in
 - Analyze the provided TypeScript files (e.g., `types.ts`, `aiService.ts`) for logic.
 - Re-implement using Swift 6.2 idioms (e.g., use `for await` loops for async streams).
 - **Security**: Store API Keys in Keychain, never in UserDefaults or code.
+
+# Global Rules
+
+## 1. Language
+- **MANDATORY**: You must interact with the user in **Chinese** ONLY.
+- **语言**：必须全程使用 **中文** 与用户交流。

@@ -30,13 +30,19 @@ class SettingsManager {
     /// 注意：不要直接创建 AppSettings 实例，必须通过 fetchOrInitSettings 获取以确保只有一份
     var appSettings: AppSettings?
     
-    /// 已验证通过的 Provider（内存缓存，切换 tab 后保持状态）
-    var validatedProviders: Set<AiProvider> = []
+    /// 已验证通过的 Provider（内存缓存 + UserDefaults 持久化）
+    var validatedProviders: Set<AiProvider> = [] {
+        didSet {
+            saveValidatedProviders()
+        }
+    }
     
     private let keychain = KeychainHelper.shared
+    private let validatedProvidersKey = "WingValidatedProviders"
     
     private init() {
         // 单例模式
+        loadValidatedProviders()
     }
     
     // MARK: - Initialization
@@ -54,6 +60,7 @@ class SettingsManager {
      * 获取或初始化 AppSettings
      * 如果数据库中没有记录，则创建一个默认配置
      */
+    
     @MainActor
     private func fetchOrInitSettings() {
         guard let context = modelContext else { return }
@@ -70,8 +77,8 @@ class SettingsManager {
                 let defaultSettings = AppSettings(
                     aiProvider: .gemini,
                     aiModels: [
-                        .gemini: "gemini-2.5-flash",
-                        .openai: "gpt-4o",
+                        .gemini: "gemini-3-flash",
+                        .openai: "gpt-5.2",
                         .deepseek: "deepseek-chat"
                     ],
                     language: .zh, // 简配版，实际可检测 Locale.current
@@ -167,8 +174,6 @@ class SettingsManager {
             return nil
         }
         
-        // ... (existing code)
-        
         let provider = settings.aiProvider
         let model = settings.aiModels[provider] ?? defaultModel(for: provider)
         let apiKey = await getApiKey(for: provider) ?? ""
@@ -193,13 +198,28 @@ class SettingsManager {
     func getJournalLanguage() -> JournalLanguage {
         return appSettings?.journalLanguage ?? .auto
     }
-    
+
     private func defaultModel(for provider: AiProvider) -> String {
         switch provider {
-        case .gemini: return "gemini-2.5-flash"
-        case .openai: return "gpt-4o"
+        case .gemini: return "gemini-3-flash"
+        case .openai: return "gpt-5.2"
         case .deepseek: return "deepseek-chat"
         case .custom: return ""
+        }
+    }
+    
+    // MARK: - Validation State Persistence
+    
+    private func loadValidatedProviders() {
+        if let data = UserDefaults.standard.data(forKey: validatedProvidersKey),
+           let providers = try? JSONDecoder().decode(Set<AiProvider>.self, from: data) {
+            self.validatedProviders = providers
+        }
+    }
+    
+    private func saveValidatedProviders() {
+        if let data = try? JSONEncoder().encode(validatedProviders) {
+            UserDefaults.standard.set(data, forKey: validatedProvidersKey)
         }
     }
 }

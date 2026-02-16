@@ -45,16 +45,16 @@ struct SettingsEntryView: View {
                 // Section 2: Features
                 Section {
                     NavigationLink(destination: SettingsAIView()) {
-                        Label(L("settings.ai.title"), systemImage: "cpu")
+                        Label(L("settings.ai.title"), systemImage: "bolt") // Scheme B: Geometric
                             .badge(settingsManager.appSettings?.aiProvider.rawValue.capitalized ?? "")
                     }
                     
                     NavigationLink(destination: SettingsDisplayView()) {
-                        Label(L("settings.display.label"), systemImage: "textformat.size")
+                        Label(L("settings.display.label"), systemImage: "rectangle.on.rectangle") // Scheme B: Geometric
                     }
                     
                     NavigationLink(destination: SettingsStorageView()) {
-                        Label(L("settings.storage.label"), systemImage: "externaldrive")
+                        Label(L("settings.storage.label"), systemImage: "cylinder") // Scheme B: Geometric
                     }
                 } header: {
                     Text(L("settings.section.features"))
@@ -64,7 +64,7 @@ struct SettingsEntryView: View {
                 if settingsManager.appSettings?.enableLongTermMemory == true {
                     Section {
                         NavigationLink(destination: SettingsMemoryView()) {
-                            Label(L("settings.memory.label"), systemImage: "brain.head.profile")
+                            Label(L("settings.memory.label"), systemImage: "circle.hexagongrid") // Scheme B: Geometric
                         }
                     } header: {
                         Text(L("settings.section.lab"))
@@ -155,8 +155,6 @@ private extension DateFormatter {
 
 #Preview {
     SettingsEntryView()
-        .modelContainer(for: [AppSettings.self, DailySession.self], inMemory: true)
-        .onAppear {
-            SettingsManager.shared.initialize(with: try! ModelContainer(for: AppSettings.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true)))
-        }
+        .environment(SettingsManager.shared) // Inject shared if needed, but better to rely on environment
+        .modelContainer(for: [AppSettings.self, DailySession.self, WingEntry.self, RawFragment.self], inMemory: true)
 }

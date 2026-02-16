@@ -79,7 +79,10 @@ final class JournalSynthesisService {
                 fragments: session.fragments,
                 memories: memories,
                 config: config,
-                journalLanguage: journalLanguage
+                journalLanguage: journalLanguage,
+                writingStyle: SettingsManager.shared.appSettings?.writingStyle ?? .prose,
+                writingStylePrompt: SettingsManager.shared.appSettings?.writingStylePrompt,
+                insightPrompt: SettingsManager.shared.appSettings?.insightPrompt
             )
             
             // 4. 创建 WingEntry
@@ -106,13 +109,27 @@ final class JournalSynthesisService {
             }
             entry.images = entryImages
             
-            // 5. 关联到 Session
-            entry.dailySession = session
-            session.finalEntry = entry
+            // 5. 清理旧日记（重新生成场景）
+            //    必须在设置新关系之前删除旧 Entry，否则 SwiftData 更新反向关系时
+            //    会惰性加载旧对象导致 "Never access a full future backing data" Crash
+            if let oldEntryId = session.finalEntryId {
+                let descriptor = FetchDescriptor<WingEntry>(
+                    predicate: #Predicate { $0.id == oldEntryId }
+                )
+                if let oldEntry = try? context.fetch(descriptor).first {
+                    context.delete(oldEntry)
+                }
+                session.finalEntryId = nil
+                try context.save()
+            }
+            
+            // 6. 插入新 Entry 并建立关联
+            context.insert(entry)
+            session.finalEntry = entry   // SwiftData 自动维护 entry.dailySession 反向关系
             session.finalEntryId = entryId
             session.status = .completed
             
-            // 6. 记录完成信息
+            // 7. 记录完成信息
             let completion = GatherCompletion(
                 completedAt: Int64(Date().timeIntervalSince1970 * 1000),
                 entryId: entryId,
@@ -120,8 +137,6 @@ final class JournalSynthesisService {
             )
             session.gatherCompletions.append(completion)
             
-            // 7. 保存到数据库
-            context.insert(entry)
             try context.save()
             
             // 8. 完成

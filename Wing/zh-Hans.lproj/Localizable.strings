@@ -2,8 +2,14 @@
 
 // MARK: - Tabs
 "tab.now" = "当下";
-"tab.journal" = "回忆";
+"tab.journal" = "日记";
 "tab.settings" = "设置";
+
+// MARK: - Composer
+"composer.title" = "记录此刻";
+"composer.new" = "记录";
+"composer.placeholder" = "写下你的想法...";
+"composer.close" = "关闭";
 
 // MARK: - Chat
 "chat.title" = "当下";
@@ -31,6 +37,7 @@
 "synthesis.failed" = "生成失败: %@";
 "synthesis.error.noFragments" = "没有可用的碎片记录";
 "synthesis.error.configMissing" = "缺少 AI 配置，请在设置中配置 API Key";
+"synthesis.collapsing" = "收拢中...";
 
 // MARK: - Date Navigator
 "date.today" = "今天";
@@ -42,7 +49,7 @@
 "date.weekdays" = "日,一,二,三,四,五,六";
 
 // MARK: - Journal
-"journal.title" = "回忆";
+"journal.title" = "日记";
 "journal.empty" = "暂无日记";
 "journal.empty.hint" = "从\"当下\"记录你的想法，生成第一篇日记";
 "journal.detail.title" = "日记详情";
@@ -79,6 +86,26 @@
 "settings.ai.status.valid" = "连接成功";
 "settings.ai.status.failed" = "验证失败";
 "settings.ai.status.networkError" = "网络错误";
+
+// MARK: - Settings > AI > Personalization
+"settings.ai.section.personalization" = "个性化";
+"settings.ai.section.personalization.footer" = "自定义 AI 生成日记的写作风格和洞察视角。";
+"settings.ai.writingStyle" = "文风";
+"settings.ai.writingStyle.letter" = "书信体";
+"settings.ai.writingStyle.prose" = "散文体";
+"settings.ai.writingStyle.report" = "日报体";
+"settings.ai.writingStyle.custom" = "自定义";
+"settings.ai.writingStyle.preview" = "文风指令预览";
+"settings.ai.writingStylePrompt" = "自定义文风指令";
+"settings.ai.writingStylePrompt.placeholder" = "例如：用温柔治愈的口吻，像朋友写信一样...";
+"settings.ai.insightPrompt" = "洞察视角指令（可选）";
+"settings.ai.insightPrompt.placeholder" = "例如：从积极心理学角度给予鼓励...";
+
+// AI Prompts (Localized)
+"prompt.tone.letter" = "日记正文采用书信体文风：如同写给某人或未来的自己的信，可使用第二人称「你」或称呼语，语气亲切、私密，可有开头的称呼与结尾的落款感。";
+"prompt.tone.prose" = "日记正文采用散文体文风：行文自由、富有节奏感，可夹叙夹议，注重意境与情绪的自然流动，语言优美、留白适中。";
+"prompt.tone.report" = "日记正文采用报告体文风：条理清晰、层次分明，可适当使用小标题或分点，客观记述与简要点评结合，简洁克制。";
+"prompt.insight.default" = "洞察：基于积极心理学给予鼓励和深层见解（2-3句）。";
 
 // MARK: - Settings > Display
 "settings.display.title" = "显示选项";
@@ -253,3 +280,14 @@
 "common.ok" = "确定";
 "common.processing" = "正在处理...";
 
+
+// MARK: - Voice Input
+"voice.input.listening" = "正在聆听...";
+"voice.input.permission.denied" = "请在设置中开启麦克风和语音识别权限";
+
+// MARK: - Context Menu
+"menu.edit" = "编辑";
+"menu.delete" = "删除";
+"menu.delete.confirm" = "确认删除吗？";
+"menu.save" = "保存";
+"menu.cancel" = "取消";

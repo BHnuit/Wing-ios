@@ -184,12 +184,25 @@ actor AIService {
      * - Returns: JournalOutput 结构化输出
      * - Note: 包含 Fallback 机制，解析失败时返回"无题日记"
      */
-    func synthesizeJournal(fragments: [RawFragment], memories: [String] = [], config: AIConfig, journalLanguage: JournalLanguage = .auto) async throws -> JournalOutput {
+    func synthesizeJournal(
+        fragments: [RawFragment],
+        memories: [String] = [],
+        config: AIConfig,
+        journalLanguage: JournalLanguage = .auto,
+        writingStyle: WritingStyle = .prose,
+        writingStylePrompt: String? = nil,
+        insightPrompt: String? = nil
+    ) async throws -> JournalOutput {
         guard !config.apiKey.isEmpty else {
             throw AIError.missingAPIKey
         }
         
-        let systemInstruction = getJournalSystemInstruction(language: journalLanguage)
+        let systemInstruction = getJournalSystemInstruction(
+            language: journalLanguage,
+            writingStyle: writingStyle,
+            writingStylePrompt: writingStylePrompt,
+            insightPrompt: insightPrompt
+        )
         let userPrompt = buildUserPrompt(from: fragments, memories: memories)
         
         // 构建非流式请求
@@ -407,17 +420,24 @@ actor AIService {
     
     // MARK: - Prompt Engineering
     
-    private func getSystemInstruction() -> String {
+    private func getSystemInstruction(writingStyle: WritingStyle = .prose, writingStylePrompt: String? = nil) -> String {
+        let toneInstruction = buildToneInstruction(writingStyle: writingStyle, writingStylePrompt: writingStylePrompt)
+        
         return """
         Role: You are "Wing", an empathetic AI diary assistant.
         Task: Write a cohesive diary entry based on the user's raw fragments for the day.
         Format: Output ONLY the diary content in Markdown. Do not wrap in JSON. Do not include title or other metadata fields.
         Language: Detect language (Chinese/English) from fragments or default to Chinese.
-        Tone: Warm, reflective, literary.
+        \(toneInstruction)
         """
     }
     
-    private func getJournalSystemInstruction(language: JournalLanguage = .auto) -> String {
+    private func getJournalSystemInstruction(
+        language: JournalLanguage = .auto,
+        writingStyle: WritingStyle = .prose,
+        writingStylePrompt: String? = nil,
+        insightPrompt: String? = nil
+    ) -> String {
         let instruction: String
         switch language {
         case .auto: instruction = "Detect language from fragments and write in the same language."
@@ -425,29 +445,59 @@ actor AIService {
         case .en: instruction = "Write the diary ONLY in English."
         }
         
-        return """
-        Role: You are "Wing", an empathetic AI diary assistant.
-        Task: Create a complete diary entry from the user's raw fragments.
+        // 生成文风指令
+        let toneInstruction = buildToneInstruction(writingStyle: writingStyle, writingStylePrompt: writingStylePrompt)
         
-        Output Format: Return ONLY a valid JSON object with this exact structure:
-        {
-          "title": "A concise, poetic title (5-10 characters, no emoji)",
-          "summary": "One-sentence summary of the day",
-          "mood": "A single emoji representing the overall mood",
-          "content": "Full diary content in Markdown format",
-          "insights": "Psychological insights and encouragement (2-3 sentences)"
+        // 生成洞察提示词，如果用户没有自定义，使用默认的占位描述
+        let insightValueDescription: String
+        if let customInsight = insightPrompt, !customInsight.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            insightValueDescription = customInsight
+        } else {
+            insightValueDescription = "A short reflection on the user's day. Be observant but objective."
         }
         
-        Content Guidelines:
-        - Use proper Markdown formatting (headers ##, bold **, lists -)
-        - DO NOT include emoji in the content field
-        - DO NOT include [Image] or [Photo] placeholders
-        - Write a cohesive narrative weaving the fragments together
-        
+        return """
+        Role: You are an expert ghostwriter. You have no identity of your own. Your ONLY function is to convert the user's raw fragments into a polished, first-person ("I") diary entry.
+
+        Task: Synthesize the provided fragments into a cohesive narrative.
         Language: \(instruction)
-        Tone: Warm, reflective, literary.
-        
+
+        IMPORTANT - Writing Style (Follow strictly):
+        \(toneInstruction)
+
+        Output Format:
+        Return ONLY a raw, minified JSON object. No Markdown code fences. Ensure strictly valid JSON syntax. Escape all newlines (\\n) and double quotes (\\") within string values.
+
+        Structure:
+        {
+          "title": "A concise, poetic title (5-10 chars, no emoji)",
+          "summary": "One-sentence summary of the day",
+          "mood": "A single emoji representing the overall mood",
+          "content": "Full diary content in Markdown. Use ## for headers if needed. NO Title/Date at start.",
+          "insights": "\(insightValueDescription)"
+        }
+
+        Content Guidelines:
+        1. **First-Person Immersion**: Write strictly as "I". Never address the user as "you". Never mention "Wing", "AI", or "Assistant".
+        2. **Handling Fragments**: Weave fragments into a smooth story. Do not list them.
+        3. **Handling Photos**: If the input contains "[Photo]" or "[Image]" markers, simply IGNORE and REMOVE them to maintain text flow. Do not describe them.
+        4. **Memory Usage**: If "Background Context (Implicit Knowledge)" is provided, treat it as the user's own existing knowledge. Use it to ensure continuity (e.g., knowing a friend's name without being told today), but NEVER say "According to records".
+        5. **Formatting**: Use Markdown (bold **, lists -). NO emoji inside the 'content' field.
+        6. **Natural Time & Date**: **NEVER** mention the exact calendar date (e.g., "Feb 16"). Use natural references like "This Monday" or just "Today". Convert timestamps (e.g., 09:30) into narrative flow (e.g., "In the morning").
         """
+    }
+    
+    /// 根据 writingStyle 生成文风指令（使用本地化 Prompt）
+    private func buildToneInstruction(writingStyle: WritingStyle, writingStylePrompt: String? = nil) -> String {
+        switch writingStyle {
+        case .custom:
+            if let prompt = writingStylePrompt, !prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                return prompt
+            }
+            return WritingStyle.prose.defaultPrompt
+        default:
+            return writingStyle.defaultPrompt
+        }
     }
 
     private func getMemorySystemInstruction(language: JournalLanguage = .auto) -> String {
@@ -507,17 +557,33 @@ actor AIService {
             return "[\(timeStr)] \(imageMarker) \(fragment.content)"
         }.joined(separator: "\n")
         
+        let dateOfEntry: String
+        if let firstFragment = sortedFragments.first {
+            let date = Date(timeIntervalSince1970: TimeInterval(firstFragment.timestamp) / 1000)
+            // 强制使用 ISO 8601 (YYYY-MM-DD) + 星期几
+            let isoDateFormatter = DateFormatter()
+            isoDateFormatter.dateFormat = "yyyy-MM-dd EEEE"
+            isoDateFormatter.locale = Locale(identifier: "en_US_POSIX") // 确保格式固定
+            dateOfEntry = isoDateFormatter.string(from: date)
+        } else {
+            let isoDateFormatter = DateFormatter()
+            isoDateFormatter.dateFormat = "yyyy-MM-dd EEEE"
+            isoDateFormatter.locale = Locale(identifier: "en_US_POSIX")
+            dateOfEntry = isoDateFormatter.string(from: Date())
+        }
+        
         var prompt = """
+        Context: \(dateOfEntry)
         User's fragments for today (in chronological order):
         
         \(fragmentTexts)
         """
         
         if !memories.isEmpty {
-            prompt += "\n\nRelevant Context via Memory RAG:\n\n" + memories.joined(separator: "\n\n")
+            prompt += "\n\nBackground Context (Implicit Knowledge):\n\n" + memories.joined(separator: "\n\n")
         }
         
-        prompt += "\n\nWrite the diary content now."
+        prompt += "\n\nSynthesize these fragments into a cohesive first-person narrative."
         return prompt
     }
     
@@ -721,10 +787,10 @@ actor AIService {
               let output = try? JSONDecoder().decode(JournalOutput.self, from: data) else {
             // Fallback: 解析失败时返回"无题日记"
             print("⚠️ JSON 解析失败，使用 Fallback 模式")
-            return JournalOutput.fallback(rawContent: cleanedContent)
+            return JournalOutput.fallback(rawContent: cleanedContent).sanitized()
         }
         
-        return output
+        return output.sanitized()
     }
     
     /// 解析记忆输出 JSON

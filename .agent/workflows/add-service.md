@@ -2,7 +2,16 @@
 description: 创建新的核心 Service (Actor) 或状态管理器，并集成并发安全、数据持久化与测试
 ---
 
-此 Workflow 总结了 Phase 3-7 的实战经验，涵盖 Swift 6 并发模型、SwiftData 数据流、数据导出以及 UI 集成最佳实践。
+
+
+## 0. 方案调研 (Discovery)
+
+在编写任何代码之前，**必须** 检查 ShipSwift 库中是否已有现成的 Service 或 Manager 实现。
+
+*   **检索命令**: `shipswift searchRecipes` (例如: "auth", "storekit", "camera")
+*   **评估**: 检查配方是否符合项目需求（如 `AIService`, `SettingsManager` 等由于业务特殊性通常需手写，但通用功能如 `Auth`, `IAP` 优先复用）。
+
+---
 
 ## 1. 架构选型：Actor vs Observable vs MainActor Class
 
@@ -122,10 +131,10 @@ func exportAll(context: ModelContext) throws {
 
 ---
 
-## 5. Mocking & Testing
+## 5. 测试与验证 (Testing & Verification)
 
-### 5.1 Swift Testing
-使用 `@Test` 宏进行单元测试。
+### 5.1 单元测试 (Swift Testing)
+使用 `@Test` 宏编写逻辑测试，并利用 Xcode MCP 运行。
 
 ```swift
 @Test func testExportLogic() async throws {
@@ -136,9 +145,18 @@ func exportAll(context: ModelContext) throws {
 }
 ```
 
+### 5.2 构建与运行验证 (Xcode MCP)
+在提交前，务必使用 Agent 工具验证代码的正确性：
+
+1.  **构建项目**: 调用 `mcp_xcode_BuildProject` 确保无编译错误。
+2.  **运行测试**: 调用 `mcp_xcode_RunSomeTests` 运行相关的 Suite 或特定测试用例。
+    *   构建失败 -> `mcp_xcode_GetBuildLog` 分析 -> 修复。
+
 ---
 
-## 6. Checklist (Phase 7 Updated)
+## 6. Checklist
+
+- [ ] **调研**: 已检索 ShipSwift 是否有现成方案。
 
 - [ ] **架构**：明确是 `actor` (计算/IO密集) 还是 `@MainActor class` (由于 SwiftData 限制，绝大多数数据操作服务选这个)。
 - [ ] **数据源**：服务内部使用 `FetchDescriptor` 自行获取数据，不依赖 View 传参（除非是单条操作）。
@@ -146,3 +164,4 @@ func exportAll(context: ModelContext) throws {
 - [ ] **容错**：处理 Optional 关系（Orphaned Data），确保导出/显示不崩溃。
 - [ ] **集成**：若有配置项，集成到 `SettingsEntryView`；若有操作，集成到对应详情页 Toolbar。
 - [ ] **测试**：编写基础逻辑测试。
+- [ ] **验证**: 通过 `mcp_xcode_BuildProject` 和 `mcp_xcode_RunSomeTests` 验证通过。

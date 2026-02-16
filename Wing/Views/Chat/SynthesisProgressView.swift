@@ -53,8 +53,8 @@ struct SynthesisProgressView: View {
             
             // 加载指示器（非完成状态时显示）
             if !isCompleted {
-                ProgressView()
-                    .scaleEffect(1.2)
+                ThinkingIndicator(dotColor: .accentColor)
+                    .padding(.top, 8)
             }
         }
         .padding(40)

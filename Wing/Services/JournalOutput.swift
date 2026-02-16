@@ -90,4 +90,27 @@ extension JournalOutput {
             rawJSON: nil
         )
     }
+    
+    /// 清理内容格式（修复换行符转义问题）
+    nonisolated func sanitized() -> JournalOutput {
+        // 修复可能的双重转义换行符 (\\n -> \n) 和异常字符 (/n -> \n)
+        let cleanContent = content
+            .replacingOccurrences(of: "\\n", with: "\n")
+            .replacingOccurrences(of: "/n/n", with: "\n\n") // 修复特定异常标识符
+            .replacingOccurrences(of: "/n", with: "\n")
+        
+        let cleanInsights = insights
+            .replacingOccurrences(of: "\\n", with: "\n")
+            .replacingOccurrences(of: "/n/n", with: "\n\n")
+            .replacingOccurrences(of: "/n", with: "\n")
+        
+        return JournalOutput(
+            title: title,
+            summary: summary,
+            mood: mood,
+            content: cleanContent,
+            insights: cleanInsights,
+            rawJSON: rawJSON
+        )
+    }
 }
