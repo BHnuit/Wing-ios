@@ -191,6 +191,8 @@ actor AIService {
         journalLanguage: JournalLanguage = .auto,
         writingStyle: WritingStyle = .prose,
         writingStylePrompt: String? = nil,
+        titleStyle: TitleStyle = .abstract,
+        titleStylePrompt: String? = nil,
         insightPrompt: String? = nil
     ) async throws -> JournalOutput {
         guard !config.apiKey.isEmpty else {
@@ -201,6 +203,8 @@ actor AIService {
             language: journalLanguage,
             writingStyle: writingStyle,
             writingStylePrompt: writingStylePrompt,
+            titleStyle: titleStyle,
+            titleStylePrompt: titleStylePrompt,
             insightPrompt: insightPrompt
         )
         let userPrompt = buildUserPrompt(from: fragments, memories: memories)
@@ -436,6 +440,8 @@ actor AIService {
         language: JournalLanguage = .auto,
         writingStyle: WritingStyle = .prose,
         writingStylePrompt: String? = nil,
+        titleStyle: TitleStyle = .abstract,
+        titleStylePrompt: String? = nil,
         insightPrompt: String? = nil
     ) -> String {
         let instruction: String
@@ -447,6 +453,9 @@ actor AIService {
         
         // 生成文风指令
         let toneInstruction = buildToneInstruction(writingStyle: writingStyle, writingStylePrompt: writingStylePrompt)
+        
+        // 生成标题指令
+        let titleInstruction = buildTitleInstruction(style: titleStyle, customPrompt: titleStylePrompt)
         
         // 生成洞察提示词，如果用户没有自定义，使用默认的占位描述
         let insightValueDescription: String
@@ -470,9 +479,9 @@ actor AIService {
 
         Structure:
         {
-          "title": "A concise, poetic title (5-10 chars, no emoji)",
+          "title": "\(titleInstruction)",
           "summary": "One-sentence summary of the day",
-          "mood": "A single emoji representing the overall mood",
+          "mood": "A single emoji representing the mood. Prefer specific objects (e.g., ☕️, 🐱, 🌧️) over generic faces if mentioned.",
           "content": "Full diary content in Markdown. Use ## for headers if needed. NO Title/Date at start.",
           "insights": "\(insightValueDescription)"
         }
@@ -497,6 +506,18 @@ actor AIService {
             return WritingStyle.prose.defaultPrompt
         default:
             return writingStyle.defaultPrompt
+        }
+    }
+    
+    private func buildTitleInstruction(style: TitleStyle, customPrompt: String? = nil) -> String {
+        switch style {
+        case .custom:
+            if let prompt = customPrompt, !prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                return prompt
+            }
+            return TitleStyle.abstract.defaultPrompt
+        default:
+            return style.defaultPrompt
         }
     }
 

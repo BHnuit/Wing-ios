@@ -33,6 +33,13 @@ extension Bundle {
                 case .zh: lprojName = "zh-Hans"
                 case .en: lprojName = "en"
                 case .ja: lprojName = "ja"
+                case .system:
+                    // Return Bundle.main to verify system language or fallback
+                    // Ideally we should find the bundle matching System language, 
+                    // but Bundle.main usually handles the default loading if we use NSLocalizedString without bundle.
+                    // However, we ARE using bundle:. So we need to return Bundle.main or nil logic.
+                    // Returning Bundle.main is safest as it contains the base.
+                    return Bundle.main
                 }
                 
                 // 加载对应的 .lproj Bundle

@@ -28,7 +28,6 @@ struct ChatView: View {
     @Environment(SettingsManager.self) private var settingsManager
     @Query private var allSessions: [DailySession]
     
-    @State private var selectedDate: String
     @State private var sessionService = SessionService()
     @State private var selectedImageItem: ImagePreviewItem?
     
@@ -37,7 +36,7 @@ struct ChatView: View {
     
     // 当前查看的 Session
     private var currentSession: DailySession? {
-        allSessions.first { $0.date == selectedDate }
+        allSessions.first { $0.date == navigationManager.selectedDate }
     }
     
     // 碎片列表（按时间排序）
@@ -57,19 +56,17 @@ struct ChatView: View {
     }
     
     init() {
-        // 初始化为今天
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        _selectedDate = State(initialValue: formatter.string(from: Date()))
+        // init body does not need to manage state anymore
     }
     
     var body: some View {
+        @Bindable var navigationManager = navigationManager
         NavigationStack {
             GeometryReader { geometry in
                 VStack(spacing: 0) {
                     // 顶部日期导航
                     DateNavigator(
-                        selectedDate: $selectedDate,
+                        selectedDate: $navigationManager.selectedDate,
                         availableDates: availableDates
                     )
                     .padding(.horizontal)
@@ -168,23 +165,16 @@ struct ChatView: View {
     // MARK: - Empty State
     
     private var emptyStateView: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "sparkles")
-            // ... (rest of emptyStateView)
-            
-            Image(systemName: "sparkles")
-                .font(.system(size: 60))
-                .foregroundStyle(.secondary)
-            
-            Text(isToday ? L("chat.empty.today") : L("chat.empty.past"))
-                .font(.title3)
-                .fontWeight(.medium)
-            
-            Text(L("chat.empty.hint"))
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+        VStack(spacing: 0) {
+            // 仅今日且无记录时显示极简引导，过去日期无记录则保持空白（不可达）
+            if isToday {
+               Image(systemName: "square.and.pencil")
+                   .font(.system(size: 40))
+                   .foregroundStyle(.tertiary.opacity(0.5))
+                   .padding(.bottom, 8)
+           }
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.top, 100)
     }
     
@@ -193,7 +183,7 @@ struct ChatView: View {
     private var isToday: Bool {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        return selectedDate == formatter.string(from: Date())
+        return navigationManager.selectedDate == formatter.string(from: Date())
     }
     
     // MARK: - Actions

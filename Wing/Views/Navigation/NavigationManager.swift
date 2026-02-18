@@ -45,6 +45,20 @@ class NavigationManager {
         }
     }
     
+    /// 当前选中的日期 (YYYY-MM-DD)，默认为今天
+    var selectedDate: String = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: Date())
+    }()
+    
+    /// 当前选中日期的 Date 对象
+    var currentSessionDate: Date {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.date(from: selectedDate) ?? Date()
+    }
+    
     /// 回忆 Tab 的导航路径（仅此 Tab 需要深层导航）
     /// 注意：NavigationPath 不持久化，重启后回到列表页是合理的 UX
     var journalPath = NavigationPath()

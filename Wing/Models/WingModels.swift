@@ -36,12 +36,14 @@ enum FragmentType: String, Codable {
  * 语言类型
  */
 enum Language: String, Codable, CaseIterable {
+    case system = "system"
     case zh = "zh"
     case en = "en"
     case ja = "ja"
     
     var displayName: String {
         switch self {
+        case .system: return L("language.system")
         case .zh: return "中文"
         case .en: return "English"
         case .ja: return "日本語"
@@ -71,11 +73,43 @@ enum WritingStyle: String, Codable {
     nonisolated var defaultPrompt: String {
         switch self {
         case .letter:
-            return NSLocalizedString("prompt.tone.letter", value: "Tone: Write as a warm personal letter to the reader, using intimate and conversational style.", comment: "Letter writing style prompt")
+            return L("prompt.tone.letter")
         case .prose:
-            return NSLocalizedString("prompt.tone.prose", value: "Tone: Warm, reflective, literary prose.", comment: "Prose writing style prompt")
+            return L("prompt.tone.prose")
         case .report:
-            return NSLocalizedString("prompt.tone.report", value: "Tone: Structured and objective, like a daily report with clear sections.", comment: "Report writing style prompt")
+            return L("prompt.tone.report")
+        case .custom:
+            return ""
+        }
+    }
+}
+
+/**
+ * 标题风格类型
+ */
+enum TitleStyle: String, Codable, CaseIterable {
+    case abstract = "abstract"
+    case summary = "summary"
+    case dateBased = "date_based"
+    case custom = "custom"
+    
+    var displayName: String {
+        switch self {
+        case .abstract: return L("title.style.abstract")
+        case .summary: return L("title.style.summary")
+        case .dateBased: return L("title.style.dateBased")
+        case .custom: return L("title.style.custom")
+        }
+    }
+    
+    nonisolated var defaultPrompt: String {
+        switch self {
+        case .abstract:
+            return L("prompt.title.abstract")
+        case .summary:
+            return L("prompt.title.summary")
+        case .dateBased:
+            return L("prompt.title.dateBased")
         case .custom:
             return ""
         }
@@ -84,7 +118,7 @@ enum WritingStyle: String, Codable {
 
 extension AppSettings {
     static var defaultInsightPrompt: String {
-        String(localized: "prompt.insight.default", defaultValue: "Psychological insights and encouragement (2-3 sentences)")
+        L("prompt.insight.default")
     }
 }
 
@@ -766,7 +800,11 @@ final class AppSettings {
     var backupApiKeys: Bool
     
     /// 文风：letter 书信体、prose 散文体、report 报告体、custom 自定义
-    var writingStyle: WritingStyle
+    @Attribute(originalName: "writingStyle") var _writingStyle: WritingStyle?
+    var writingStyle: WritingStyle {
+        get { _writingStyle ?? WritingStyle.prose }
+        set { _writingStyle = newValue }
+    }
     
     /// 自定义文风时的提示词
     var writingStylePrompt: String?
@@ -774,14 +812,36 @@ final class AppSettings {
     /// 猫头鹰洞察的自定义提示语
     var insightPrompt: String?
     
+    /// 标题风格：abstract 抽象、summary 总结、dateBased 日期、custom 自定义
+    @Attribute(originalName: "titleStyle") var _titleStyle: TitleStyle?
+    var titleStyle: TitleStyle {
+        get { _titleStyle ?? TitleStyle.abstract }
+        set { _titleStyle = newValue }
+    }
+    
+    /// 自定义标题风格时的提示词
+    var titleStylePrompt: String?
+    
     /// 是否启用长期记忆功能（Beta）
-    var enableLongTermMemory: Bool
+    @Attribute(originalName: "enableLongTermMemory") var _enableLongTermMemory: Bool?
+    var enableLongTermMemory: Bool {
+        get { _enableLongTermMemory ?? false }
+        set { _enableLongTermMemory = newValue }
+    }
     
     /// 是否自动提取记忆（日记生成后自动提取）
-    var memoryExtractionAuto: Bool
+    @Attribute(originalName: "memoryExtractionAuto") var _memoryExtractionAuto: Bool?
+    var memoryExtractionAuto: Bool {
+        get { _memoryExtractionAuto ?? false }
+        set { _memoryExtractionAuto = newValue }
+    }
     
     /// 是否在生成日记时检索记忆（向AI传递记忆内容，需记忆数≥100）
-    var memoryRetrievalEnabled: Bool
+    @Attribute(originalName: "memoryRetrievalEnabled") var _memoryRetrievalEnabled: Bool?
+    var memoryRetrievalEnabled: Bool {
+        get { _memoryRetrievalEnabled ?? false }
+        set { _memoryRetrievalEnabled = newValue }
+    }
     
     /// 日记生成语言设置
     var journalLanguage: JournalLanguage = JournalLanguage.auto
@@ -831,7 +891,9 @@ final class AppSettings {
         memoryExtractionAuto: Bool = false,
         memoryRetrievalEnabled: Bool = false,
         journalLanguage: JournalLanguage = .auto,
-        bilingualMode: Bool = false
+        bilingualMode: Bool = false,
+        titleStyle: TitleStyle = .abstract,
+        titleStylePrompt: String? = nil
     ) {
         self.id = id
         self.aiProvider = aiProvider
@@ -843,13 +905,16 @@ final class AppSettings {
         self.modelLanguage = modelLanguage
         self.keepEditHistory = keepEditHistory
         self.backupApiKeys = backupApiKeys
-        self.writingStyle = writingStyle
+        self._writingStyle = writingStyle
         self.writingStylePrompt = writingStylePrompt
         self.insightPrompt = insightPrompt
-        self.enableLongTermMemory = enableLongTermMemory
-        self.memoryExtractionAuto = memoryExtractionAuto
-        self.memoryRetrievalEnabled = memoryRetrievalEnabled
+        self._enableLongTermMemory = enableLongTermMemory
+        self._memoryExtractionAuto = memoryExtractionAuto
+        self._memoryRetrievalEnabled = memoryRetrievalEnabled
         self.journalLanguage = journalLanguage
+        self.bilingualMode = bilingualMode
+        self._titleStyle = titleStyle
+        self.titleStylePrompt = titleStylePrompt
         
         // 使用计算属性的 setter 来初始化
         self.aiModels = aiModels

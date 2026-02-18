@@ -126,7 +126,7 @@ struct CalendarHeatmapView: View {
             // Legend
             HStack(spacing: 4) {
                 Spacer()
-                Text("Less")
+                Text(L("settings.stats.heatmap.less"))
                     .font(.caption2)
                     .foregroundStyle(.secondary)
                 
@@ -140,7 +140,7 @@ struct CalendarHeatmapView: View {
                 .frame(width: 8, height: 8)
                 .cornerRadius(1)
                 
-                Text("More")
+                Text(L("settings.stats.heatmap.more"))
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }

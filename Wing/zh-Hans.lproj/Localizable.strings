@@ -46,6 +46,7 @@
 "date.picker.done" = "完成";
 "date.format.monthDay" = "M月d日";
 "date.format.yearMonth" = "yyyy年M月";
+"date.format.full" = "yyyy年MM月dd日 EEEE";
 "date.weekdays" = "日,一,二,三,四,五,六";
 
 // MARK: - Journal
@@ -55,8 +56,36 @@
 "journal.detail.title" = "日记详情";
 "journal.detail.notFound" = "日记不存在";
 "journal.detail.notFound.desc" = "无法找到该日记";
-"journal.insight.title" = "猫头鹰的洞察";
+"journal.insight.title" = "洞察";
 "journal.unknown.route" = "未知路由";
+
+// MARK: - Journal Detail Actions
+"journal.detail.editing" = "编辑日记";
+"journal.action.finish" = "完成";
+"journal.action.edit" = "编辑";
+"journal.action.duplicate" = "创建副本";
+"journal.action.copy" = "复制正文";
+"journal.action.exportImage" = "导出图片";
+"journal.action.jumpToChat" = "跳转到对话";
+"journal.action.delete" = "删除";
+"journal.delete.confirm" = "确认删除？";
+// MARK: - Journal Detail Actions
+"journal.detail.editing" = "编辑日记";
+"journal.action.finish" = "完成";
+"journal.action.edit" = "编辑";
+"journal.action.duplicate" = "创建副本";
+"journal.action.copy" = "复制正文";
+"journal.action.exportImage" = "导出图片";
+"journal.action.jumpToChat" = "跳转到对话";
+"journal.action.delete" = "删除";
+"journal.delete.confirm" = "确认删除？";
+"journal.delete.message" = "此操作不可撤销。";
+"journal.edit.titlePlaceholder" = "标题";
+"journal.copy.suffix" = "（副本）";
+"journal.edit.summaryPlaceholder" = "摘要";
+"journal.edit.date" = "日期";
+"journal.image.replace" = "替换";
+"journal.image.delete" = "删除";
 
 // MARK: - Settings
 "settings.title" = "设置";
@@ -90,6 +119,15 @@
 // MARK: - Settings > AI > Personalization
 "settings.ai.section.personalization" = "个性化";
 "settings.ai.section.personalization.footer" = "自定义 AI 生成日记的写作风格和洞察视角。";
+"settings.ai.titleStyle" = "标题风格";
+"settings.ai.titleStylePrompt" = "自定义标题指令";
+"settings.ai.titleStylePrompt.placeholder" = "例如：使用诗意的短语，不包含具体日期...";
+"settings.ai.titleStyle.preview" = "标题指令预览";
+"title.style.abstract" = "抽象诗意";
+"title.style.summary" = "内容摘要";
+"title.style.dateBased" = "日期书信";
+"title.style.custom" = "自定义";
+
 "settings.ai.writingStyle" = "文风";
 "settings.ai.writingStyle.letter" = "书信体";
 "settings.ai.writingStyle.prose" = "散文体";
@@ -105,7 +143,12 @@
 "prompt.tone.letter" = "日记正文采用书信体文风：如同写给某人或未来的自己的信，可使用第二人称「你」或称呼语，语气亲切、私密，可有开头的称呼与结尾的落款感。";
 "prompt.tone.prose" = "日记正文采用散文体文风：行文自由、富有节奏感，可夹叙夹议，注重意境与情绪的自然流动，语言优美、留白适中。";
 "prompt.tone.report" = "日记正文采用报告体文风：条理清晰、层次分明，可适当使用小标题或分点，客观记述与简要点评结合，简洁克制。";
-"prompt.insight.default" = "洞察：基于积极心理学给予鼓励和深层见解（2-3句）。";
+
+"prompt.title.abstract" = "标题风格：使用抽象、诗意的的短语捕捉当下的情绪（例如：'雨夜的低语'）。避免通用的标题。";
+"prompt.title.summary" = "标题风格：简练、客观的总结性标题（例如：'项目相关记录'）。";
+"prompt.title.dateBased" = "标题风格：包含日期或像信件抬头的标题（例如：'致未来的自己'）。";
+
+"prompt.insight.default" = "基于积极心理学给予鼓励和深层见解（2-3句）。";
 
 // MARK: - Settings > Display
 "settings.display.title" = "显示选项";
@@ -164,8 +207,8 @@
 "settings.memory.episodic" = "经历";
 "settings.memory.procedural" = "习惯";
 "settings.memory.extractLatest" = "从最新日记提取";
-"settings.memory.extractFrom" = "从指定日记提取...";
-"settings.memory.merge" = "整理合并相似记忆...";
+"settings.memory.extractFrom" = "从指定日记提取";
+"settings.memory.merge" = "整理合并相似记忆";
 "settings.memory.clearAll" = "清空所有记忆";
 "settings.memory.clear.confirm" = "确认清空所有记忆？";
 "settings.memory.clear.message" = "此操作将永久删除所有已提取的事实、经历和习惯记忆。无法撤销。但不会删除您的日记内容。";
@@ -264,7 +307,9 @@
 "journal.language.auto" = "自动检测";
 "journal.language.zh" = "中文";
 "journal.language.en" = "English";
+"journal.language.en" = "English";
 "journal.language.ja" = "日本語";
+"language.system" = "跟随系统";
 
 // MARK: - AI Errors
 "ai.error.missingKey" = "缺少 API Key，请在设置中配置。";
@@ -291,3 +336,11 @@
 "menu.delete.confirm" = "确认删除吗？";
 "menu.save" = "保存";
 "menu.cancel" = "取消";
+"stats.unit.days" = "天";
+"stats.unit.times" = "次";
+"stats.unit.feathers" = "枚";
+"settings.stats.label.totalDays" = "总计记录";
+"settings.stats.label.todayFlaps" = "今日挥动翅膀";
+"settings.stats.label.totalFeathers" = "累计收集羽毛";
+"settings.stats.heatmap.less" = "少";
+"settings.stats.heatmap.more" = "多";

@@ -41,6 +41,18 @@ struct SettingsAIView: View {
                     Text(L("settings.ai.section.credential.footer"))
                 }
                 
+                // 文风与自定义 Prompt
+                Section {
+                    TitleStyleSectionView(settings: settings, settingsManager: settingsManager)
+                    WritingStyleSectionView(settings: settings, settingsManager: settingsManager)
+                    InsightStyleSectionView(settings: settings, settingsManager: settingsManager)
+
+                } header: {
+                    Text(L("settings.ai.section.personalization"))
+                } footer: {
+                    Text(L("settings.ai.section.personalization.footer"))
+                }
+                
                 Section {
                     Toggle(L("settings.ai.longTermMemory"), isOn: Binding(
                         get: { settingsManager.appSettings?.enableLongTermMemory ?? false },
@@ -54,96 +66,6 @@ struct SettingsAIView: View {
                     Text(L("settings.ai.section.advanced"))
                 } footer: {
                     Text(L("settings.ai.section.advanced.footer"))
-                }
-                
-                // 文风与自定义 Prompt
-                Section {
-                    // 文风选择
-                    Picker(L("settings.ai.writingStyle"), selection: Binding(
-                        get: { settings.writingStyle },
-                        set: { newValue in
-                            settings.writingStyle = newValue
-                            try? settingsManager.modelContext?.save()
-                        }
-                    )) {
-                        Text(L("settings.ai.writingStyle.letter")).tag(WritingStyle.letter)
-                        Text(L("settings.ai.writingStyle.prose")).tag(WritingStyle.prose)
-                        Text(L("settings.ai.writingStyle.report")).tag(WritingStyle.report)
-                        Text(L("settings.ai.writingStyle.custom")).tag(WritingStyle.custom)
-                    }
-                    
-                    // 文风 Prompt 显示
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(settings.writingStyle == .custom ? L("settings.ai.writingStylePrompt") : L("settings.ai.writingStyle.preview"))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        
-                        if settings.writingStyle == .custom {
-                            // 自定义模式：可编辑
-                            TextEditor(text: Binding(
-                                get: { settings.writingStylePrompt ?? "" },
-                                set: { newValue in
-                                    settings.writingStylePrompt = newValue
-                                    try? settingsManager.modelContext?.save()
-                                }
-                            ))
-                            .frame(minHeight: 80)
-                            .font(.body)
-                            .overlay(
-                                Group {
-                                    if (settings.writingStylePrompt ?? "").isEmpty {
-                                        Text(L("settings.ai.writingStylePrompt.placeholder"))
-                                            .foregroundStyle(.tertiary)
-                                            .padding(.horizontal, 5)
-                                            .padding(.vertical, 8)
-                                            .allowsHitTesting(false)
-                                    }
-                                },
-                                alignment: .topLeading
-                            )
-                        } else {
-                            // 预设模式：只读预览
-                            Text(settings.writingStyle.defaultPrompt)
-                                .font(.callout)
-                                .foregroundStyle(.secondary)
-                                .padding()
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Color(uiColor: .secondarySystemBackground))
-                                .cornerRadius(8)
-                        }
-                    }
-                    
-                    // 洞察自定义 Prompt — 始终可编辑
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(L("settings.ai.insightPrompt"))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        TextEditor(text: Binding(
-                            get: { settings.insightPrompt ?? "" },
-                            set: { newValue in
-                                settings.insightPrompt = newValue.isEmpty ? nil : newValue
-                                try? settingsManager.modelContext?.save()
-                            }
-                        ))
-                        .frame(minHeight: 60)
-                        .font(.body)
-                        .overlay(
-                            Group {
-                                if (settings.insightPrompt ?? "").isEmpty {
-                                    Text(L("settings.ai.insightPrompt.placeholder"))
-                                        .foregroundStyle(.tertiary)
-                                        .padding(.horizontal, 5)
-                                        .padding(.vertical, 8)
-                                        .allowsHitTesting(false)
-                                }
-                            },
-                            alignment: .topLeading
-                        )
-                    }
-                } header: {
-                    Text(L("settings.ai.section.personalization"))
-                } footer: {
-                    Text(L("settings.ai.section.personalization.footer"))
                 }
             }
         }
@@ -450,3 +372,156 @@ struct APIKeyInput: View {
 
 // 借用 SettingsEntryView 中的 ValidationState 和 PresetModels
 // 如果需要在多处使用，建议移到单独的 Models 文件，这里暂时复用或假定已移动
+
+struct TitleStyleSectionView: View {
+    @Bindable var settings: AppSettings
+    var settingsManager: SettingsManager
+    
+    var body: some View {
+        Group {
+            Picker(L("settings.ai.titleStyle"), selection: Binding(
+                get: { settings.titleStyle },
+                set: { newValue in
+                    settings.titleStyle = newValue
+                    try? settingsManager.modelContext?.save()
+                }
+            )) {
+                ForEach(TitleStyle.allCases, id: \.self) { style in
+                    Text(style.displayName).tag(style)
+                }
+            }
+            
+            VStack(alignment: .leading, spacing: 6) {
+                Text(settings.titleStyle == .custom ? L("settings.ai.titleStylePrompt") : L("settings.ai.titleStyle.preview"))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                
+                if settings.titleStyle == .custom {
+                    TextEditor(text: Binding(
+                        get: { settings.titleStylePrompt ?? "" },
+                        set: { newValue in
+                            settings.titleStylePrompt = newValue
+                            try? settingsManager.modelContext?.save()
+                        }
+                    ))
+                    .frame(minHeight: 80)
+                    .font(.body)
+                    .overlay(
+                        Group {
+                            if (settings.titleStylePrompt ?? "").isEmpty {
+                                Text(L("settings.ai.titleStylePrompt.placeholder"))
+                                    .foregroundStyle(.tertiary)
+                                    .padding(.horizontal, 5)
+                                    .padding(.vertical, 8)
+                                    .allowsHitTesting(false)
+                            }
+                        },
+                        alignment: .topLeading
+                    )
+                } else {
+                    Text(settings.titleStyle.defaultPrompt)
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color(uiColor: .secondarySystemBackground))
+                        .cornerRadius(8)
+                }
+            }
+        }
+    }
+}
+
+struct WritingStyleSectionView: View {
+    @Bindable var settings: AppSettings
+    var settingsManager: SettingsManager
+    
+    var body: some View {
+        Group {
+            Picker(L("settings.ai.writingStyle"), selection: Binding(
+                get: { settings.writingStyle },
+                set: { newValue in
+                    settings.writingStyle = newValue
+                    try? settingsManager.modelContext?.save()
+                }
+            )) {
+                Text(L("settings.ai.writingStyle.letter")).tag(WritingStyle.letter)
+                Text(L("settings.ai.writingStyle.prose")).tag(WritingStyle.prose)
+                Text(L("settings.ai.writingStyle.report")).tag(WritingStyle.report)
+                Text(L("settings.ai.writingStyle.custom")).tag(WritingStyle.custom)
+            }
+            
+            VStack(alignment: .leading, spacing: 6) {
+                Text(settings.writingStyle == .custom ? L("settings.ai.writingStylePrompt") : L("settings.ai.writingStyle.preview"))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                
+                if settings.writingStyle == .custom {
+                    TextEditor(text: Binding(
+                        get: { settings.writingStylePrompt ?? "" },
+                        set: { newValue in
+                            settings.writingStylePrompt = newValue
+                            try? settingsManager.modelContext?.save()
+                        }
+                    ))
+                    .frame(minHeight: 80)
+                    .font(.body)
+                    .overlay(
+                        Group {
+                            if (settings.writingStylePrompt ?? "").isEmpty {
+                                Text(L("settings.ai.writingStylePrompt.placeholder"))
+                                    .foregroundStyle(.tertiary)
+                                    .padding(.horizontal, 5)
+                                    .padding(.vertical, 8)
+                                    .allowsHitTesting(false)
+                            }
+                        },
+                        alignment: .topLeading
+                    )
+                } else {
+                    Text(settings.writingStyle.defaultPrompt)
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color(uiColor: .secondarySystemBackground))
+                        .cornerRadius(8)
+                }
+            }
+        }
+    }
+}
+
+struct InsightStyleSectionView: View {
+    @Bindable var settings: AppSettings
+    var settingsManager: SettingsManager
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(L("settings.ai.insightPrompt"))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            TextEditor(text: Binding(
+                get: { settings.insightPrompt ?? "" },
+                set: { newValue in
+                    settings.insightPrompt = newValue.isEmpty ? nil : newValue
+                    try? settingsManager.modelContext?.save()
+                }
+            ))
+            .frame(minHeight: 60)
+            .font(.body)
+            .overlay(
+                Group {
+                    if (settings.insightPrompt ?? "").isEmpty {
+                        Text(L("settings.ai.insightPrompt.placeholder"))
+                            .foregroundStyle(.tertiary)
+                            .padding(.horizontal, 5)
+                            .padding(.vertical, 8)
+                            .allowsHitTesting(false)
+                    }
+                },
+                alignment: .topLeading
+            )
+        }
+    }
+}

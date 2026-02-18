@@ -45,6 +45,7 @@
 "date.picker.done" = "完了";
 "date.format.monthDay" = "M月d日";
 "date.format.yearMonth" = "yyyy年M月";
+"date.format.full" = "yyyy年MM月dd日 EEEE";
 "date.weekdays" = "日,月,火,水,木,金,土";
 
 // MARK: - Journal
@@ -56,6 +57,24 @@
 "journal.detail.notFound.desc" = "この日記は見つかりませんでした";
 "journal.insight.title" = "フクロウの洞察";
 "journal.unknown.route" = "不明なルート";
+
+// MARK: - Journal Detail Actions
+"journal.detail.editing" = "日記を編集";
+"journal.action.finish" = "完了";
+"journal.action.edit" = "編集";
+"journal.action.duplicate" = "複製を作成";
+"journal.action.copy" = "本文をコピー";
+"journal.action.exportImage" = "画像をエクスポート";
+"journal.action.jumpToChat" = "チャットへ移動";
+"journal.action.delete" = "削除";
+"journal.delete.confirm" = "削除しますか？";
+"journal.delete.message" = "この操作は取り消せません。";
+"journal.edit.titlePlaceholder" = "タイトル";
+"journal.copy.suffix" = "（コピー）";
+"journal.edit.summaryPlaceholder" = "要約";
+"journal.edit.date" = "日付";
+"journal.image.replace" = "置き換え";
+"journal.image.delete" = "削除";
 
 // MARK: - Settings
 "settings.title" = "設定";
@@ -100,10 +119,24 @@
 "settings.ai.insightPrompt" = "インサイトプロンプト（任意）";
 "settings.ai.insightPrompt.placeholder" = "例：ポジティブ心理学の視点から励ましを...";
 
+"settings.ai.titleStyle" = "タイトルスタイル";
+"settings.ai.titleStylePrompt" = "カスタムタイトルプロンプト";
+"settings.ai.titleStylePrompt.placeholder" = "例：詩的なフレーズを使用し、具体的な日付は含めない...";
+"settings.ai.titleStyle.preview" = "タイトルプロンプト（プレビュー）";
+
+"title.style.abstract" = "抽象的・詩的";
+"title.style.summary" = "要約・レポート";
+"title.style.dateBased" = "日付・手紙形式";
+"title.style.custom" = "カスタム";
+
 // AI Prompts (Localized)
 "prompt.tone.letter" = "トーン：日記の本文は手紙形式で：誰か、あるいは未来の自分に宛てた私信のように。二人称「あなた」や呼びかけを使用し、親密でプライベートな口調で。冒頭の呼びかけや結びの言葉を含めてもよい。";
 "prompt.tone.prose" = "トーン：日記の本文は散文形式で：自由な筆致でリズム感を持たせる。叙述と議論を織り交ぜ、意境と感情の自然な流れを重視する。美しい言葉遣いで、適度な余白を持たせる。";
 "prompt.tone.report" = "トーン：日記の本文はレポート形式で：論理的で階層が明確。小見出しや箇条書きを適切に使用する。客観的な記述と簡潔なコメントを組み合わせ、抑制された表現にする。";
+"prompt.title.abstract" = "タイトルのトーン：その瞬間の感情を捉えた抽象的で詩的なフレーズ（例：「雨夜のささやき」）。一般的なタイトルは避ける。";
+"prompt.title.summary" = "タイトルのトーン：簡潔で客観的な要約タイトル（例：「プロジェクト関連の記録」）。";
+"prompt.title.dateBased" = "タイトルのトーン：日付を含めるか、手紙の冒頭のようなタイトル（例：「未来の自分へ」）。";
+
 "prompt.insight.default" = "インサイト：ポジティブ心理学に基づいた励ましと深い洞察（2-3文）。";
 
 // MARK: - Settings > Display
@@ -163,8 +196,8 @@
 "settings.memory.episodic" = "経験";
 "settings.memory.procedural" = "習慣";
 "settings.memory.extractLatest" = "最新の日記から抽出";
-"settings.memory.extractFrom" = "指定の日記から抽出...";
-"settings.memory.merge" = "類似の記憶を整理・統合...";
+"settings.memory.extractFrom" = "指定の日記から抽出";
+"settings.memory.merge" = "類似の記憶を整理・統合";
 "settings.memory.clearAll" = "すべての記憶を消去";
 "settings.memory.clear.confirm" = "すべての記憶を消去しますか？";
 "settings.memory.clear.message" = "抽出されたすべての事実、経験、習慣の記憶が永久に削除されます。元に戻すことはできません。ただし、日記の内容は削除されません。";
@@ -263,7 +296,9 @@
 "journal.language.auto" = "自動検出";
 "journal.language.zh" = "中文";
 "journal.language.en" = "English";
+"journal.language.en" = "English";
 "journal.language.ja" = "日本語";
+"language.system" = "システムに従う";
 
 // MARK: - AI Errors
 "ai.error.missingKey" = "APIキーがありません。設定で構成してください。";
@@ -289,3 +324,11 @@
 "menu.delete.confirm" = "削除しますか？";
 "menu.save" = "保存";
 "menu.cancel" = "キャンセル";
+"stats.unit.days" = "日";
+"stats.unit.times" = "回";
+"stats.unit.feathers" = "枚";
+"settings.stats.label.totalDays" = "記録日数";
+"settings.stats.label.todayFlaps" = "今日のアクション";
+"settings.stats.label.totalFeathers" = "集めた羽毛";
+"settings.stats.heatmap.less" = "少";
+"settings.stats.heatmap.more" = "多";

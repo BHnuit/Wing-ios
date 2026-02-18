@@ -1,8 +1,8 @@
 # 🗺️ Wing iOS Native - 开发路线图 (Roadmap)
 
-> **当前状态**: Phase 10 (发布准备) - 规划中
+> **当前状态**: Phase 10 (深度体验打磨) - 进行中
 > **目标环境**: iOS 26.2+ | Swift 6.2 | SwiftUI | SwiftData
-> **最后更新**: 2026-02-13
+> **最后更新**: 2026-02-18
 > **Xcode**: 26.3
 
 ## 📌 项目概述
@@ -93,7 +93,7 @@ Wing 是一个从 React/TypeScript 重构为原生 iOS 的 AI 驱动日记应用
     - [x] 渲染 `FragmentBubble` 视图 (文本 & 图片).
 - [x] **5.2 输入区域**
     - [x] 文本输入框 (自适应高度).
-    - [ ] 输入体验优化 (光标位置、换行逻辑、键盘遮挡) - *遗留任务*.
+    - [x] 输入体验优化 (通过 Phase 10 持续打磨).
     - [x] **照片选择器**: 集成 `PhotosPicker` (SwiftUI Native).
     - [x] **触感反馈**: 发送时增加 `UIImpactFeedbackGenerator`.
     - [x] **日期导航**: 健壮的日期切换与日历 (`DateNavigator.swift`).
@@ -116,7 +116,7 @@ Wing 是一个从 React/TypeScript 重构为原生 iOS 的 AI 驱动日记应用
 - [x] **6.3 日记合成**
     - [x] `JournalSynthesisService`: 编排合成流程.
     - [x] `AIService.synthesizeJournal`: 单次请求 JSON 模式.
-    - [x] `SynthesisProgressView`: 循环鼓励语 + 时间预估.
+    - [x] `SynthesisProgressView`: 循环鼓励语 + 时间预估 (S3 重构).
     - [x] **Fallback**: JSON 解析失败时 → 保存为 "无题日记".
 
 > 📖 技术回顾: [phase6-retrospective.md](.agent/memories/phase6-retrospective.md)
@@ -128,7 +128,7 @@ Wing 是一个从 React/TypeScript 重构为原生 iOS 的 AI 驱动日记应用
 
 - [x] **7.1 设置视图**
     - [x] AI 服务商配置 (API Key 输入 -> Keychain).
-    - [ ] 完善模型列表与服务商配置 (OpenAI/Gemini/DeepSeek 预设列表) - *遗留任务*.
+    - [x] 完善模型列表与服务商配置 (OpenAI/Gemini/DeepSeek 预设列表).
     - [x] 设置 UI 重构 (模块化分区).
 - [x] **7.2 数据管理**
     - [x] 导出/备份逻辑 (全量 JSON 导出).
@@ -145,14 +145,14 @@ Wing 是一个从 React/TypeScript 重构为原生 iOS 的 AI 驱动日记应用
 
 - [x] **8.1 高级个性化**
     - [x] `WritingStyle` 设置 UI (书信、散文、报告).
-    - [ ] 自定义 Prompt 编辑器 (`writingStylePrompt`, `insightPrompt` - 文风与洞察支持自定义) - *遗留任务*
+    - [x] 自定义 Prompt 编辑器 (`writingStylePrompt`, `insightPrompt`).
 - [x] **8.2 AI Agent 能力**
     - [x] 长期记忆 (语义/情景/程序性记忆提取).
     - [x] 上下文感知的 RAG 检索 (用于日记合成).
 - [x] **8.3 高级数据特性**
     - [x] 导入逻辑 (从 JSON 备份恢复).
     - [x] 记忆整合与管理 UI.
-    - [ ] iCloud 同步 (CloudKit 集成) - *暂缓*
+    - [ ] iCloud 同步 (CloudKit 集成) - *暂缓 (Phase 13)*
 
 ---
 
@@ -164,6 +164,7 @@ Wing 是一个从 React/TypeScript 重构为原生 iOS 的 AI 驱动日记应用
     - [x] **动态切换**: 无需重启 App 即时刷新语言.
     - [x] **深度集成**: AI Prompts, 错误信息, 导出内容均已本地化.
     - [x] **线程安全**: 修复了 `L()` 在后台线程的并发问题 (自动回退).
+    - [x] **设置页修复**: 修复了日语环境下的显示问题 (`settings.ai.titleStyle`).
 - [x] **9.2 数据可视化**
     - [x] 日历热力图 (`CalendarHeatmapView`) - 按日追踪活跃度.
     - [x] 统计仪表盘 (挥动次数, 羽毛总数).
@@ -183,29 +184,6 @@ Wing 是一个从 React/TypeScript 重构为原生 iOS 的 AI 驱动日记应用
 
 ---
 
-## 🗺️ Phase 10: 发布准备 (规划中)
-**目标**: App Store 提交前的最终准备与新用户引导。
-
-- [ ] **10.1 新用户引导 (Onboarding)**
-    - [ ] **欢迎日记 (Welcome Entry)**: 首次启动自动生成一篇介绍 Wing 功能的日记.
-    - [ ] **启动教程**: 简单的功能引导页 (Onboarding Slides).
-    - [ ] **高级个性化补全**: 实现自定义 Prompt 编辑器 (`writingStylePrompt`, `insightPrompt`).
-    - [ ] **AI 配置完善**: 补充各服务商的主流模型预设列表.
-    - [ ] **输入体验打磨**: 优化长文本输入时的滚动、光标及键盘交互体验.
-- [ ] **10.2 App Store 资源**
-    - [ ] App Icon (生产级品质).
-    - [ ] 商店截图 (EN/ZH/JA 多语言版本).
-    - [ ] 隐私政策 URL.
-- [ ] **10.3 最终打磨 (Pre-launch Refinement)**
-    - [ ] **跨日期合成**: 支持在日期导航器选定日期后，合成对应日期的日记（非仅限制今日）.
-    - [ ] **空白页优化**: 优化新一天的默认提醒样式与提示语 (Empty State UI).
-    - [ ] **日记详情操作增强**: 增加复制、编辑、粘贴、拷贝、导出等交互项.
-    - [ ] **AI 生成优化**: 优化日记生成的标题与 Emoji 选择，避免单调重复.
-    - [ ] 启动屏动画 (Launch Screen).
-    - [ ] 性能分析 (使用 Instruments) & 内存泄漏检查.
-- [ ] **10.4 TestFlight**
-    - [ ] 构建与归档 (Archive) 并上传至 App Store Connect.
-
 ## ✅ Phase S3: 交互革新 (已完成 - 2026-02-16)
 **目标**: 实现全新的 "Liquid Glass" 交互语言与 "气泡汇聚" 合成动画。
 
@@ -220,6 +198,60 @@ Wing 是一个从 React/TypeScript 重构为原生 iOS 的 AI 驱动日记应用
     - [x] **并发安全**: 解决了 Swift 6 模式下的 Timer 闭包非 Sendable 捕获警告.
     - [x] **操作冲突**: 修复了长按启动合成后，松手误触发记录表单弹出的问题.
     - [x] **Anchor 稳定性**: 实现了基于 GeometryProxy 的鲁棒性锚点解析 fallback 机制.
+
+---
+
+## 🏗️ Phase 10: 深度体验打磨 (Deep Polish)
+**目标**: 专注 App 内部的交互细节与稳定性，确保核心循环流畅无阻。
+
+- [x] **10.1 核心功能完善 (已修复)**
+    - [x] **图片浏览器回归修复**: 修复了查看详情图片时的黑屏/白屏问题.
+    - [x] **日记操作增强**: 修复删除后列表不刷新问题；校正日期显示逻辑.
+    - [x] **本地化补全**: 修复了删除确认弹窗及日语文本未翻译问题.
+- [x] **10.2 输入与编辑体验**
+    - [x] **长文本优化**: 优化输入框的高度自适应、光标定位及键盘遮挡处理.
+    - [x] **日记操作增强**: 增加复制全文、导出单篇 Markdown、重新编辑功能.
+- [x] **10.3 AI 生成多样性**
+    - [x] **跨日期合成**: 允许在日期导航器选定任意日期进行日记合成 (Time Travel Synthesis).
+    - [x] **文风随机性**: 优化 Title 与 Emoji 的选择逻辑，避免千篇一律的格式.
+
+---
+
+## 🚀 Phase 11: 新用户旅程 (Onboarding)
+**目标**: 打造令人印象深刻的首 5 分钟体验 (First Run Experience)。
+
+- [ ] **11.1 启动引导**
+    - [ ] **Welcome Entry**:首次启动自动生成一篇介绍 Wing 功能的日记 (预置数据).
+    - [ ] **Onboarding Slides**: 简洁的功能引导页 (SwiftUI 动画演示).
+- [ ] **11.2 第零配置**
+    - [ ] **启动屏动画**: 实现 Logo 呼吸或展开的 Launch Screen 动画.
+    - [ ] **默认设置优化**: 内置各服务商 (OpenAI/Gemini) 推荐模型列表，减少用户配置负担.
+    - [ ] **空白状态 (Empty State)**: 优化新一天的默认提醒样式与提示语.
+
+---
+
+## 🏁 Phase 12: 发布冲刺 (Launch Ready)
+**目标**: 完成 App Store 上架的所有外部准备工作。
+
+- [ ] **12.1 商店资产**
+    - [ ] **App Icon**: 导出全尺寸生产级图标资源 (AppIcon set).
+    - [ ] **Screenshots**: 制作 EN/ZH/JA 多语言版本的 App Store 截图.
+    - [ ] **Privacy Policy**: 托管隐私政策页面.
+- [ ] **12.2 TestFlight 分发**
+    - [ ] **Archive**: 构建发布版本.
+    - [ ] **Upload**: 上传至 App Store Connect.
+    - [ ] **Internal Testing**: 这里进行最后真机验证 (性能 & 内存).
+
+---
+
+## 🔮 Phase 13: 未来展望 (Future - TBD)
+**目标**: 版本稳定后的功能迭代方向。
+
+- [ ] **iCloud Sync**: 基于 CloudKit 的多设备同步.
+- [ ] **iPad/Mac**: 大屏适配与多窗口支持.
+- [ ] **Widget**: 桌面小组件 (热力图/今日回顾).
+
+---
 
 ## 📝 开发者指南
 

@@ -45,6 +45,7 @@
 "date.picker.done" = "Done";
 "date.format.monthDay" = "MMM d";
 "date.format.yearMonth" = "MMM yyyy";
+"date.format.full" = "EEEE, MMM d, yyyy";
 "date.weekdays" = "Su,Mo,Tu,We,Th,Fr,Sa";
 
 // MARK: - Journal
@@ -54,8 +55,26 @@
 "journal.detail.title" = "Journal Detail";
 "journal.detail.notFound" = "Journal Not Found";
 "journal.detail.notFound.desc" = "Unable to find this journal";
-"journal.insight.title" = "Owl's Insight";
+"journal.insight.title" = "Details";
 "journal.unknown.route" = "Unknown Route";
+
+// MARK: - Journal Detail Actions
+"journal.detail.editing" = "Edit Journal";
+"journal.action.finish" = "Done";
+"journal.action.edit" = "Edit";
+"journal.action.duplicate" = "Duplicate";
+"journal.action.copy" = "Copy Text";
+"journal.action.exportImage" = "Export Image";
+"journal.action.jumpToChat" = "Jump to Chat";
+"journal.action.delete" = "Delete";
+"journal.delete.confirm" = "Confirm Delete?";
+"journal.delete.message" = "This action cannot be undone.";
+"journal.edit.titlePlaceholder" = "Title";
+"journal.copy.suffix" = " (Copy)";
+"journal.edit.summaryPlaceholder" = "Summary";
+"journal.edit.date" = "Date";
+"journal.image.replace" = "Replace";
+"journal.image.delete" = "Delete";
 
 // MARK: - Settings
 "settings.title" = "Settings";
@@ -89,6 +108,16 @@
 // MARK: - Settings > AI > Personalization
 "settings.ai.section.personalization" = "Personalization";
 "settings.ai.section.personalization.footer" = "Customize writing style and insight perspective for AI-generated journals.";
+
+"settings.ai.titleStyle" = "Title Style";
+"settings.ai.titleStylePrompt" = "Custom Title Prompt";
+"settings.ai.titleStylePrompt.placeholder" = "e.g. Use poetic phrases, no dates...";
+"settings.ai.titleStyle.preview" = "Title Prompt Preview";
+"title.style.abstract" = "Abstract & Poetic";
+"title.style.summary" = "Summary";
+"title.style.dateBased" = "Date & Letter";
+"title.style.custom" = "Custom";
+
 "settings.ai.writingStyle" = "Writing Style";
 "settings.ai.writingStyle.letter" = "Letter";
 "settings.ai.writingStyle.prose" = "Prose";
@@ -104,6 +133,11 @@
 "prompt.tone.letter" = "Tone: Journal body uses epistolary style: As if writing a private letter to someone or your future self. You may use the second person 'You' or an address. The tone should be intimate and personal, possibly starting with a salutation and ending with a signature.";
 "prompt.tone.prose" = "Tone: Journal body uses prose style: Free-flowing and rhythmic writing that mixes narration with commentary. Focus on the natural flow of mood and imagery. Use beautiful language with moderate use of white space.";
 "prompt.tone.report" = "Tone: Journal body uses report style: Clear organization and hierarchy. May use subheadings or bullet points. Combines objective description with brief comments. Concise and restrained.";
+
+"prompt.title.abstract" = "Tone: A poetic, abstract title that captures the mood (e.g., 'Whispers of Rain'). Avoid generic titles.";
+"prompt.title.summary" = "Tone: A concise, objective summary title (e.g., 'Daily Log: Project X').";
+"prompt.title.dateBased" = "Tone: A title that incorporates the date or feels like a letter header (e.g., 'Dear Future Me').";
+
 "prompt.insight.default" = "Psychological insights and encouragement (2-3 sentences)";
 
 // MARK: - Settings > Display
@@ -163,8 +197,8 @@
 "settings.memory.episodic" = "Episodes";
 "settings.memory.procedural" = "Habits";
 "settings.memory.extractLatest" = "Extract from Latest Journal";
-"settings.memory.extractFrom" = "Extract from Journal...";
-"settings.memory.merge" = "Merge Similar Memories...";
+"settings.memory.extractFrom" = "Extract from Journal";
+"settings.memory.merge" = "Merge Similar Memories";
 "settings.memory.clearAll" = "Clear All Memories";
 "settings.memory.clear.confirm" = "Clear all memories?";
 "settings.memory.clear.message" = "This will permanently delete all extracted facts, episodes, and habits. This cannot be undone, but your journal entries will not be affected.";
@@ -289,3 +323,11 @@
 "menu.delete.confirm" = "Confirm delete?";
 "menu.save" = "Save";
 "menu.cancel" = "Cancel";
+"stats.unit.days" = "Days";
+"stats.unit.times" = "Times";
+"stats.unit.feathers" = "Feathers";
+"settings.stats.label.totalDays" = "Total Recorded";
+"settings.stats.label.todayFlaps" = "Today's Flaps";
+"settings.stats.label.totalFeathers" = "Total Feathers";
+"settings.stats.heatmap.less" = "Less";
+"settings.stats.heatmap.more" = "More";

@@ -103,41 +103,11 @@ struct SettingsEntryView: View {
                 .padding(.vertical, 8)
                 .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
             
-            HStack(spacing: 16) {
-                VStack(alignment: .leading) {
-                    Text("\(daysRecorded)")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                    Text(L("settings.stats.daysRecorded"))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Divider()
-                
-                VStack(alignment: .leading) {
-                    Text("\(todayFragments)")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                    Text(L("settings.stats.todayFlaps"))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Divider()
-                
-                VStack(alignment: .leading) {
-                    Text("\(totalWings)")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                    Text(L("settings.stats.totalFeathers"))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
+            StatisticsView(
+                daysRecorded: daysRecorded,
+                todayFlaps: todayFragments,
+                totalFeathers: totalWings
+            )
         } header: {
             Text(L("settings.section.overview"))
         }

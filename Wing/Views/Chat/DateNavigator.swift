@@ -73,6 +73,16 @@ struct DateNavigator: View {
             return L("date.yesterday")
         } else {
             formatter.dateFormat = L("date.format.monthDay")
+            // Use current app language
+            let language = SettingsManager.shared.appSettings?.language ?? .zh
+            let localeId: String
+            switch language {
+            case .system: localeId = Locale.current.identifier
+            case .zh: localeId = "zh_CN"
+            case .en: localeId = "en_US"
+            case .ja: localeId = "ja_JP"
+            }
+            formatter.locale = Locale(identifier: localeId)
             return formatter.string(from: date)
         }
     }
@@ -315,6 +325,16 @@ private struct DatePickerSheet: View {
     private func monthYearString(for date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = L("date.format.yearMonth")
+        // Use current app language
+        let language = SettingsManager.shared.appSettings?.language ?? .zh
+        let localeId: String
+        switch language {
+        case .system: localeId = Locale.current.identifier
+        case .zh: localeId = "zh_CN"
+        case .en: localeId = "en_US"
+        case .ja: localeId = "ja_JP"
+        }
+        formatter.locale = Locale(identifier: localeId)
         return formatter.string(from: date)
     }
     

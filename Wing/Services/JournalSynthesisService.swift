@@ -82,12 +82,26 @@ final class JournalSynthesisService {
                 journalLanguage: journalLanguage,
                 writingStyle: SettingsManager.shared.appSettings?.writingStyle ?? .prose,
                 writingStylePrompt: SettingsManager.shared.appSettings?.writingStylePrompt,
+                titleStyle: SettingsManager.shared.appSettings?.titleStyle ?? .abstract,
+                titleStylePrompt: SettingsManager.shared.appSettings?.titleStylePrompt,
                 insightPrompt: SettingsManager.shared.appSettings?.insightPrompt
             )
             
             // 4. 创建 WingEntry
             progressCallback(.saving)
             
+            // Calculate createdAt based on session date (23:59:59)
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            let sessionDate = formatter.date(from: session.date) ?? Date()
+            
+            let calendar = Calendar.current
+            var components = calendar.dateComponents([.year, .month, .day], from: sessionDate)
+            components.hour = 23
+            components.minute = 59
+            components.second = 59
+            let createdAtDate = calendar.date(from: components) ?? Date()
+
             let entryId = UUID()
             let entry = WingEntry(
                 id: entryId,
@@ -96,7 +110,7 @@ final class JournalSynthesisService {
                 mood: output.mood,
                 markdownContent: output.content,
                 aiInsights: output.insights,
-                createdAt: Int64(Date().timeIntervalSince1970 * 1000),
+                createdAt: Int64(createdAtDate.timeIntervalSince1970 * 1000),
                 generatedAt: Int64(Date().timeIntervalSince1970 * 1000)
             )
             

@@ -133,6 +133,7 @@ class SettingsManager {
     var resolvedLocale: Locale {
         guard let language = appSettings?.language else { return Locale.current }
         switch language {
+        case .system: return Locale.current
         case .zh: return Locale(identifier: "zh-Hans")
         case .en: return Locale(identifier: "en")
         case .ja: return Locale(identifier: "ja")

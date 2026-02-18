@@ -395,10 +395,7 @@ private struct CustomTabBar: View {
     }
     
     private var currentSession: DailySession? {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        let today = formatter.string(from: Date())
-        return allSessions.first { $0.date == today }
+        return allSessions.first { $0.date == navigationManager.selectedDate }
     }
 }
 
@@ -567,12 +564,7 @@ private struct JournalTabView: View {
     
     /// 格式化日记日期 (MM/dd)
     private func formatEntryDate(_ entry: WingEntry) -> String {
-        // 优先使用 session.date
-        if let dateString = entry.dailySession?.date {
-            return formatListDate(dateString)
-        }
-        
-        // Fallback: 使用 createdAt 时间戳
+        // 始终优先显示 entry.createdAt
         let date = Date(timeIntervalSince1970: TimeInterval(entry.createdAt) / 1000)
         let formatter = DateFormatter()
         formatter.dateFormat = "MM/dd"
