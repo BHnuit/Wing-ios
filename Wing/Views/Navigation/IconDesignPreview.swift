@@ -13,7 +13,7 @@ struct IconDesignPreview: View {
                     .font(.headline)
                     .foregroundStyle(.secondary)
                 ZStack {
-                    Circle().fill(.ultraThinMaterial).frame(width: 60, height: 60)
+                    Circle().fill(.clear).frame(width: 60, height: 60).glassEffect(.regular, in: .circle)
                     Image(systemName: "bird.fill")
                         .font(.system(size: 24))
                         .foregroundStyle(.blue)
@@ -26,7 +26,7 @@ struct IconDesignPreview: View {
                     .font(.headline)
                     .foregroundStyle(.secondary)
                 ZStack {
-                    Circle().fill(.ultraThinMaterial).frame(width: 60, height: 60)
+                    Circle().fill(.clear).frame(width: 60, height: 60).glassEffect(.regular, in: .circle)
                     Image(systemName: "text.bubble.fill")
                         .font(.system(size: 24))
                         .foregroundStyle(.blue)
@@ -39,7 +39,7 @@ struct IconDesignPreview: View {
                     .font(.headline)
                     .foregroundStyle(.secondary)
                 ZStack {
-                    Circle().fill(.ultraThinMaterial).frame(width: 60, height: 60)
+                    Circle().fill(.clear).frame(width: 60, height: 60).glassEffect(.regular, in: .circle)
                     Image(systemName: "sparkles")
                         .font(.system(size: 24))
                         .foregroundStyle(.blue)

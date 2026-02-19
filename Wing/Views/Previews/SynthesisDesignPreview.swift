@@ -70,9 +70,9 @@ struct DesignComponent: View {
         ZStack {
             // Background Shadow
             Circle()
-                .fill(.ultraThinMaterial)
+                .fill(.clear)
                 .frame(width: 60, height: 60)
-                .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 5)
+                .glassEffect(.regular, in: .circle)
             
             if isComplete {
                 Image(systemName: icon)

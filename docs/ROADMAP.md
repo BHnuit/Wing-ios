@@ -2,7 +2,7 @@
 
 > **当前状态**: Phase 10 (深度体验打磨) - 进行中
 > **目标环境**: iOS 26.2+ | Swift 6.2 | SwiftUI | SwiftData
-> **最后更新**: 2026-02-18
+> **最后更新**: 2026-02-19
 > **Xcode**: 26.3
 
 ## 📌 项目概述
@@ -214,6 +214,20 @@ Wing 是一个从 React/TypeScript 重构为原生 iOS 的 AI 驱动日记应用
 - [x] **10.3 AI 生成多样性**
     - [x] **跨日期合成**: 允许在日期导航器选定任意日期进行日记合成 (Time Travel Synthesis).
     - [x] **文风随机性**: 优化 Title 与 Emoji 的选择逻辑，避免千篇一律的格式.
+- [x] **10.4 空状态与视觉一致性**
+    - [x] **统一空状态组件**: 创建 `EmptyStateView` 并替换系统默认的 `ContentUnavailableView`.
+    - [x] **全场景覆盖**: 适配日记列表、记忆列表、合并预览及详情页.
+    - [x] **聊天页定制**: 为 ChatView 实现极简风格(无标题)的空状态引导.
+- [x] **10.5 视觉深度重构 (Visual Refactor)**
+    - [x] **Liquid Glass 2.0**: 全面升级 iOS 26 原生 `glassEffect` API (取代 `ultraThinMaterial`).
+    - [x] **动态通透**: TabBar 采用 `GlassEffectContainer` + 滚动穿透优化 (`contentMargins`).
+    - [x] **组件标准化**: 统一按钮与 Sheet 的玻璃质感。
+    - [x] **ChatView 重构**: `DateNavigator` 悬浮胶囊设计 (无背景) + 智能日期显示 ("前天").
+    - [x] **视觉一致性**: 统一 `ComposerView` 底栏与 Sheet 背景材质.
+    - [ ] **10.6 上线前最后检查 (Pre-launch Checklist)**
+        - [ ] **文案润色**: 对全局提示文案进行润色和本地化检查 (CN/EN/JA).
+        - [ ] **数据完整性**: 再次确认全量导出 (JSON) 和导入恢复流程是否正常.
+        - [ ] **代码清理**: 去除无用的测试数据、调试代码及相关注入逻辑.
 
 ---
 
@@ -226,7 +240,7 @@ Wing 是一个从 React/TypeScript 重构为原生 iOS 的 AI 驱动日记应用
 - [ ] **11.2 第零配置**
     - [ ] **启动屏动画**: 实现 Logo 呼吸或展开的 Launch Screen 动画.
     - [ ] **默认设置优化**: 内置各服务商 (OpenAI/Gemini) 推荐模型列表，减少用户配置负担.
-    - [ ] **空白状态 (Empty State)**: 优化新一天的默认提醒样式与提示语.
+    - [x] **空白状态 (Empty State)**: 优化新一天的默认提醒样式与提示语. (已在 Phase 10.4 完成)
 
 ---
 

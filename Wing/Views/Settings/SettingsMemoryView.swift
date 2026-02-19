@@ -135,7 +135,13 @@ struct SettingsMemoryView: View {
     private var semanticList: some View {
         Section {
             if semanticMemories.isEmpty {
-                 ContentUnavailableView(L("settings.memory.semantic.empty"), systemImage: "brain", description: Text(L("settings.memory.semantic.empty.desc"))) // Revert
+                 EmptyStateView(
+                     systemImage: "brain",
+                     title: L("settings.memory.semantic.empty"),
+                     description: L("settings.memory.semantic.empty.desc")
+                 )
+                 .listRowBackground(Color.clear)
+                 .frame(height: 200)
             } else {
                 ForEach(semanticMemories) { memory in
                     VStack(alignment: .leading) {
@@ -179,7 +185,13 @@ struct SettingsMemoryView: View {
     private var episodicList: some View {
         Section {
             if episodicMemories.isEmpty {
-                ContentUnavailableView(L("settings.memory.episodic.empty"), systemImage: "clock.arrow.circlepath", description: Text(L("settings.memory.episodic.empty.desc")))
+                EmptyStateView(
+                    systemImage: "clock.arrow.circlepath",
+                    title: L("settings.memory.episodic.empty"),
+                    description: L("settings.memory.episodic.empty.desc")
+                )
+                .listRowBackground(Color.clear)
+                .frame(height: 200)
             } else {
                 ForEach(episodicMemories) { memory in
                     VStack(alignment: .leading, spacing: 6) {
@@ -232,7 +244,13 @@ struct SettingsMemoryView: View {
     private var proceduralList: some View {
         Section {
             if proceduralMemories.isEmpty {
-                 ContentUnavailableView(L("settings.memory.procedural.empty"), systemImage: "figure.walk", description: Text(L("settings.memory.procedural.empty.desc")))
+                 EmptyStateView(
+                     systemImage: "figure.walk",
+                     title: L("settings.memory.procedural.empty"),
+                     description: L("settings.memory.procedural.empty.desc")
+                 )
+                 .listRowBackground(Color.clear)
+                 .frame(height: 200)
             } else {
                 ForEach(proceduralMemories) { memory in
                     VStack(alignment: .leading) {

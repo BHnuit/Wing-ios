@@ -22,24 +22,23 @@ struct DateNavigator: View {
     @State private var showDatePicker = false
     
     var body: some View {
-        HStack(spacing: 16) {
-            // 左箭头：前一个有记录的日期（更早的日期）
-            Button {
-                navigateToPrevious()
-            } label: {
-                Image(systemName: "chevron.left")
-                    .font(.title3)
-                    .foregroundStyle(hasPreviousDate ? .blue : .gray)
-            }
-            .disabled(!hasPreviousDate)
-            
-            // 日期显示
+        ZStack {
+            // 中间：日期胶囊
             Button {
                 showDatePicker = true
             } label: {
-                Text(formattedDate)
-                    .font(.headline)
-                    .foregroundStyle(.primary)
+                HStack(spacing: 4) {
+                    Text(smartDateString)
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                    
+                    Image(systemName: "chevron.down")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.horizontal, 16)
+                .frame(height: 44)
+                .glassEffect(.regular, in: Capsule())
             }
             .sheet(isPresented: $showDatePicker) {
                 DatePickerSheet(
@@ -48,32 +47,62 @@ struct DateNavigator: View {
                 )
             }
             
-            // 右箭头：后一个有记录的日期（更近的日期）
-            Button {
-                navigateToNext()
-            } label: {
-                Image(systemName: "chevron.right")
-                    .font(.title3)
-                    .foregroundStyle(hasNextDate ? .blue : .gray)
+            // 两侧：导航按钮
+            HStack {
+                // 左箭头：前一个日期
+                Button {
+                    navigateToPrevious()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.title3)
+                        .foregroundStyle(hasPreviousDate ? .primary : .tertiary)
+                        .frame(width: 44, height: 44)
+                        .glassEffect(.regular, in: Circle())
+                }
+                .disabled(!hasPreviousDate)
+                .opacity(hasPreviousDate ? 1 : 0.6)
+                
+                Spacer()
+                
+                // 右箭头：后一个日期
+                Button {
+                    navigateToNext()
+                } label: {
+                    Image(systemName: "chevron.right")
+                        .font(.title3)
+                        .foregroundStyle(hasNextDate ? .primary : .tertiary)
+                        .frame(width: 44, height: 44)
+                        .glassEffect(.regular, in: Circle())
+                }
+                .disabled(!hasNextDate)
+                .opacity(hasNextDate ? 1 : 0.6)
             }
-            .disabled(!hasNextDate)
         }
         .padding(.vertical, 8)
+        .padding(.horizontal, 16) // Ensure buttons conform to standard margin
     }
     
     // MARK: - Computed Properties
     
-    private var formattedDate: String {
+    private var smartDateString: String {
         let date = dateFromString(selectedDate)
-        let formatter = DateFormatter()
+        let calendar = Calendar.current
         
-        if Calendar.current.isDateInToday(date) {
+        if calendar.isDateInToday(date) {
             return L("date.today")
-        } else if Calendar.current.isDateInYesterday(date) {
+        } else if calendar.isDateInYesterday(date) {
             return L("date.yesterday")
+        } else if isDayBeforeYesterday(date) {
+            return "前天" // 增加“前天”的支持
         } else {
-            formatter.dateFormat = L("date.format.monthDay")
-            // Use current app language
+            let formatter = DateFormatter()
+            // 如果是当年，只显示 M月d日，否则显示 yyyy年M月d日
+            if calendar.component(.year, from: date) == calendar.component(.year, from: Date()) {
+                formatter.dateFormat = "M月d日"
+            } else {
+                formatter.dateFormat = "yyyy年M月d日"
+            }
+            // 保持原有的语言环境逻辑
             let language = SettingsManager.shared.appSettings?.language ?? .zh
             let localeId: String
             switch language {
@@ -83,8 +112,18 @@ struct DateNavigator: View {
             case .ja: localeId = "ja_JP"
             }
             formatter.locale = Locale(identifier: localeId)
+            
             return formatter.string(from: date)
         }
+    }
+    
+    private func isDayBeforeYesterday(_ date: Date) -> Bool {
+        let calendar = Calendar.current
+        guard let yesterday = calendar.date(byAdding: .day, value: -1, to: Date()),
+              let dayBefore = calendar.date(byAdding: .day, value: -1, to: yesterday) else {
+            return false
+        }
+        return calendar.isDate(date, inSameDayAs: dayBefore)
     }
     
     /// 日期按时间升序排列（旧→新），并去重

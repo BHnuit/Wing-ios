@@ -63,18 +63,8 @@ struct ChatView: View {
         @Bindable var navigationManager = navigationManager
         NavigationStack {
             GeometryReader { geometry in
-                VStack(spacing: 0) {
-                    // 顶部日期导航
-                    DateNavigator(
-                        selectedDate: $navigationManager.selectedDate,
-                        availableDates: availableDates
-                    )
-                    .padding(.horizontal)
-                    .padding(.top, 8)
-                    
-                    Divider()
-                        .padding(.top, 8)
-                    
+                ZStack(alignment: .top) {
+                    // 背景与内容
                     ZStack {
                         // 背景
                         Color(uiColor: .systemGroupedBackground)
@@ -83,6 +73,9 @@ struct ChatView: View {
                         ScrollViewReader { proxy in
                             ScrollView {
                                 LazyVStack(spacing: 0) {
+                                    // 顶部留白，避免被悬浮导航栏遮挡
+                                    Color.clear.frame(height: 60)
+                                    
                                     if fragments.isEmpty {
                                         emptyStateView
                                     } else {
@@ -145,6 +138,13 @@ struct ChatView: View {
                             Text(error.localizedDescription)
                         }
                     }
+                    
+                    // 顶部悬浮日期导航 (无背景容器)
+                    DateNavigator(
+                        selectedDate: $navigationManager.selectedDate,
+                        availableDates: availableDates
+                    )
+                    .padding(.top, 0) // Align to safe area top
                 }
             }
             .toolbar(.hidden, for: .navigationBar)
@@ -165,17 +165,18 @@ struct ChatView: View {
     // MARK: - Empty State
     
     private var emptyStateView: some View {
-        VStack(spacing: 0) {
-            // 仅今日且无记录时显示极简引导，过去日期无记录则保持空白（不可达）
+        // 仅今日且无记录时显示极简引导，过去日期无记录则保持空白（不可达）
+        Group {
             if isToday {
-               Image(systemName: "square.and.pencil")
-                   .font(.system(size: 40))
-                   .foregroundStyle(.tertiary.opacity(0.5))
-                   .padding(.bottom, 8)
-           }
+                EmptyStateView(
+                    systemImage: "square.and.pencil",
+                    title: nil,
+                    description: "开始记录 今天发生了什么"
+                )
+                .padding(.top, 100)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(.top, 100)
     }
     
     // MARK: - Computed Properties
@@ -221,10 +222,19 @@ struct ChatView: View {
 }
 
 #Preview {
-    ChatView()
-        .modelContainer(for: [
-            DailySession.self,
-            RawFragment.self,
-            WingEntry.self
-        ], inMemory: true)
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: DailySession.self, RawFragment.self, WingEntry.self, configurations: config)
+    let navManager: NavigationManager = {
+        let manager = NavigationManager()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        // Set to today to show empty state
+        manager.selectedDate = formatter.string(from: Date())
+        return manager
+    }()
+    
+    return ChatView()
+        .environment(navManager)
+        .environment(SettingsManager.shared)
+        .modelContainer(container)
 }

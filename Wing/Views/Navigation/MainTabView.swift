@@ -55,6 +55,7 @@ struct MainTabView: View {
             // 移除原生 TabBar 相关修饰符
             .sheet(isPresented: $navigationManager.showComposer) {
                 ComposerView()
+                    .presentationBackground(.ultraThinMaterial)
             }
             .environment(navigationManager)
             .environment(SettingsManager.shared)
@@ -112,8 +113,10 @@ private struct CustomTabBar: View {
     
     // Animation Namespace for Sliding Effect
     @Namespace private var animation
+    @Namespace private var glassNamespace
     
     var body: some View {
+        GlassEffectContainer {
         HStack(alignment: .bottom, spacing: 0) {
             // Left Capsule Group: Journal | Settings
             HStack(spacing: 0) {
@@ -137,12 +140,14 @@ private struct CustomTabBar: View {
                     .frame(width: 52, height: 44)
                     .background {
                         if selectedTab == .journal {
-                            GlassHighlight()
+                            Capsule()
+                                .fill(Color.accentColor.opacity(0.15))
                                 .matchedGeometryEffect(id: "selection", in: animation)
                         }
                     }
                 }
                 .disabled(navigationManager.isSynthesizing)
+                .glassEffectID("tab-journal", in: glassNamespace)
                 // Report Anchor for Journal Icon
                 .anchorPreference(key: JournalIconAnchorKey.self, value: .bounds) { anchor in
                     return anchor
@@ -165,17 +170,17 @@ private struct CustomTabBar: View {
                     .frame(width: 52, height: 44)
                     .background {
                         if selectedTab == .settings {
-                            GlassHighlight()
+                            Capsule()
+                                .fill(Color.accentColor.opacity(0.15))
                                 .matchedGeometryEffect(id: "selection", in: animation)
                         }
                     }
+                .glassEffectID("tab-settings", in: glassNamespace)
                 }
             }
             .padding(.horizontal, 4)
             .frame(height: 50)
-            .background(.ultraThinMaterial)
-            .clipShape(Capsule())
-            .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 5)
+            .glassEffect(.regular, in: Capsule())
             
             Spacer()
             
@@ -210,13 +215,7 @@ private struct CustomTabBar: View {
                     }
                 } label: {
                     ZStack {
-                        Circle()
-                            .fill(.ultraThinMaterial)
-                            .frame(width: 50, height: 50)
-                            .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 5)
-                        
-                        // Selected State Highlight -> REMOVED per feedback
-                        // The GlassCircleHighlight is removed to keep it clean.
+                        // 图标区域（不再需要单独的 Circle 背景）
 
                         if navigationManager.isSynthesizing {
                              if case .completed = navigationManager.synthesisProgress {
@@ -251,11 +250,13 @@ private struct CustomTabBar: View {
                         } else {
                             // Icon Switch Logic
                             Image(systemName: selectedTab == .now ? "square.and.pencil" : "text.bubble.fill")
-                                .font(.system(size: 26, weight: .semibold)) // Standardize weight
+                                .font(.system(size: 26, weight: .semibold))
                                 .foregroundStyle(Color.accentColor)
-                                .contentTransition(.symbolEffect(.replace)) // Keep animation if valid
+                                .contentTransition(.symbolEffect(.replace))
                         }
                     }
+                    .frame(width: 50, height: 50)
+                    .glassEffect(.regular, in: .circle)
                     .scaleEffect(navigationManager.isCharging ? 1.1 : 1.0)
                 }
                 .simultaneousGesture(
@@ -270,7 +271,9 @@ private struct CustomTabBar: View {
                         }
                 )
             }
+            .glassEffectID("tab-now", in: glassNamespace)
         }
+        } // GlassEffectContainer
         .padding(.horizontal, 24)
         .padding(.bottom, 16)
     }
@@ -400,62 +403,7 @@ private struct CustomTabBar: View {
 }
 
 // MARK: - Helper Views
-
-struct GlassHighlight: View {
-    @Environment(\.colorScheme) private var colorScheme
-    
-    var body: some View {
-        let isDark = colorScheme == .dark
-        
-        Capsule()
-            .fill(isDark ? .white.opacity(0.1) : .black.opacity(0.05)) // Reverted to neutral
-            .overlay {
-                Capsule()
-                    .strokeBorder(
-                        LinearGradient(
-                            colors: [
-                                isDark ? .white.opacity(0.5) : .black.opacity(0.1),
-                                isDark ? .white.opacity(0.1) : .black.opacity(0.05)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 0.5
-                    )
-            }
-            // Inner glow
-            .shadow(color: isDark ? .white.opacity(0.2) : .white.opacity(0.5), radius: 4, x: -2, y: -2)
-            // Drop shadow
-            .shadow(color: isDark ? .black.opacity(0.3) : .black.opacity(0.1), radius: 4, x: 2, y: 2)
-    }
-}
-
-struct GlassCircleHighlight: View {
-    @Environment(\.colorScheme) private var colorScheme
-    
-    var body: some View {
-        let isDark = colorScheme == .dark
-        
-        Circle()
-            .fill(isDark ? .white.opacity(0.1) : .black.opacity(0.05))
-            .overlay {
-                Circle()
-                    .strokeBorder(
-                        LinearGradient(
-                            colors: [
-                                isDark ? .white.opacity(0.5) : .black.opacity(0.1),
-                                isDark ? .white.opacity(0.1) : .black.opacity(0.05)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 0.5
-                    )
-            }
-            .shadow(color: isDark ? .white.opacity(0.2) : .white.opacity(0.5), radius: 4, x: -2, y: -2)
-            .shadow(color: isDark ? .black.opacity(0.3) : .black.opacity(0.1), radius: 4, x: 2, y: 2)
-    }
-}
+// GlassHighlight / GlassCircleHighlight 已由 iOS 26 原生 .glassEffect() 替代
 
 struct ProgressIcon: View {
     let progress: SynthesisProgress
@@ -524,30 +472,34 @@ private struct JournalTabView: View {
         @Bindable var navManager = navigationManager
         
         NavigationStack(path: $navManager.journalPath) {
-            List {
+            Group {
                 if entries.isEmpty {
-                    ContentUnavailableView(
-                        L("journal.empty"),
+                    EmptyStateView(
                         systemImage: "book.closed",
-                        description: Text(L("journal.empty.hint"))
+                        title: L("journal.empty"),
+                        description: L("journal.empty.hint")
                     )
+                    .background(Color(uiColor: .systemBackground))
                 } else {
-                    ForEach(entries) { entry in
-                        NavigationLink(value: AppRoute.journalDetail(entryId: entry.id)) {
-                            HStack {
-                                Text(entry.mood)
-                                    .font(.title2)
-                                Text(entry.title)
-                                    .font(.headline)
-                                Spacer()
-                                // 右侧日期（优先使用 session.date，fallback 到 createdAt）
-                                Text(formatEntryDate(entry))
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                    List {
+                        ForEach(entries) { entry in
+                            NavigationLink(value: AppRoute.journalDetail(entryId: entry.id)) {
+                                HStack {
+                                    Text(entry.mood)
+                                        .font(.title2)
+                                    Text(entry.title)
+                                        .font(.headline)
+                                    Spacer()
+                                    // 右侧日期（优先使用 session.date，fallback 到 createdAt）
+                                    Text(formatEntryDate(entry))
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .padding(.vertical, 4)
                             }
-                            .padding(.vertical, 4)
                         }
                     }
+                    .contentMargins(.bottom, 80, for: .scrollContent)
                 }
             }
             .navigationTitle(L("journal.title"))

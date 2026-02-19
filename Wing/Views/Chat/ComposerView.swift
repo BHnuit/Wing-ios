@@ -170,7 +170,7 @@ struct ComposerView: View {
         .padding(.horizontal, 20)
         .padding(.bottom, 12)
         .padding(.top, 8)
-        .background(AnyShapeStyle(Color.clear)) // Clean look matching compact mode
+        // .glassEffect(.regular, in: Rectangle()) // Removed to blend with sheet background
     }
     
     // MARK: - Actions

@@ -102,11 +102,12 @@ struct JournalDetailView: View {
                     .padding(.bottom)
                 }
             } else {
-                ContentUnavailableView(
-                    L("journal.detail.notFound"),
+                EmptyStateView(
                     systemImage: "exclamationmark.triangle",
-                    description: Text(L("journal.detail.notFound.desc"))
+                    title: L("journal.detail.notFound"),
+                    description: L("journal.detail.notFound.desc")
                 )
+                .background(Color(uiColor: .systemBackground))
             }
         }
         .navigationTitle(isEditing ? L("journal.detail.editing") : L("journal.detail.title"))

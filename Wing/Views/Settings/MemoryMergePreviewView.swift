@@ -23,7 +23,13 @@ struct MemoryMergePreviewView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                         .listRowBackground(Color.clear)
                 } else if candidates.isEmpty {
-                    ContentUnavailableView(L("settings.memory.merge.noSimilar"), systemImage: "checkmark.circle", description: Text(L("settings.memory.merge.noSimilar.desc")))
+                    EmptyStateView(
+                        systemImage: "checkmark.circle",
+                        title: L("settings.memory.merge.noSimilar"),
+                        description: L("settings.memory.merge.noSimilar.desc")
+                    )
+                    .listRowBackground(Color.clear)
+                    .frame(height: 200)
                 } else {
                     ForEach(candidates) { group in
                         MergeGroupSection(group: group) { keepingId, discardingIds in
