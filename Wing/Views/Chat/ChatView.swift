@@ -139,6 +139,20 @@ struct ChatView: View {
                         }
                     }
                     
+                    // 顶部渐变遮罩 (使气泡滚动到顶部时自然淡出)
+                    LinearGradient(
+                        stops: [
+                            .init(color: Color(uiColor: .systemGroupedBackground), location: 0.0),
+                            .init(color: Color(uiColor: .systemGroupedBackground).opacity(0.8), location: 0.6),
+                            .init(color: Color(uiColor: .systemGroupedBackground).opacity(0.0), location: 1.0)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .frame(height: 140)
+                    .ignoresSafeArea(edges: .top)
+                    .allowsHitTesting(false)
+                    
                     // 顶部悬浮日期导航 (无背景容器)
                     DateNavigator(
                         selectedDate: $navigationManager.selectedDate,
@@ -171,7 +185,7 @@ struct ChatView: View {
                 EmptyStateView(
                     systemImage: "square.and.pencil",
                     title: nil,
-                    description: "开始记录 今天发生了什么"
+                    description: L("chat.empty.today")
                 )
                 .padding(.top, 100)
             }

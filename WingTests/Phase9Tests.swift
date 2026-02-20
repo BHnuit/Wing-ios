@@ -346,6 +346,183 @@ struct DataImportTests {
         #expect(fragments.count == 1)
         #expect(fragments.first?.content == "新替换碎片")
     }
+    
+    @Test("导出模式：空数据库不报错")
+    @MainActor
+    func testExportEmptyDB() async throws {
+        let container = try Self.createContainer()
+        let context = container.mainContext
+        
+        let url = try await DataExportService.shared.exportJSON(context: context)
+        let data = try Data(contentsOf: url)
+        let exportData = try JSONDecoder().decode(WingExportData.self, from: data)
+        #expect(exportData.sessions.isEmpty)
+    }
+
+    @Test("导出模式：处理孤儿日记 (Orphaned Entry)")
+    @MainActor
+    func testExportOrphanedEntry() async throws {
+        let container = try Self.createContainer()
+        let context = container.mainContext
+        
+        let orphanedEntry = WingEntry(title: "Orphan", summary: "Test", mood: "Happy", markdownContent: "Content", aiInsights: "Insight", createdAt: 1739318400000)
+        context.insert(orphanedEntry)
+        try context.save()
+        
+        let url = try await DataExportService.shared.exportJSON(context: context)
+        let data = try Data(contentsOf: url)
+        let exportData = try JSONDecoder().decode(WingExportData.self, from: data)
+        
+        #expect(exportData.sessions.count == 1)
+        #expect(exportData.sessions[0].entries.count == 1)
+        #expect(exportData.sessions[0].entries[0].title == "Orphan")
+        #expect(exportData.sessions[0].fragments.isEmpty)
+    }
+    
+    @Test("导出与导入模式：验证图片 Base64 传递")
+    @MainActor
+    func testExportImportImageBase64() async throws {
+        let container = try Self.createContainer()
+        let context = container.mainContext
+        
+        let imageBytes: [UInt8] = [0xFF, 0xD8, 0xFF, 0xDB] // fake JPEG header
+        let imageData = Data(imageBytes)
+        
+        // 插入到 Fragment
+        let session = DailySession(date: "2026-02-12", status: .completed)
+        let fragment = RawFragment(content: "Image Frag", imageData: imageData, timestamp: 1739318400000, type: .image)
+        fragment.dailySession = session
+        context.insert(session)
+        context.insert(fragment)
+        try context.save()
+        
+        let url = try await DataExportService.shared.exportJSON(context: context)
+        let data = try Data(contentsOf: url)
+        let exportData = try JSONDecoder().decode(WingExportData.self, from: data)
+        
+        let b64 = exportData.sessions[0].fragments[0].imageDataBase64
+        #expect(b64 == imageData.base64EncodedString())
+        
+        // 测试再次导入是否恢复为 Data
+        let container2 = try Self.createContainer()
+        let context2 = container2.mainContext
+        try await DataImportService.shared.importJSON(from: url, context: context2)
+        
+        let fragDesc = FetchDescriptor<RawFragment>()
+        let fragments = try context2.fetch(fragDesc)
+        #expect(fragments.count == 1)
+        #expect(fragments.first?.imageData == imageData)
+    }
+
+    @Test("替换模式：清空所有记忆数据")
+    @MainActor
+    func testReplaceClearsMemories() async throws {
+        let container = try Self.createContainer()
+        let context = container.mainContext
+        
+        // 插入记忆
+        context.insert(SemanticMemory(key: "test", value: "test", createdAt: 0, updatedAt: 0))
+        context.insert(EpisodicMemory(event: "test", date: "2026", sourceEntryId: UUID(), createdAt: 0))
+        context.insert(ProceduralMemory(pattern: "test", preference: "test", createdAt: 0, updatedAt: 0))
+        try context.save()
+        
+        let json = """
+        {
+            "version": "1.1",
+            "exportedAt": "2026-02-12T00:00:00Z",
+            "sessions": []
+        }
+        """
+        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("test_memory_replace_\\(UUID().uuidString).json")
+        try json.data(using: .utf8)!.write(to: tempURL)
+        
+        try await DataImportService.shared.replaceData(from: tempURL, context: context)
+        
+        let semCount = try context.fetchCount(FetchDescriptor<SemanticMemory>())
+        let epiCount = try context.fetchCount(FetchDescriptor<EpisodicMemory>())
+        let proCount = try context.fetchCount(FetchDescriptor<ProceduralMemory>())
+        
+        #expect(semCount == 0)
+        #expect(epiCount == 0)
+        #expect(proCount == 0)
+    }
+
+    @Test("合并模式：防止重复导入相同的 Fragment 和 Entry")
+    @MainActor
+    func testImportMergeAvoidsDuplicates() async throws {
+        let container = try Self.createContainer()
+        let context = container.mainContext
+        
+        let session = DailySession(date: "2026-02-12", status: .completed)
+        let fragment = RawFragment(id: UUID(uuidString: "11111111-1111-1111-1111-111111111111")!, content: "frag1", timestamp: 1739318400000, type: .text)
+        fragment.dailySession = session
+        
+        let entry = WingEntry(id: UUID(uuidString: "22222222-2222-2222-2222-222222222222")!, title: "entry1", summary: "", mood: "", markdownContent: "", aiInsights: "", createdAt: 1739318400000)
+        entry.dailySession = session
+        
+        context.insert(session)
+        context.insert(fragment)
+        context.insert(entry)
+        try context.save()
+        
+        let fragDesc = FetchDescriptor<RawFragment>()
+        let entryDesc = FetchDescriptor<WingEntry>()
+        
+        // 构造包含同样 fragment 和 entry 的 JSON
+        let json = """
+        {
+            "version": "1.1",
+            "exportedAt": "2026-02-12T00:00:00Z",
+            "sessions": [
+                {
+                    "id": "\\(session.id.uuidString)",
+                    "date": "2026-02-12",
+                    "status": "COMPLETED",
+                    "fragments": [
+                        {
+                            "id": "11111111-1111-1111-1111-111111111111",
+                            "content": "frag1",
+                            "type": "text",
+                            "timestamp": 1739318400000
+                        },
+                        {
+                            "id": "\\(UUID().uuidString)",
+                            "content": "frag2_new",
+                            "type": "text",
+                            "timestamp": 1739318400001
+                        }
+                    ],
+                    "entries": [
+                        {
+                            "id": "22222222-2222-2222-2222-222222222222",
+                            "title": "entry1",
+                            "summary": "",
+                            "mood": "",
+                            "content": "",
+                            "insights": "",
+                            "todos": [],
+                            "createdAt": 1739318400000,
+                            "imagesBase64": {}
+                        }
+                    ]
+                }
+            ]
+        }
+        """
+        
+        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("test_merge_dup_\\(UUID().uuidString).json")
+        try json.data(using: .utf8)!.write(to: tempURL)
+        
+        try await DataImportService.shared.importJSON(from: tempURL, context: context)
+        
+        let afterFragCount = try context.fetchCount(fragDesc)
+        let afterEntryCount = try context.fetchCount(entryDesc)
+        
+        // Frag 应该变成 2 (1旧 + 1新)
+        #expect(afterFragCount == 2)
+        // Entry 应该保持 1 (只有旧的，跳过重复)
+        #expect(afterEntryCount == 1)
+    }
 }
 
 // MARK: - Prompt Building Tests

@@ -8,15 +8,15 @@
 // MARK: - Composer
 "composer.title" = "Capture Now";
 "composer.new" = "Record";
-"composer.placeholder" = "Write your thoughts...";
+"composer.placeholder" = "What's on your mind...";
 "composer.close" = "Close";
 
 // MARK: - Chat
 "chat.title" = "Now";
-"chat.empty.today" = "A new day begins...";
-"chat.empty.past" = "No records for this day";
-"chat.empty.hint" = "Capture your thoughts, feelings, or inspirations";
-"chat.input.placeholder" = "What's on your mind...";
+"chat.empty.today" = "A new day, spread your wings...";
+"chat.empty.past" = "No feathers fell here...";
+"chat.empty.hint" = "Leave the feathers of your thoughts here";
+"chat.input.placeholder" = "Leave the feathers of your thoughts here...";
 "chat.generate" = "Generate Journal";
 "chat.generate.failed" = "Generation Failed";
 "chat.ok" = "OK";
@@ -33,7 +33,7 @@
 "synthesis.started" = "Gathering today's feathers...";
 "synthesis.generating" = "Weaving your journal...";
 "synthesis.saving" = "Generating insights...";
-"synthesis.completed" = "Done ✨";
+"synthesis.completed" = "Done gathering";
 "synthesis.failed" = "Failed: %@";
 "synthesis.error.noFragments" = "No fragments available";
 "synthesis.error.configMissing" = "AI configuration missing. Please set up your API Key in Settings.";
@@ -50,8 +50,8 @@
 
 // MARK: - Journal
 "journal.title" = "Journal";
-"journal.empty" = "No Journals Yet";
-"journal.empty.hint" = "Record your thoughts in \"Now\" to generate your first journal";
+"journal.empty" = "No content yet";
+"journal.empty.hint" = "Gather thought-feathers from 'Now' into your journal";
 "journal.detail.title" = "Journal Detail";
 "journal.detail.notFound" = "Journal Not Found";
 "journal.detail.notFound.desc" = "Unable to find this journal";
@@ -117,6 +117,49 @@
 "title.style.summary" = "Summary";
 "title.style.dateBased" = "Date & Letter";
 "title.style.custom" = "Custom";
+
+// MARK: - Onboarding
+"onboarding.slide1.title" = "Welcome to Wing";
+"onboarding.slide1.desc" = "Capture your fragmented thoughts effortlessly,\nand leave every feather here.";
+"onboarding.slide2.title" = "Gather Your Daily Thoughts";
+"onboarding.slide2.desc" = "Long-press the record button to trigger the synthesis,\ngenerating a beautiful journal in your preferred style.";
+"onboarding.slide3.title" = "Memories Grow Here";
+"onboarding.slide3.desc" = "The more you record in Wing,\nthe warmer the generated journals will feel.";
+
+"onboarding.slide4.title" = "Configuration Before We Start";
+"onboarding.slide4.model" = "Which AI model do you want to use?";
+"onboarding.slide4.apiKey.placeholder" = "Enter your API Key";
+"onboarding.slide4.apiKey.fetch" = "Get it from %@";
+"onboarding.slide4.style" = "What kind of journal do you prefer?";
+"onboarding.slide4.dynamic.prefix" = "Based on the configuration above, Wing will use ";
+"onboarding.slide4.dynamic.titleAnd" = " title and ";
+"onboarding.slide4.dynamic.suffix" = " tone";
+"onboarding.slide4.dynamic.notice" = "You can fully customize your preferred style later in Settings.";
+"onboarding.slide4.apiKey.fetch.prefix" = "If you don't have an API Key yet, you can ";
+"onboarding.slide4.apiKey.fetch.action" = "get one from %@";
+"onboarding.button.start" = "Start Logging";
+"onboarding.button.skip" = "Skip for now";
+
+"diary.style.letter" = "Intimate Letter";
+"diary.style.prose" = "Elegant Prose";
+"diary.style.report" = "Concise Report";
+
+"diary.title.letter" = "Friendly";
+"diary.title.prose" = "Poetic";
+"diary.title.report" = "Summary";
+
+"diary.writing.letter" = "Letter";
+"diary.writing.prose" = "Prose";
+"diary.writing.report" = "Report";
+
+// MARK: - Welcome Entry
+"welcome.entry.title" = "Take Flight From Here";
+"welcome.entry.summary" = "The first encounter with Wing and the user guide.";
+"welcome.entry.mood" = "🪽";
+"welcome.entry.content" = "**The Birth of Wing**: The name Wing carries a dual imagery: the quill and the wing.\nLike a quill, it captures fragments of life with a light touch; like an owl folding its wings at dusk, it organizes the thoughts and memories of the day. It is a privacy-focused, lightweight AI journal app, making logging and reviewing as light and free as a feather.\n\n**1. Highlights of Wing**\n- **Local Logging**: All data is strictly kept locally; your thoughts belong only to you.\n- **Backup Support**: Provides full JSON export and recovery to keep your data safe.\n- **Model Selection**: Integrates with multiple LLMs to let you choose your best AI companion.\n\n**2. How to Use**\n- **Configure Model**: Fill in your API Key on the settings page, and choose your preferred writing style and title format.\n- **Capture Thoughts**: Input your fragmented ideas anytime, anywhere on the 'Now' page, just like sending a message.\n- **Generate Journal**: When night falls, long-press the '+' button at the bottom, and the AI will organize your fragments into a beautifully formatted, structured journal.\n\n**A Final Note**: This introduction will appear here as your first journal entry. You can delete it anytime by going to the detail page and tapping 'More' → 'Delete', or keep it for future reference.\n\nMay you fly towards a farther and clearer tomorrow with Wing.";
+"welcome.entry.insight" = "Every stroke of the pen is a flap of the wings; every gathering is a step closer to a brighter self.";
+"welcome.entry.todo1" = "Finish reading the first journal entry";
+"welcome.entry.todo2" = "Add the first feather";
 
 "settings.ai.writingStyle" = "Writing Style";
 "settings.ai.writingStyle.letter" = "Letter";
@@ -206,13 +249,13 @@
 "settings.memory.error" = "Operation Failed";
 "settings.memory.extracting" = "Extracting memories...";
 "settings.memory.semantic.empty" = "No Facts";
-"settings.memory.semantic.empty.desc" = "AI hasn't extracted any facts about you yet";
+"settings.memory.semantic.empty.desc" = "You can extract memory from generated journals.";
 "settings.memory.semantic.count" = "%d facts";
 "settings.memory.episodic.empty" = "No Episodes";
-"settings.memory.episodic.empty.desc" = "AI hasn't extracted any life events yet";
+"settings.memory.episodic.empty.desc" = "You can extract memory from generated journals.";
 "settings.memory.episodic.count" = "%d events";
 "settings.memory.procedural.empty" = "No Habits";
-"settings.memory.procedural.empty.desc" = "AI hasn't discovered your behavior patterns yet";
+"settings.memory.procedural.empty.desc" = "You can extract memory from generated journals.";
 "settings.memory.procedural.count" = "%d patterns";
 "settings.memory.edit" = "Edit";
 "settings.memory.label" = "Memory";
@@ -264,8 +307,8 @@
 // MARK: - Markdown Export
 "export.md.mood" = "Mood";
 "export.md.summary" = "Summary";
-"export.md.insight" = "🔮 Insight";
-"export.md.todo" = "✅ To-Do";
+"export.md.insight" = "Insight";
+"export.md.todo" = "To-Do";
 "export.md.time" = "Exported at";
 
 // MARK: - Journal Language
@@ -273,31 +316,7 @@
 "journal.language.zh" = "中文";
 "journal.language.en" = "English";
 "journal.language.ja" = "日本語";
-
-// MARK: - AI Errors
-"ai.error.missingKey" = "Missing API Key. Please configure it in Settings.";
-"ai.error.invalidURL" = "Invalid URL address.";
-"ai.error.network" = "Network request failed: %@";
-"ai.error.api" = "API Error (HTTP %d): %@";
-"ai.error.parsing" = "Failed to parse response data.";
-"ai.error.empty" = "Server returned empty response.";
-
-// MARK: - Data Import & Export
-"data.import.error.readFailed" = "Failed to read file";
-"data.import.error.jsonDecodeFailed" = "JSON decoding failed";
-"data.import.error.invalidFormat" = "Invalid data format";
-"data.import.error.unknown" = "Unknown error";
-"export.md.mood" = "Mood";
-"export.md.summary" = "Summary";
-"export.md.insight" = "🔮 Insight";
-"export.md.todo" = "✅ To-Do";
-"export.md.time" = "Exported at";
-
-// MARK: - Journal Language
-"journal.language.auto" = "Auto Detect";
-"journal.language.zh" = "中文";
-"journal.language.en" = "English";
-"journal.language.ja" = "日本語";
+"language.system" = "System";
 
 // MARK: - AI Errors
 "ai.error.missingKey" = "Missing API Key. Please configure it in Settings.";

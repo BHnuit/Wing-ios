@@ -196,8 +196,38 @@ struct SettingsStorageView: View {
     private func clearAllData() async {
         isImporting = true
         defer { isImporting = false }
-        await TestDataInjector.shared.clearAllData(context: modelContext)
-        importMessage = L("settings.storage.cleared")
+        
+        do {
+            // Delete WingEntries
+            let entries = try modelContext.fetch(FetchDescriptor<WingEntry>())
+            for entry in entries { modelContext.delete(entry) }
+            
+            // Delete RawFragments
+            let fragments = try modelContext.fetch(FetchDescriptor<RawFragment>())
+            for fragment in fragments { modelContext.delete(fragment) }
+            
+            // Delete DailySessions
+            let sessions = try modelContext.fetch(FetchDescriptor<DailySession>())
+            for session in sessions { modelContext.delete(session) }
+            
+            // Delete Memories
+            let semantics = try modelContext.fetch(FetchDescriptor<SemanticMemory>())
+            for memory in semantics { modelContext.delete(memory) }
+            let episodics = try modelContext.fetch(FetchDescriptor<EpisodicMemory>())
+            for memory in episodics { modelContext.delete(memory) }
+            let procedurals = try modelContext.fetch(FetchDescriptor<ProceduralMemory>())
+            for memory in procedurals { modelContext.delete(memory) }
+            
+            try modelContext.save()
+            
+            // 重置引导页状态
+            UserDefaults.standard.set(false, forKey: "hasCompletedOnboarding")
+            
+            importMessage = L("settings.storage.cleared")
+        } catch {
+            importMessage = "Clear failed: \(error.localizedDescription)"
+        }
+        
         showImportAlert = true
     }
 }

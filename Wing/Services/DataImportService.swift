@@ -174,7 +174,8 @@ final class DataImportService {
             for entryExport in sessionExport.entries {
                 // 检查 Entry 是否存在
                 if !clearBeforeImport {
-                    let desc = FetchDescriptor<WingEntry>(predicate: #Predicate { $0.id == entryExport.id })
+                    let targetId = entryExport.id
+                    let desc = FetchDescriptor<WingEntry>(predicate: #Predicate { $0.id == targetId })
                     if (try? context.fetch(desc).first) != nil { continue }
                 }
                 

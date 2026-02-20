@@ -36,16 +36,6 @@ struct WingApp: App {
         // 初始化设置管理器
         SettingsManager.shared.initialize(with: sharedModelContainer)
         
-        // 注入测试数据（仅在开发阶段，且数据库为空时）
-        #if DEBUG
-        let container = sharedModelContainer
-        Task { @MainActor in
-            let context = container.mainContext
-            let injector = TestDataInjector()
-            await injector.injectTestData(context: context)
-        }
-        #endif
-        
         // 强制隐藏原生 TabBar 背景，防止“鬼影”
         let appearance = UITabBarAppearance()
         appearance.configureWithTransparentBackground()
@@ -61,10 +51,11 @@ struct WingApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MainTabView()
+            RootView()
                 .appFont()
                 .preferredColorScheme(settingsManager.resolvedColorScheme)
                 .environment(\.locale, settingsManager.resolvedLocale)
+                .environment(settingsManager)
         }
         .modelContainer(sharedModelContainer)
     }

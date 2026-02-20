@@ -8,15 +8,15 @@
 // MARK: - Composer
 "composer.title" = "记录此刻";
 "composer.new" = "记录";
-"composer.placeholder" = "写下你的想法...";
+"composer.placeholder" = "此刻在想什么...";
 "composer.close" = "关闭";
 
 // MARK: - Chat
 "chat.title" = "当下";
-"chat.empty.today" = "新的一天开始了...";
-"chat.empty.past" = "这一天还没有记录";
-"chat.empty.hint" = "记录此刻的想法、感受或灵感";
-"chat.input.placeholder" = "记录此刻的想法...";
+"chat.empty.today" = "新的一天 挥动翅膀吧";
+"chat.empty.past" = "这里还没有羽毛落下";
+"chat.empty.hint" = "把思绪的羽毛留在这里";
+"chat.input.placeholder" = "把思绪的羽毛留在这里...";
 "chat.generate" = "生成日记";
 "chat.generate.failed" = "生成失败";
 "chat.ok" = "确定";
@@ -33,7 +33,7 @@
 "synthesis.started" = "正在收拢今日羽毛...";
 "synthesis.generating" = "正在编织日记...";
 "synthesis.saving" = "正在洞察感受...";
-"synthesis.completed" = "完成 ✨";
+"synthesis.completed" = "已完成归拢";
 "synthesis.failed" = "生成失败: %@";
 "synthesis.error.noFragments" = "没有可用的碎片记录";
 "synthesis.error.configMissing" = "缺少 AI 配置，请在设置中配置 API Key";
@@ -51,24 +51,14 @@
 
 // MARK: - Journal
 "journal.title" = "日记";
-"journal.empty" = "暂无日记";
-"journal.empty.hint" = "从\"当下\"记录你的想法，生成第一篇日记";
+"journal.empty" = "暂无内容";
+"journal.empty.hint" = "从“当下”收集思绪的羽毛，归拢成你的日记";
 "journal.detail.title" = "日记详情";
 "journal.detail.notFound" = "日记不存在";
 "journal.detail.notFound.desc" = "无法找到该日记";
 "journal.insight.title" = "洞察";
 "journal.unknown.route" = "未知路由";
 
-// MARK: - Journal Detail Actions
-"journal.detail.editing" = "编辑日记";
-"journal.action.finish" = "完成";
-"journal.action.edit" = "编辑";
-"journal.action.duplicate" = "创建副本";
-"journal.action.copy" = "复制正文";
-"journal.action.exportImage" = "导出图片";
-"journal.action.jumpToChat" = "跳转到对话";
-"journal.action.delete" = "删除";
-"journal.delete.confirm" = "确认删除？";
 // MARK: - Journal Detail Actions
 "journal.detail.editing" = "编辑日记";
 "journal.action.finish" = "完成";
@@ -127,6 +117,49 @@
 "title.style.summary" = "内容摘要";
 "title.style.dateBased" = "日期书信";
 "title.style.custom" = "自定义";
+
+// MARK: - Onboarding
+"onboarding.slide1.title" = "欢迎使用 Wing";
+"onboarding.slide1.desc" = "随心捕捉你内心的碎片思绪，\n把每一片羽毛留在这里。";
+"onboarding.slide2.title" = "归拢一天的思绪";
+"onboarding.slide2.desc" = "长按记录键即可触发归拢合成，\n生成你偏好风格的精美日记。";
+"onboarding.slide3.title" = "记忆在此处生长";
+"onboarding.slide3.desc" = "在 Wing 里记录越多，\n生成的日记会越有温度。";
+
+"onboarding.slide4.title" = "在开始之前需要配置";
+"onboarding.slide4.model" = "你希望使用哪个 AI 模型";
+"onboarding.slide4.apiKey.placeholder" = "请输入你的 API Key";
+"onboarding.slide4.apiKey.fetch" = "去 %@ 平台获取";
+"onboarding.slide4.style" = "你更偏好哪种类型的日记";
+"onboarding.slide4.dynamic.prefix" = "基于以上配置，Wing 将使用「";
+"onboarding.slide4.dynamic.titleAnd" = "」标题和「";
+"onboarding.slide4.dynamic.suffix" = "」文风为你生成日记";
+"onboarding.slide4.dynamic.notice" = "稍后你可以在 Wing 的设置页完全自定义你喜欢的风格";
+"onboarding.slide4.apiKey.fetch.prefix" = "如果你还没有 API Key，可以";
+"onboarding.slide4.apiKey.fetch.action" = "去 %@ 获取";
+"onboarding.button.start" = "开始记录";
+"onboarding.button.skip" = "暂时跳过";
+
+"diary.style.letter" = "亲切的书信";
+"diary.style.prose" = "优美的散文";
+"diary.style.report" = "精炼的报告";
+
+"diary.title.letter" = "亲切";
+"diary.title.prose" = "诗意";
+"diary.title.report" = "摘要";
+
+"diary.writing.letter" = "书信体";
+"diary.writing.prose" = "散文体";
+"diary.writing.report" = "报告体";
+
+// MARK: - Welcome Entry
+"welcome.entry.title" = "从这里，振翼起飞";
+"welcome.entry.summary" = "关于 Wing 的初次见面与使用指南。";
+"welcome.entry.mood" = "🪽";
+"welcome.entry.content" = "**Wing 的诞生**：Wing 的名字承载着双重意象：羽毛笔与翅膀。\n像羽毛笔一样，用轻盈的笔触捕捉生活的片段；像黄昏时分的猫头鹰收拢翅膀，整理一天的思绪与回忆。它是一个注重隐私、轻量级的 AI 日记应用，让记录与回顾都像羽毛一样轻盈、自由。\n\n**1. Wing 的亮点**\n- **本地记录**：所有数据均严格保存在本地，你的思绪只属于你。\n- **支持备份**：提供全量 JSON 导出与恢复，数据安全无忧。\n- **自选模型**：接入多方大模型，选择最适合你的 AI 伙伴。\n\n**2. 如何使用**\n- **配置模型**：在设置页面填写你的 API Key，并选择偏好的文风与标题样式。\n- **记录思绪**：像发消息一样，随时随地在“当下”页面输入你的碎片想法。\n- **生成日记**：夜晚来临时，长按底部的“+”号，AI 会为你将碎片整理为排版精美的结构化日记。\n\n**写在最后**：这篇介绍会作为你的第一条日记出现在这里。你可以随时在详情页通过「更多」→「删除」将其删除，或保留作日后参考。\n\n祝你凭借 Wing 飞向更遥远、更晴朗的明日。";
+"welcome.entry.insight" = "每一次落笔都是翅膀的一次挥动；每一次收拢，都是向更明亮的自己飞近一步。";
+"welcome.entry.todo1" = "读完第一篇日记";
+"welcome.entry.todo2" = "添加第一片羽毛";
 
 "settings.ai.writingStyle" = "文风";
 "settings.ai.writingStyle.letter" = "书信体";
@@ -216,13 +249,13 @@
 "settings.memory.error" = "操作失败";
 "settings.memory.extracting" = "正在提取记忆...";
 "settings.memory.semantic.empty" = "暂无事实";
-"settings.memory.semantic.empty.desc" = "AI 尚未提取到关于您的事实信息";
+"settings.memory.semantic.empty.desc" = "你可以从生成的日记里提取记忆";
 "settings.memory.semantic.count" = "共有 %d 条事实";
 "settings.memory.episodic.empty" = "暂无经历";
-"settings.memory.episodic.empty.desc" = "AI 尚未提取到重要的生活事件";
+"settings.memory.episodic.empty.desc" = "你可以从生成的日记里提取记忆";
 "settings.memory.episodic.count" = "共有 %d 个事件";
 "settings.memory.procedural.empty" = "暂无习惯";
-"settings.memory.procedural.empty.desc" = "AI 尚未发现您的行为模式";
+"settings.memory.procedural.empty.desc" = "你可以从生成的日记里提取记忆";
 "settings.memory.procedural.count" = "共有 %d 个模式";
 "settings.memory.edit" = "编辑";
 "settings.memory.label" = "记忆管理";
@@ -274,39 +307,13 @@
 // MARK: - Markdown Export
 "export.md.mood" = "心情";
 "export.md.summary" = "摘要";
-"export.md.insight" = "🔮 洞察";
-"export.md.todo" = "✅ 待办";
+"export.md.insight" = "洞察";
+"export.md.todo" = "待办";
 "export.md.time" = "导出时间";
 
 // MARK: - Journal Language
 "journal.language.auto" = "自动检测";
 "journal.language.zh" = "中文";
-"journal.language.en" = "English";
-"journal.language.ja" = "日本語";
-
-// MARK: - AI Errors
-"ai.error.missingKey" = "缺少 API Key，请在设置中配置。";
-"ai.error.invalidURL" = "无效的 URL 地址。";
-"ai.error.network" = "网络请求失败: %@";
-"ai.error.api" = "API 错误 (HTTP %d): %@";
-"ai.error.parsing" = "解析响应数据失败。";
-"ai.error.empty" = "服务器返回空数据。";
-
-// MARK: - Data Import & Export
-"data.import.error.readFailed" = "无法读取文件";
-"data.import.error.jsonDecodeFailed" = "JSON 解析失败";
-"data.import.error.invalidFormat" = "数据格式不正确";
-"data.import.error.unknown" = "未知错误";
-"export.md.mood" = "心情";
-"export.md.summary" = "摘要";
-"export.md.insight" = "🔮 洞察";
-"export.md.todo" = "✅ 待办";
-"export.md.time" = "导出时间";
-
-// MARK: - Journal Language
-"journal.language.auto" = "自动检测";
-"journal.language.zh" = "中文";
-"journal.language.en" = "English";
 "journal.language.en" = "English";
 "journal.language.ja" = "日本語";
 "language.system" = "跟随系统";
