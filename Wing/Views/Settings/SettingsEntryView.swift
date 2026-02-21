@@ -116,6 +116,7 @@ struct SettingsEntryView: View {
                             Link(L("settings.about.privacyPolicy"), destination: privacyPolicyURL)
                                 .font(.caption)
                                 .foregroundStyle(.blue)
+                                .buttonStyle(.plain) // 限制点击区域仅为蓝字
                         }
                         Spacer()
                     }
