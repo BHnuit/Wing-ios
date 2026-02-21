@@ -58,6 +58,10 @@ struct SettingsEntryView: View {
         return URL(string: urlString)!
     }
     
+    private var appVersion: String {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+    }
+    
     var body: some View {
         NavigationStack {
             List {
@@ -105,7 +109,7 @@ struct SettingsEntryView: View {
                                 .cornerRadius(12)
                                 .opacity(0.8)
                             
-                            Text("Wing v0.2.1")
+                            Text("Wing v\(appVersion)")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                             
