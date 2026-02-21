@@ -7,8 +7,10 @@
 
 import SwiftUI
 import SwiftData
+import os
 
 struct MemoryMergePreviewView: View {
+    private static let logger = Logger(subsystem: "wing", category: "MemoryMerge")
     @Environment(\.dismiss) private var dismiss
     @State private var candidates: [MergeCandidateGroup] = []
     @State private var isLoading = true
@@ -58,7 +60,7 @@ struct MemoryMergePreviewView: View {
         try? await Task.sleep(for: .seconds(0.5))
         
         guard let context = SettingsManager.shared.modelContext else {
-             print("ModelContext not initialized")
+             Self.logger.error("ModelContext not initialized")
              isLoading = false
              return
         }
@@ -68,7 +70,7 @@ struct MemoryMergePreviewView: View {
         do {
             self.candidates = try await service.findMergeCandidates(type: memoryType)
         } catch {
-            print("Check failed: \(error)")
+            Self.logger.error("Check failed: \(error)")
         }
         isLoading = false
     }
@@ -84,7 +86,7 @@ struct MemoryMergePreviewView: View {
                 candidates.removeAll(where: { $0.id == group.id })
             }
         } catch {
-            print("Merge failed: \(error)")
+            Self.logger.error("Merge failed: \(error)")
         }
     }
 }

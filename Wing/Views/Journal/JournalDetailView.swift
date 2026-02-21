@@ -95,6 +95,7 @@ struct JournalDetailView: View {
                         if !entry.aiInsights.isEmpty {
                             Divider()
                                 .padding(.horizontal)
+                                .padding(.top, 8)
                             insightSection(entry)
                                 .padding(.horizontal)
                         }
@@ -361,8 +362,9 @@ struct JournalDetailView: View {
     private func insightSection(_ entry: WingEntry) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Label(L("journal.insight.title"), systemImage: "sparkles")
-                .font(.headline)
-                .foregroundStyle(Color.accentColor) // Use accent color
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .foregroundStyle(Color.accentColor)
             
             // Remove "洞察：" or "Insight:" prefix if present
             let cleanInsight = entry.aiInsights
@@ -373,10 +375,21 @@ struct JournalDetailView: View {
             Text(cleanInsight)
                 .font(.callout)
                 .foregroundStyle(.secondary)
-                .padding()
+                .lineSpacing(6)
+                .padding(16)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color(uiColor: .secondarySystemBackground)) // Use neutral background
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    Color.accentColor.opacity(0.06),
+                                    Color.accentColor.opacity(0.02)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
                 )
         }
     }

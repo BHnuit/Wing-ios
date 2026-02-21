@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wing - Privacy Policy</title>
+    <style>
+        :root {
+            --bg-color: #f5f5f7;
+            --text-color: #1d1d1f;
+            --secondary-text: #86868b;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --accent-color: #0071e3;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #000000;
+                --text-color: #f5f5f7;
+                --secondary-text: #a1a1a6;
+                --glass-bg: rgba(28, 28, 30, 0.6);
+                --glass-border: rgba(255, 255, 255, 0.1);
+                --accent-color: #2997ff;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .lang-switcher {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            justify-content: flex-end;
+            font-size: 0.9em;
+        }
+
+        .lang-switcher a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 15px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.2s;
+        }
+
+        .lang-switcher a.active {
+            color: var(--text-color);
+            font-weight: 600;
+            border-color: var(--accent-color);
+        }
+
+        .lang-switcher a:hover {
+            color: var(--text-color);
+        }
+
+        .content {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px 50px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .content {
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        h1 {
+            font-weight: 600;
+            font-size: 2.5em;
+            margin-top: 0;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-weight: 600;
+            font-size: 1.5em;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        p,
+        li {
+            font-size: 1.05em;
+            color: var(--secondary-text);
+            margin-bottom: 15px;
+        }
+
+        strong {
+            color: var(--text-color);
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        .last-updated {
+            color: var(--secondary-text);
+            font-size: 0.9em;
+            margin-bottom: 40px;
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="lang-switcher">
+            <a href="privacy.html" class="active">English</a>
+            <a href="privacy-zh.html">简体中文</a>
+            <a href="privacy-ja.html">日本語</a>
+        </div>
+
+        <div class="content">
+            <h1>Privacy Policy</h1>
+            <div class="last-updated">Last updated: February 21, 2026</div>
+
+            <p>Welcome to <strong>Wing</strong>. We understand how important privacy is to you, which is why a
+                "Privacy-First" approach is our core design philosophy. This Privacy Policy explains how Wing handles
+                your data.</p>
+
+            <h2>1. 100% Local Storage</h2>
+            <p>All your journal entries, images, audio recordings, and settings are <strong>stored completely locally on
+                    your device (via iOS's secure database)</strong>. We have no backend servers to store your journal
+                data, and the developer has no way to access, view, or collect your private records.</p>
+
+            <h2>2. Secure Key Storage (Keychain)</h2>
+            <p>Wing allows you to use third-party AI models for journal synthesis. All API Keys you provide are securely
+                encrypted and stored using Apple's highest-grade security mechanism, the <strong>Keychain</strong>. This
+                information is never uploaded to any server or shared with other third parties.</p>
+
+            <h2>3. Third-Party AI Models</h2>
+            <p>When you use AI functionalities such as "Journal Synthesis", necessary journal fragments are temporarily
+                transmitted over an encrypted network to the third-party Large Language Model provider of your choice
+                (e.g., <strong>OpenAI, Gemini, DeepSeek</strong>).</p>
+            <ul>
+                <li>Your data transmission only happens between your device and the destination provider.</li>
+                <li>Please note that when data is sent to a third-party API, the data processing will follow the privacy
+                    policy of the respective service provider.</li>
+                <li>We recommend that you review the official privacy policies of your chosen model provider before
+                    using their services.</li>
+            </ul>
+
+            <h2>4. Data Collection and Tracking</h2>
+            <p>Wing <strong>does not contain any hidden tracking scripts, advertising SDKs, or user behavior analytics
+                    tools</strong>. We do not collect your usage habits for commercial or advertising purposes. All your
+                interactions within the app are private and entirely under your control.</p>
+
+            <h2>5. Your Rights</h2>
+            <p>Because all data is stored on your local device:</p>
+            <ul>
+                <li><strong>Modification and Deletion</strong>: You can modify or permanently delete any journal content
+                    within the app at any time. This irreversibly erases the corresponding data from your device.</li>
+                <li><strong>Data Export</strong>: You can export and back up all your data in standard formats via the
+                    in-app "Data Management" feature, giving you full ownership of your data at all times.</li>
+            </ul>
+
+            <h2>6. Changes to This Privacy Policy</h2>
+            <p>We may update this Privacy Policy from time to time. Relevant updates will be published on this page. If
+                there are significant changes, we will notify you within the app.</p>
+
+            <div class="footer">
+                <p>If you have any questions about this Privacy Policy, please contact the developer:<br>
+                    <strong>Hans</strong> - <a href="mailto:bhans@qq.com">bhans@qq.com</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

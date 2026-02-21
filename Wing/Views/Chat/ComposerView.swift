@@ -8,6 +8,7 @@
 import SwiftUI
 import PhotosUI
 import SwiftData
+import os
 
 /**
  * 半屏输入视图（"当下" Sheet）
@@ -19,6 +20,7 @@ import SwiftData
  * - 发送后保持 Sheet，支持连续输入
  */
 struct ComposerView: View {
+    nonisolated private static let logger = Logger(subsystem: "wing", category: "Composer")
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(NavigationManager.self) private var navManager
@@ -260,7 +262,7 @@ struct ComposerView: View {
                     }
                 }
             } catch {
-                print("后台图片处理失败: \(error)")
+                Self.logger.error("后台图片处理失败: \(error)")
             }
         }
     }

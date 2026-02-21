@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import UIKit
+import os
 
 /**
  * 主 Tab 视图
@@ -101,6 +102,7 @@ struct MainTabView: View {
 // MARK: - Custom Tab Bar
 
 private struct CustomTabBar: View {
+    private static let logger = Logger(subsystem: "wing", category: "MainTabView")
     @Environment(NavigationManager.self) private var navigationManager
     @Binding var selectedTab: AppTab
     let onCompose: () -> Void
@@ -391,7 +393,7 @@ private struct CustomTabBar: View {
             } catch {
                 await MainActor.run {
                     navigationManager.isSynthesizing = false
-                    print("Synthesis failed: \(error)")
+                    Self.logger.error("Synthesis failed: \(error)")
                 }
             }
         }

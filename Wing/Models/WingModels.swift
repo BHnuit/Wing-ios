@@ -54,11 +54,48 @@ enum Language: String, Codable, CaseIterable {
 /**
  * AI 供应商类型
  */
-enum AiProvider: String, Codable {
+enum AiProvider: String, Codable, Identifiable, CaseIterable {
     case gemini = "gemini"
     case openai = "openai"
     case deepseek = "deepseek"
     case custom = "custom"
+    
+    var id: String { self.rawValue }
+    
+    var displayName: String {
+        switch self {
+        case .gemini: return "Gemini"
+        case .openai: return "OpenAI"
+        case .deepseek: return "DeepSeek"
+        case .custom: return "Custom"
+        }
+    }
+    
+    var availableModels: [String] {
+        switch self {
+        case .gemini:
+            return ["gemini-3.1-pro", "gemini-3-flash", "gemini-2.5-pro"]
+        case .openai:
+            return ["gpt-5.2", "gpt-5", "gpt-4.1"]
+        case .deepseek:
+            return ["deepseek-chat", "deepseek-reasoner"]
+        case .custom:
+            return []
+        }
+    }
+    
+    var apiKeyInstructionURL: String? {
+        switch self {
+        case .gemini:
+            return "https://ai.google.dev/gemini-api/docs/models"
+        case .openai:
+            return "https://developers.openai.com/api/docs/models"
+        case .deepseek:
+            return "https://api-docs.deepseek.com/quick_start/pricing"
+        case .custom:
+            return nil
+        }
+    }
 }
 
 /**

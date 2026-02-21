@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import os
 
 /**
  * 日记合成服务
@@ -24,6 +25,7 @@ import SwiftData
 final class JournalSynthesisService {
     
     static let shared = JournalSynthesisService()
+    private static let logger = Logger(subsystem: "wing", category: "JournalSynthesis")
     
     private init() {}
     
@@ -68,7 +70,7 @@ final class JournalSynthesisService {
                     memories = try await memoryService.retrieveRelevantMemories(for: combinedContext)
                 } catch {
                     // RAG 检索失败不应阻断日记生成
-                    print("JournalSynthesisService: Memory retrieval failed, continuing without RAG: \(error)")
+                    Self.logger.warning("Memory retrieval failed, continuing without RAG: \(error)")
                 }
             }
             

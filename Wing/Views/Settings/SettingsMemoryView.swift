@@ -7,8 +7,10 @@
 
 import SwiftUI
 import SwiftData
+import os
 
 struct SettingsMemoryView: View {
+    private static let logger = Logger(subsystem: "wing", category: "SettingsMemory")
     @Environment(\.modelContext) private var modelContext
     @State private var selectedTab: MemoryType = .semantic
     @State private var isExtracting: Bool = false
@@ -348,14 +350,14 @@ struct SettingsMemoryView: View {
         do {
             guard let session = try modelContext.fetch(descriptor).first,
                   let entry = session.finalEntry else {
-                print("No journal found")
+                Self.logger.warning("No journal found")
                 return
             }
             
             // 2. Extract
             await extractFromJournal(id: entry.id)
         } catch {
-            print("Extraction failed: \(error)")
+            Self.logger.error("Extraction failed: \(error)")
             await MainActor.run {
                 errorMessage = String(format: L("settings.memory.fetchError"), error.localizedDescription)
                 showErrorAlert = true
@@ -369,13 +371,13 @@ struct SettingsMemoryView: View {
         
         do {
             try await MemoryService(container: modelContext.container).extractMemories(for: id)
-            print("Extraction triggered successfully for \(id)")
+            Self.logger.info("Extraction triggered successfully for \(id)")
             
             // Impact Feedback
             let generator = UIImpactFeedbackGenerator(style: .heavy)
             await MainActor.run { generator.impactOccurred() }
         } catch {
-            print("Extraction failed: \(error)")
+            Self.logger.error("Extraction failed: \(error)")
             await MainActor.run {
                 errorMessage = String(format: L("settings.memory.extractError"), error.localizedDescription)
                 showErrorAlert = true
@@ -391,13 +393,13 @@ struct SettingsMemoryView: View {
             try modelContext.delete(model: ProceduralMemory.self)
             
             try modelContext.save()
-            print("Memories cleared successfully")
+            Self.logger.info("Memories cleared successfully")
             
             // 触发震动反馈
             let generator = UIImpactFeedbackGenerator(style: .medium)
             await MainActor.run { generator.impactOccurred() }
         } catch {
-            print("Clear failed: \(error)")
+            Self.logger.error("Clear failed: \(error)")
         }
     }
 }

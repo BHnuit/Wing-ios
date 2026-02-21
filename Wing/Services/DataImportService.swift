@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import SwiftUI
+import os
 
 /**
  * 数据导入服务
@@ -16,6 +17,7 @@ import SwiftUI
 @MainActor
 final class DataImportService {
     static let shared = DataImportService()
+    private static let logger = Logger(subsystem: "wing", category: "DataImport")
     
     private init() {}
     
@@ -94,7 +96,7 @@ final class DataImportService {
                     try await importSessions(exportData.sessions, context: context, clearBeforeImport: false)
                 }
             } catch {
-                print("Failed to import file: \(file.lastPathComponent), error: \(error)")
+                Self.logger.error("Failed to import file: \(file.lastPathComponent), error: \(error)")
                 // 继续处理下一个文件
             }
         }

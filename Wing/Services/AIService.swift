@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import os
 
 // MARK: - Memory Extraction Types (Moved to WingModels.swift)
 
@@ -45,6 +46,7 @@ enum AIError: Error, LocalizedError {
 actor AIService {
     
     static let shared = AIService()
+    private static let logger = Logger(subsystem: "wing", category: "AIService")
     
     private init() {}
     
@@ -807,7 +809,7 @@ actor AIService {
         guard let data = cleanedContent.data(using: .utf8),
               let output = try? JSONDecoder().decode(JournalOutput.self, from: data) else {
             // Fallback: 解析失败时返回"无题日记"
-            print("⚠️ JSON 解析失败，使用 Fallback 模式")
+            Self.logger.warning("JSON 解析失败，使用 Fallback 模式")
             return JournalOutput.fallback(rawContent: cleanedContent).sanitized()
         }
         
@@ -827,7 +829,7 @@ actor AIService {
         // 尝试解析 JSON
         guard let data = cleanedContent.data(using: .utf8),
               let output = try? JSONDecoder().decode(MemoryExtractionResult.self, from: data) else {
-            print("⚠️ Memory JSON 解析失败")
+            Self.logger.warning("Memory JSON 解析失败")
             return MemoryExtractionResult(semantic: [], episodic: [], procedural: [])
         }
         

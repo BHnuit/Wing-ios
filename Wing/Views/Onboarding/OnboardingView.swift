@@ -7,8 +7,10 @@
 
 import SwiftUI
 import SwiftData
+import os
 
 struct OnboardingView: View {
+    private static let logger = Logger(subsystem: "wing", category: "Onboarding")
     @Environment(\.modelContext) private var modelContext
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding: Bool = false
     
@@ -101,9 +103,11 @@ struct OnboardingView: View {
                                 .foregroundColor(.secondary)
                             
                             HStack(spacing: 12) {
-                                ModelSelectButton(title: "OpenAI", isSelected: tempProvider == .openai) { tempProvider = .openai }
-                                ModelSelectButton(title: "Gemini", isSelected: tempProvider == .gemini) { tempProvider = .gemini }
-                                ModelSelectButton(title: "DeepSeek", isSelected: tempProvider == .deepseek) { tempProvider = .deepseek }
+                                ForEach(AiProvider.allCases) { provider in
+                                    if provider != .custom {
+                                        ModelSelectButton(title: provider.displayName, isSelected: tempProvider == provider) { tempProvider = provider }
+                                    }
+                                }
                             }
                             
                             
@@ -167,14 +171,16 @@ struct OnboardingView: View {
                                 Text(String(localized: "onboarding.slide4.apiKey.fetch.prefix"))
                                     .font(.system(size: 13))
                                     .foregroundColor(Color(uiColor: .tertiaryLabel))
-                                Link(destination: URL(string: apiKeyURL(for: tempProvider))!) {
-                                    HStack(spacing: 2) {
-                                        Text(String(format: String(localized: "onboarding.slide4.apiKey.fetch.action"), providerName(for: tempProvider)))
-                                        Image(systemName: "arrow.up.right")
-                                            .font(.system(size: 10, weight: .semibold))
+                                if let urlString = tempProvider.apiKeyInstructionURL, let url = URL(string: urlString) {
+                                    Link(destination: url) {
+                                        HStack(spacing: 2) {
+                                            Text(String(format: String(localized: "onboarding.slide4.apiKey.fetch.action"), tempProvider.displayName))
+                                            Image(systemName: "arrow.up.right")
+                                                .font(.system(size: 10, weight: .semibold))
+                                        }
+                                        .font(.system(size: 13, weight: .medium))
+                                        .foregroundColor(.accentColor)
                                     }
-                                    .font(.system(size: 13, weight: .medium))
-                                    .foregroundColor(.accentColor)
                                 }
                                 Spacer()
                             }
@@ -377,7 +383,7 @@ struct OnboardingView: View {
             do {
                 try OnboardingService.shared.createWelcomeEntryIfNeeded(context: modelContext)
             } catch {
-                print("Failed to create welcome entry: \(error)")
+                Self.logger.error("Failed to create welcome entry: \(error)")
             }
         }
     }
@@ -391,22 +397,14 @@ struct OnboardingView: View {
         do {
             try OnboardingService.shared.createWelcomeEntryIfNeeded(context: modelContext)
         } catch {
-            print("Failed to create welcome entry: \(error)")
+            Self.logger.error("Failed to create welcome entry: \(error)")
         }
     }
-    // Helper function for URLs
-    private func apiKeyURL(for provider: AiProvider) -> String {
-        switch provider {
-        case .openai: return "https://platform.openai.com/api-keys"
-        case .gemini: return "https://aistudio.google.com/app/apikey"
-        case .deepseek: return "https://platform.deepseek.com/api_keys"
-        default: return "https://google.com"
-        }
-    }
+    // apiKeyURL 和 providerName 辅助函数被移除，改用 AiProvider 扩展属性
     
     private func validateApiKey() async {
         validationState = .validating
-        let model = tempProvider == .custom ? "" : (PresetModels.defaultModel(for: tempProvider))
+        let model = tempProvider == .custom ? "" : (tempProvider.availableModels.first ?? "")
         let config = AIConfig(
             provider: tempProvider,
             model: model,
@@ -427,14 +425,6 @@ struct OnboardingView: View {
         }
     }
     
-    private func providerName(for provider: AiProvider) -> String {
-        switch provider {
-        case .openai: return "OpenAI"
-        case .gemini: return "Gemini"
-        case .deepseek: return "DeepSeek"
-        default: return "Platform"
-        }
-    }
 }
 
 enum OnboardingDiaryStyle: CaseIterable {

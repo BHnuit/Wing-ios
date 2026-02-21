@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import os
 
 /**
  * 记忆服务 Actor
@@ -15,6 +16,7 @@ import SwiftData
  */
 actor MemoryService {
     private let modelContext: ModelContext
+    private static let logger = Logger(subsystem: "wing", category: "MemoryService")
     
     init(container: ModelContainer) {
         self.modelContext = ModelContext(container)
@@ -33,7 +35,7 @@ actor MemoryService {
         // 1. 在当前 Context 中获取日记条目
         let entryDescriptor = FetchDescriptor<WingEntry>(predicate: #Predicate { $0.id == entryId })
         guard let entry = try modelContext.fetch(entryDescriptor).first else {
-            print("MemoryService: Entry not found for id \(entryId)")
+            Self.logger.warning("Entry not found for id \(entryId)")
             return
         }
         
@@ -43,7 +45,7 @@ actor MemoryService {
             throw AIError.missingAPIKey
         }
         
-        print("MemoryService: Extraction started for entry \(entry.title)")
+        Self.logger.info("Extraction started for entry \(entry.title)")
         
         // 3. 调用 AI 提取
         // 提取 Markdown 正文（通常这是最有价值的部分）
@@ -63,7 +65,7 @@ actor MemoryService {
         
         // 5. 提交事务
         try modelContext.save()
-        print("MemoryService: Extraction completed and saved.")
+        Self.logger.info("Extraction completed and saved.")
     }
     
     // MARK: - Retrieval

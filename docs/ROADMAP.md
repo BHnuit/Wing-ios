@@ -1,8 +1,8 @@
 # 🗺️ Wing iOS Native - 开发路线图 (Roadmap)
 
-> **当前状态**: Phase 10 (深度体验打磨) - 进行中
+> **当前状态**: Phase 12 (发布冲刺) - 待启动
 > **目标环境**: iOS 26.2+ | Swift 6.2 | SwiftUI | SwiftData
-> **最后更新**: 2026-02-19
+> **最后更新**: 2026-02-21
 > **Xcode**: 26.3
 
 ## 📌 项目概述
@@ -201,7 +201,7 @@ Wing 是一个从 React/TypeScript 重构为原生 iOS 的 AI 驱动日记应用
 
 ---
 
-## 🏗️ Phase 10: 深度体验打磨 (Deep Polish)
+## ✅ Phase 10: 深度体验打磨 (Deep Polish) (已完成)
 **目标**: 专注 App 内部的交互细节与稳定性，确保核心循环流畅无阻。
 
 - [x] **10.1 核心功能完善 (已修复)**
@@ -232,7 +232,7 @@ Wing 是一个从 React/TypeScript 重构为原生 iOS 的 AI 驱动日记应用
 
 ---
 
-### Phase 11: 首次启动与功能指引 (Onboarding)
+## ✅ Phase 11: 首次启动与功能指引 (Onboarding) (已完成)
 **目标:** 建立无缝的首次使用体验，让用户自然理解 Wing 的“碎片->加工->记忆”闭环。
 
 #### 11.1 预置欢迎日记 (Welcome Entry) [✓]
@@ -245,13 +245,13 @@ Wing 是一个从 React/TypeScript 重构为原生 iOS 的 AI 驱动日记应用
 - [x] **交互式介绍**: 实现 Slide 1-4 的功能与理念传递
 - [x] **液态玻璃 (Liquid Glass) UI**: 为引导配置页赋予高度通透的 VisionOS/iOS 26 质感
 
-#### 11.3 核心体验深度定制 (Deep Customization) [进行中]
-- [ ] **推荐模型列表更新**: 内置各服务商 (OpenAI/Gemini/DeepSeek) 最新的推荐模型列表，保持前沿能力。
-- [ ] **日记详情排版优化**: 对内容排版、间距、字体层级进行重新设计与优化，提升长文阅读体验。
+#### 11.3 核心体验深度定制 (Deep Customization) [✓]
+- [x] **推荐模型列表更新**: 内置 OpenAI (gpt-5.2)、Gemini (3.1-pro)、DeepSeek 最新模型，并完成架构级解耦。
+- [x] **日记详情排版优化**: 对内容排版、间距、字体层级进行重新设计与优化，提升长文阅读体验。
 
-#### 11.4 发布前清理 (Pre-launch Cleanup)
-- [ ] **代码清理**: 去除冗余的测试用例、界面原型和开发期配置。
-- [ ] **启动屏动画**: 实现 Logo 呼吸或展开的 Launch Screen 动画.
+#### 11.4 发布前清理 (Pre-launch Cleanup) [✓]
+- [x] **代码清理**: 删除调试视图，全局 `print()` 迁移至 `os.Logger`。
+- [x] **启动屏动画**: 复用 Wing Logo 三笔画绘制动画，实现 Launch Screen 淡出过渡。
 
 ---
 
@@ -259,9 +259,9 @@ Wing 是一个从 React/TypeScript 重构为原生 iOS 的 AI 驱动日记应用
 **目标**: 完成 App Store 上架的所有外部准备工作。
 
 - [ ] **12.1 商店资产**
-    - [ ] **App Icon**: 导出全尺寸生产级图标资源 (AppIcon set).
-    - [ ] **Screenshots**: 制作 EN/ZH/JA 多语言版本的 App Store 截图.
-    - [ ] **Privacy Policy**: 托管隐私政策页面.
+    - [x] **App Icon**: 导出全尺寸生产级图标资源 (AppIcon set), 已配置 iOS 26 多外观 (Light/Dark/Tinted).
+    - [x] **Screenshots**: 制作 EN/ZH/JA 多语言版本的 App Store 截图.
+    - [x] **Privacy Policy**: 托管隐私政策页面.
 - [ ] **12.2 TestFlight 分发**
     - [ ] **Archive**: 构建发布版本.
     - [ ] **Upload**: 上传至 App Store Connect.

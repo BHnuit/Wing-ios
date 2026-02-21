@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wing - 隐私政策 (Privacy Policy)</title>
+    <style>
+        :root {
+            --bg-color: #f5f5f7;
+            --text-color: #1d1d1f;
+            --secondary-text: #86868b;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --accent-color: #0071e3;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #000000;
+                --text-color: #f5f5f7;
+                --secondary-text: #a1a1a6;
+                --glass-bg: rgba(28, 28, 30, 0.6);
+                --glass-border: rgba(255, 255, 255, 0.1);
+                --accent-color: #2997ff;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .lang-switcher {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            justify-content: flex-end;
+            font-size: 0.9em;
+        }
+
+        .lang-switcher a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 15px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.2s;
+        }
+
+        .lang-switcher a.active {
+            color: var(--text-color);
+            font-weight: 600;
+            border-color: var(--accent-color);
+        }
+
+        .lang-switcher a:hover {
+            color: var(--text-color);
+        }
+
+        .content {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px 50px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .content {
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        h1 {
+            font-weight: 600;
+            font-size: 2.5em;
+            margin-top: 0;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-weight: 600;
+            font-size: 1.5em;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        p, li {
+            font-size: 1.05em;
+            color: var(--secondary-text);
+            margin-bottom: 15px;
+        }
+        
+        strong {
+            color: var(--text-color);
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        .last-updated {
+            color: var(--secondary-text);
+            font-size: 0.9em;
+            margin-bottom: 40px;
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="lang-switcher">
+            <a href="privacy.html">English</a>
+            <a href="privacy-zh.html" class="active">简体中文</a>
+            <a href="privacy-ja.html">日本語</a>
+        </div>
+        
+        <div class="content">
+            <h1>隐私政策</h1>
+            <div class="last-updated">最后更新时间：2026年2月21日</div>
+
+            <p>欢迎使用 <strong>Wing</strong>。我们深知隐私对您的重要性，因此我们将“隐私优先”作为本应用的核心设计理念。本隐私政策旨在说明 Wing 如何处理您的数据。</p>
+
+            <h2>1. 数据存储与 100% 本地化</h2>
+            <p>您的所有日记内容、图片、语音记录及设置均<strong>完全存储在您的设备本地（通过 iOS 的安全数据库）</strong>。我们没有任何后端服务器存储您的日记数据，开发者也无法访问、查看或收集您的任何私人记录。</p>
+
+            <h2>2. 密钥安全 (Keychain)</h2>
+            <p>Wing 允许您使用第三方 AI 模型进行日记合成。您提供的所有 API Key 均会通过苹果系统最高等级的 <strong>Keychain（钥匙串）</strong>进行加密安全存储。该信息绝不会被上传至我们的服务器或与其他第三方共享。</p>
+
+            <h2>3. 第三方 AI 模型服务</h2>
+            <p>当您使用“日记合成”等 AI 功能时，必要的日记片段将会通过加密网络临时发送至您选择的第三方大语言模型提供商（如：<strong>OpenAI, Gemini, DeepSeek</strong>）。</p>
+            <ul>
+                <li>您的数据传输仅发生于您的设备与目标提供商之间。</li>
+                <li>请注意，当数据发送至第三方 API 时，其数据处理将遵循各个服务提供商自身的隐私政策。</li>
+                <li>我们建议您在使用对应的模型前，详细阅读其官方的隐私协议声明。</li>
+            </ul>
+
+            <h2>4. 数据收集与追踪分析</h2>
+            <p>Wing <strong>不含有任何隐藏的追踪脚本、广告 SDK 或用户行为分析工具</strong>。我们不会收集您的使用习惯以用于商业或广告目的。您在使用应用时的所有操作均是私密且完全由您自己掌控的。</p>
+
+            <h2>5. 您的权利</h2>
+            <p>由于所有数据均存储在您的本地设备上：</p>
+            <ul>
+                <li><strong>修改与删除</strong>：您可以随时在应用内修改或彻底删除任何日记内容。这会从您的设备上不可逆地抹去对应数据。</li>
+                <li><strong>数据导出</strong>：您可以通过应用内的“数据管理”功能将所有数据以标准格式导出和备份，以便您随时随地拥有您的数据所有权。</li>
+            </ul>
+
+            <h2>6. 本隐私政策的更新</h2>
+            <p>我们可能会适时修改本隐私政策，相关更新将在此页面公布。若有重大变更，我们会在应用内通知您。</p>
+
+            <div class="footer">
+                <p>如果您对本隐私政策有任何疑问，请联系开发者：<br>
+                <strong>Hans</strong> - <a href="mailto:bhans@qq.com">bhans@qq.com</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

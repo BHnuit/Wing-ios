@@ -156,21 +156,7 @@ enum ValidationState: Equatable {
     }
 }
 
-/**
- * 预设模型列表
- */
-enum PresetModels {
-    static let models: [AiProvider: [String]] = [
-        .gemini: ["gemini-3-pro", "gemini-3-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"],
-        .openai: ["gpt-5.2", "gpt-5", "gpt-4o"],
-        .deepseek: ["deepseek-chat", "deepseek-reasoner"],
-        .custom: []
-    ]
-    
-    static func defaultModel(for provider: AiProvider) -> String {
-        models[provider]?.first ?? ""
-    }
-}
+
 
 // MARK: - Validation Status View
 
@@ -231,10 +217,9 @@ struct ProviderPicker: View {
                 try? SettingsManager.shared.modelContext?.save()
             }
         )) {
-            Text("Gemini").tag(AiProvider.gemini)
-            Text("OpenAI").tag(AiProvider.openai)
-            Text("DeepSeek").tag(AiProvider.deepseek)
-            Text("Custom").tag(AiProvider.custom)
+            ForEach(AiProvider.allCases) { provider in
+                Text(provider.displayName).tag(provider)
+            }
         }
     }
 }
@@ -243,11 +228,11 @@ struct ModelPicker: View {
     @Bindable var settings: AppSettings
     
     private var currentModel: String {
-        settings.aiModels[settings.aiProvider] ?? PresetModels.defaultModel(for: settings.aiProvider)
+        settings.aiModels[settings.aiProvider] ?? settings.aiProvider.availableModels.first ?? ""
     }
     
     private var availableModels: [String] {
-        PresetModels.models[settings.aiProvider] ?? []
+        settings.aiProvider.availableModels
     }
     
     var body: some View {
@@ -313,6 +298,13 @@ struct APIKeyInput: View {
             HStack {
                 ValidationStatusView(state: validationState)
                 
+                if let urlString = settings.aiProvider.apiKeyInstructionURL, let url = URL(string: urlString) {
+                    Link(destination: url) {
+                        Image(systemName: "questionmark.circle")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                
                 Spacer()
                 
                 Button(L("settings.ai.validate")) {
@@ -339,7 +331,7 @@ struct APIKeyInput: View {
     private func validateApiKey() async {
         validationState = .validating
         
-        let model = settings.aiModels[settings.aiProvider] ?? PresetModels.defaultModel(for: settings.aiProvider)
+        let model = settings.aiModels[settings.aiProvider] ?? settings.aiProvider.availableModels.first ?? ""
         let config = AIConfig(
             provider: settings.aiProvider,
             model: model,
@@ -370,7 +362,7 @@ struct APIKeyInput: View {
     }
 }
 
-// 借用 SettingsEntryView 中的 ValidationState 和 PresetModels
+
 // 如果需要在多处使用，建议移到单独的 Models 文件，这里暂时复用或假定已移动
 
 struct TitleStyleSectionView: View {

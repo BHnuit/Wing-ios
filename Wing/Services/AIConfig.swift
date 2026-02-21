@@ -15,7 +15,7 @@ struct AIConfig {
     /// AI 供应商
     let provider: AiProvider
     
-    /// 模型名称 (e.g. "gemini-1.5-flash", "gpt-4o")
+    /// 模型名称 (e.g. "gemini-3-flash", "gpt-5.2")
     let model: String
     
     /// API Key

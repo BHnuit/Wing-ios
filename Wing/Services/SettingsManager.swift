@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import SwiftUI
+import os
 
 /**
  * 设置管理器 (SettingsManager)
@@ -22,6 +23,7 @@ import SwiftUI
 @Observable
 class SettingsManager {
     static let shared = SettingsManager()
+    private static let logger = Logger(subsystem: "wing", category: "SettingsManager")
     
     /// SwiftData 模型上下文（将在初始化时由外部传入或延迟获取）
     var modelContext: ModelContext?
@@ -73,7 +75,7 @@ class SettingsManager {
                 self.appSettings = first
             } else {
                 // 创建默认设置 (对齐 Web 版默认值)
-                print("SettingsManager: Creating default AppSettings")
+                Self.logger.info("Creating default AppSettings")
                 let defaultSettings = AppSettings(
                     aiProvider: .gemini,
                     aiModels: [
@@ -99,7 +101,7 @@ class SettingsManager {
                 self.appSettings = defaultSettings
             }
         } catch {
-            print("SettingsManager Error: Failed to fetch/init settings: \(error)")
+            Self.logger.error("Failed to fetch/init settings: \(error)")
         }
     }
     
@@ -115,7 +117,7 @@ class SettingsManager {
         do {
             try context.save()
         } catch {
-            print("SettingsManager Error: Failed to save settings: \(error)")
+            Self.logger.error("Failed to save settings: \(error)")
         }
     }
     

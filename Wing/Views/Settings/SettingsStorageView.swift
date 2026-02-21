@@ -8,8 +8,10 @@
 import SwiftUI
 import SwiftData
 import UniformTypeIdentifiers
+import os
 
 struct SettingsStorageView: View {
+    private static let logger = Logger(subsystem: "wing", category: "SettingsStorage")
     @Environment(\.modelContext) private var modelContext
     @State private var showImportFilePicker: Bool = false
     @State private var showImportFolderPicker: Bool = false
@@ -130,7 +132,7 @@ struct SettingsStorageView: View {
             let fileURL = try await DataExportService.shared.exportJSON(context: modelContext)
             exportItem = ExportItem(url: fileURL)
         } catch {
-            print("Export JSON failed: \(error)")
+            Self.logger.error("Export JSON failed: \(error)")
             importMessage = String(format: L("settings.storage.exportFailed"), error.localizedDescription)
             showImportAlert = true
         }

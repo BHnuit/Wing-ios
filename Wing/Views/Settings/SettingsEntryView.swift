@@ -22,7 +22,7 @@ struct SettingsEntryView: View {
     
     // Computed Stats
     private var daysRecorded: Int {
-        allSessions.count
+        allSessions.filter { !$0.fragments.isEmpty }.count
     }
     
     private var todayFragments: Int {
@@ -70,6 +70,7 @@ struct SettingsEntryView: View {
                         Text(L("settings.section.lab"))
                     }
                 }
+                
                 
                 // Section 4: About
                 Section {

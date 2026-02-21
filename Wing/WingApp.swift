@@ -48,14 +48,24 @@ struct WingApp: App {
     }
 
     @Bindable private var settingsManager = SettingsManager.shared
+    @State private var showSplash = true
     
     var body: some Scene {
         WindowGroup {
-            RootView()
-                .appFont()
-                .preferredColorScheme(settingsManager.resolvedColorScheme)
-                .environment(\.locale, settingsManager.resolvedLocale)
-                .environment(settingsManager)
+            ZStack {
+                RootView()
+                    .appFont()
+                    .preferredColorScheme(settingsManager.resolvedColorScheme)
+                    .environment(\.locale, settingsManager.resolvedLocale)
+                    .environment(settingsManager)
+                
+                if showSplash {
+                    SplashScreenView {
+                        showSplash = false
+                    }
+                    .transition(.opacity)
+                }
+            }
         }
         .modelContainer(sharedModelContainer)
     }

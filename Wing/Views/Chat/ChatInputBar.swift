@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI
+import os
 
 /**
  * 聊天输入栏组件
@@ -17,6 +18,7 @@ import PhotosUI
  * - 发送按钮
  */
 struct ChatInputBar: View {
+    private static let logger = Logger(subsystem: "wing", category: "ChatInputBar")
     @Binding var text: String
     let onSend: () -> Void
     let onImageSelected: (Data) async -> Void
@@ -85,7 +87,7 @@ struct ChatInputBar: View {
                 }
             }
         } catch {
-            print("图片加载失败: \(error)")
+            Self.logger.error("图片加载失败: \(error)")
         }
         
         // 重置选择
@@ -101,11 +103,11 @@ struct ChatInputBar: View {
         ChatInputBar(
             text: $text,
             onSend: {
-                print("发送: \(text)")
+
                 text = ""
             },
             onImageSelected: { data in
-                print("图片大小: \(data.count) bytes")
+
             }
         )
     }
