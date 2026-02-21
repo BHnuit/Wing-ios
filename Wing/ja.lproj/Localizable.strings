@@ -84,6 +84,7 @@
 "settings.stats.daysRecorded" = "記録日数";
 "settings.stats.todayFlaps" = "今日の羽ばたき";
 "settings.stats.totalFeathers" = "累計の羽毛";
+"settings.about.privacyPolicy" = "プライバシーポリシー";
 
 // MARK: - Settings > AI
 "settings.ai.title" = "モデル設定";

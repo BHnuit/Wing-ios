@@ -36,6 +36,28 @@ struct SettingsEntryView: View {
             .reduce(0) { $0 + $1.content.count }
     }
     
+    private var privacyPolicyURL: URL {
+        let langCode = settingsManager.appSettings?.uiLanguage ?? "system"
+        let actualLang: String
+        
+        if langCode == "system" {
+            actualLang = Locale.current.language.languageCode?.identifier ?? "en"
+        } else {
+            actualLang = langCode
+        }
+        
+        let urlString: String
+        if actualLang.hasPrefix("zh") {
+            urlString = "https://BHnuit.github.io/Wing-ios/privacy-zh.html"
+        } else if actualLang.hasPrefix("ja") {
+            urlString = "https://BHnuit.github.io/Wing-ios/privacy-ja.html"
+        } else {
+            urlString = "https://BHnuit.github.io/Wing-ios/privacy.html"
+        }
+        
+        return URL(string: urlString)!
+    }
+    
     var body: some View {
         NavigationStack {
             List {
@@ -86,6 +108,10 @@ struct SettingsEntryView: View {
                             Text("Wing v0.2.1")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
+                            
+                            Link(L("settings.about.privacyPolicy"), destination: privacyPolicyURL)
+                                .font(.caption)
+                                .foregroundStyle(.blue)
                         }
                         Spacer()
                     }

@@ -84,6 +84,7 @@
 "settings.stats.daysRecorded" = "Days Recorded";
 "settings.stats.todayFlaps" = "Today's Flaps";
 "settings.stats.totalFeathers" = "Total Feathers";
+"settings.about.privacyPolicy" = "Privacy Policy";
 
 // MARK: - Settings > AI
 "settings.ai.title" = "AI Configuration";

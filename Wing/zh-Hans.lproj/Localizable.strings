@@ -85,6 +85,7 @@
 "settings.stats.daysRecorded" = "已记录天数";
 "settings.stats.todayFlaps" = "今日挥动";
 "settings.stats.totalFeathers" = "累计羽毛";
+"settings.about.privacyPolicy" = "隐私政策";
 
 // MARK: - Settings > AI
 "settings.ai.title" = "模型配置";
