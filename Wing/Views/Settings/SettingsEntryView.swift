@@ -37,7 +37,7 @@ struct SettingsEntryView: View {
     }
     
     private var privacyPolicyURL: URL {
-        let langCode = settingsManager.appSettings?.uiLanguage ?? "system"
+        let langCode = settingsManager.appSettings?.language.rawValue ?? "system"
         let actualLang: String
         
         if langCode == "system" {
