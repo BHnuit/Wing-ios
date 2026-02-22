@@ -33,6 +33,7 @@ struct ComposerView: View {
     @State private var savedInputText = ""
     @State private var selectedDate = Date()
     @State private var showDatePicker = false
+    @State private var showVoiceError = false
     @FocusState private var isFocused: Bool
     
     var body: some View {
@@ -62,14 +63,17 @@ struct ComposerView: View {
                 }
             }
             // 错误提示
-            .alert(L("voice.input.permission.denied"), isPresented: .constant(voiceInputManager.error != nil)) {
+            .alert(L("voice.input.permission.denied"), isPresented: $showVoiceError) {
                 Button(L("common.ok")) {
-                    voiceInputManager.error = nil // Clear error
+                    voiceInputManager.error = nil
                 }
             } message: {
                 if let error = voiceInputManager.error {
                      Text(error)
                 }
+            }
+            .onChange(of: voiceInputManager.error) { _, newError in
+                showVoiceError = newError != nil
             }
         }
         .presentationDetents(
@@ -212,37 +216,30 @@ struct ComposerView: View {
         selectedPhoto = nil // 重置选中状态
         
         // 捕获必要的上下文信息（主线程）
-        let container = modelContext.container
-        let mainContext = modelContext
-        let mainSessionService = sessionService
         let capturedDate = selectedDate
         
         // 2. 启动后台任务处理图片
-        Task.detached(priority: .userInitiated) {
+        Task {
             do {
                 if let data = try await item.loadTransferable(type: Data.self) {
-                    // 创建后台 Actor 和 Context
-                    let bgContext = ModelContext(container)
-                    let service = SessionService()
-                    
-                    // 日期格式化（后台线程）
+                    // 日期格式化
                     let formatter = DateFormatter()
                     formatter.dateFormat = "yyyy-MM-dd"
                     formatter.timeZone = TimeZone.current
                     let dateStr = formatter.string(from: capturedDate)
                     
                     // 获取 Session
-                    let session = service.getOrCreateSession(
+                    let session = sessionService.getOrCreateSession(
                         for: dateStr,
-                        context: bgContext
+                        context: modelContext
                     )
                     
                     // 3. 添加"处理中"的占位记录（立即显示模糊图）
-                    let id = service.addPendingImageFragment(
+                    let id = sessionService.addPendingImageFragment(
                         data,
                         date: capturedDate,
                         to: session,
-                        context: bgContext
+                        context: modelContext
                     )
                     
                     // 4. 执行压缩（耗时操作）
@@ -251,14 +248,12 @@ struct ComposerView: View {
                     try? await Task.sleep(for: .milliseconds(500))
                     
                     if let compressedData = await compressor.compress(data) {
-                        // 5. 完成处理（切换回主线程更新以触发 UI 刷新）
-                        await MainActor.run {
-                             mainSessionService.completeImageFragment(
-                                id: id,
-                                finalData: compressedData,
-                                context: mainContext
-                            )
-                        }
+                        // 5. 完成处理
+                        sessionService.completeImageFragment(
+                            id: id,
+                            finalData: compressedData,
+                            context: modelContext
+                        )
                     }
                 }
             } catch {
@@ -278,7 +273,13 @@ struct ComposerView: View {
     
     private func handleVoiceInput() {
         if !voiceInputManager.permissionGranted {
-             voiceInputManager.checkPermissions()
+            Task {
+                let granted = await voiceInputManager.checkPermissions()
+                if granted {
+                    voiceInputManager.startRecording()
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+            }
         } else {
              voiceInputManager.startRecording()
              UIImpactFeedbackGenerator(style: .medium).impactOccurred()

@@ -356,7 +356,10 @@ private struct CustomTabBar: View {
              navigationManager.chargingProgress = 0.0
         }
         
-        guard let session = currentSession else { return }
+        guard let session = currentSession else {
+            Self.logger.error("Synthesis aborted: no session found for date \(navigationManager.selectedDate)")
+            return
+        }
         
         Task {
             await MainActor.run {
@@ -366,8 +369,11 @@ private struct CustomTabBar: View {
             
             do {
                 guard let config = await SettingsManager.shared.getAIConfig() else {
+                    Self.logger.error("Synthesis failed: AI config is nil (API Key not set)")
                     throw SynthesisError.configurationMissing
                 }
+                
+                Self.logger.info("Starting synthesis with provider: \(config.provider.rawValue), model: \(config.model)")
                 
                 let journalLanguage = SettingsManager.shared.appSettings?.journalLanguage ?? .auto
                 
@@ -391,9 +397,14 @@ private struct CustomTabBar: View {
                 }
                 
             } catch {
+                Self.logger.error("Synthesis failed: \(error)")
                 await MainActor.run {
-                    navigationManager.isSynthesizing = false
-                    Self.logger.error("Synthesis failed: \(error)")
+                    navigationManager.synthesisProgress = .failed(error: error)
+                    // 延迟重置以便用户看到失败状态
+                    Task { @MainActor in
+                        try? await Task.sleep(for: .seconds(2))
+                        navigationManager.isSynthesizing = false
+                    }
                 }
             }
         }

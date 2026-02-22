@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 /**
  * 日记合成进度视图
@@ -63,8 +64,11 @@ struct SynthesisProgressView: View {
                 .fill(.regularMaterial)
         )
         .shadow(radius: 10)
-        .onAppear {
-            startEncouragementTimer()
+        .onReceive(encouragementTimer) { _ in
+            guard !isCompleted else { return }
+            withAnimation {
+                encouragementIndex = (encouragementIndex + 1) % encouragements.count
+            }
         }
     }
     
@@ -120,22 +124,8 @@ struct SynthesisProgressView: View {
     
     // MARK: - Timer
     
-    private func startEncouragementTimer() {
-        // 每 3 秒切换鼓励语
-        Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { timer in
-            if case .completed = progress {
-                timer.invalidate()
-                return
-            }
-            if case .failed = progress {
-                timer.invalidate()
-                return
-            }
-            
-            withAnimation {
-                encouragementIndex = (encouragementIndex + 1) % encouragements.count
-            }
-        }
+    private var encouragementTimer: Publishers.Autoconnect<Timer.TimerPublisher> {
+        Timer.publish(every: 3.0, on: .main, in: .common).autoconnect()
     }
 }
 

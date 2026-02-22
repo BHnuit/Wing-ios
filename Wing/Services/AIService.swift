@@ -84,8 +84,9 @@ actor AIService {
     
     /// Gemini: 调用 /models 接口验证 (免费)
     private func validateGeminiConnection(config: AIConfig) async throws -> Bool {
-        let urlString = "\(geminiBaseURL)/models?key=\(config.apiKey)"
-        guard let url = URL(string: urlString) else {
+        var components = URLComponents(string: "\(geminiBaseURL)/models")
+        components?.queryItems = [URLQueryItem(name: "key", value: config.apiKey)]
+        guard let url = components?.url else {
             throw AIError.invalidURL
         }
         
@@ -101,6 +102,7 @@ actor AIService {
         
         guard (200...299).contains(httpResponse.statusCode) else {
             let errorMsg = String(data: data, encoding: .utf8) ?? "Unknown error"
+            Self.logger.error("Gemini validation failed (\(httpResponse.statusCode)): \(errorMsg)")
             throw AIError.apiError(statusCode: httpResponse.statusCode, message: errorMsg)
         }
         
@@ -646,9 +648,10 @@ actor AIService {
     private func buildGeminiRequest(config: AIConfig, system: String, user: String) throws -> URLRequest {
         // Gemini URL: https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:streamGenerateContent?key=YOUR_API_KEY
         let model = config.model.isEmpty ? "gemini-2.5-flash" : config.model
-        let urlString = "\(geminiBaseURL)/models/\(model):streamGenerateContent?key=\(config.apiKey)"
+        var components = URLComponents(string: "\(geminiBaseURL)/models/\(model):streamGenerateContent")
+        components?.queryItems = [URLQueryItem(name: "key", value: config.apiKey)]
         
-        guard let url = URL(string: urlString) else { throw AIError.invalidURL }
+        guard let url = components?.url else { throw AIError.invalidURL }
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -663,7 +666,7 @@ actor AIService {
                     ]
                 ]
             ],
-            "system_instruction": [
+            "systemInstruction": [
                 "parts": [
                     ["text": system]
                 ]
@@ -711,9 +714,10 @@ actor AIService {
     private func buildGeminiJSONRequest(config: AIConfig, system: String, user: String) throws -> URLRequest {
         let model = config.model.isEmpty ? "gemini-2.5-flash" : config.model
         // 非流式：使用 generateContent 而非 streamGenerateContent
-        let urlString = "\(geminiBaseURL)/models/\(model):generateContent?key=\(config.apiKey)"
+        var components = URLComponents(string: "\(geminiBaseURL)/models/\(model):generateContent")
+        components?.queryItems = [URLQueryItem(name: "key", value: config.apiKey)]
         
-        guard let url = URL(string: urlString) else { throw AIError.invalidURL }
+        guard let url = components?.url else { throw AIError.invalidURL }
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -727,13 +731,13 @@ actor AIService {
                     ]
                 ]
             ],
-            "system_instruction": [
+            "systemInstruction": [
                 "parts": [
                     ["text": system]
                 ]
             ],
             "generationConfig": [
-                "response_mime_type": "application/json"
+                "responseMimeType": "application/json"
             ]
         ]
         

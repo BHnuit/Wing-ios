@@ -25,7 +25,7 @@
 
 /* Begin PBXFileReference section */
 		3A50CC182F42F9BA0018B930 /* Wing.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Wing.xctestplan; sourceTree = "<group>"; };
-		3A745E912F291E950000D6E3 /* Wing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wing.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A745E912F291E950000D6E3 /* ZenWing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZenWing.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A745EA02F291E960000D6E3 /* WingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A745EAA2F291E960000D6E3 /* WingUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WingUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -87,7 +87,7 @@
 		3A745E922F291E950000D6E3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3A745E912F291E950000D6E3 /* Wing.app */,
+				3A745E912F291E950000D6E3 /* ZenWing.app */,
 				3A745EA02F291E960000D6E3 /* WingTests.xctest */,
 				3A745EAA2F291E960000D6E3 /* WingUITests.xctest */,
 			);
@@ -116,7 +116,7 @@
 			packageProductDependencies = (
 			);
 			productName = Wing;
-			productReference = 3A745E912F291E950000D6E3 /* Wing.app */;
+			productReference = 3A745E912F291E950000D6E3 /* ZenWing.app */;
 			productType = "com.apple.product-type.application";
 		};
 		3A745E9F2F291E960000D6E3 /* WingTests */ = {
@@ -405,6 +405,10 @@
 				DEVELOPMENT_TEAM = UMWZ2C43N9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "蝉翼";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "$(PRODUCT_NAME) needs microphone access for voice input.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "$(PRODUCT_NAME) needs speech recognition to convert voice to text.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -415,14 +419,14 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.wing.journal.Wing;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.zenwing.app;
+				PRODUCT_NAME = ZenWing;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -438,6 +442,10 @@
 				DEVELOPMENT_TEAM = UMWZ2C43N9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "蝉翼";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "$(PRODUCT_NAME) needs microphone access for voice input.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "$(PRODUCT_NAME) needs speech recognition to convert voice to text.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -448,14 +456,14 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.wing.journal.Wing;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.zenwing.app;
+				PRODUCT_NAME = ZenWing;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

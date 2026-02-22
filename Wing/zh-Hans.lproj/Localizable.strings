@@ -132,10 +132,10 @@
 "onboarding.slide4.apiKey.placeholder" = "请输入你的 API Key";
 "onboarding.slide4.apiKey.fetch" = "去 %@ 平台获取";
 "onboarding.slide4.style" = "你更偏好哪种类型的日记";
-"onboarding.slide4.dynamic.prefix" = "基于以上配置，蝉翼将使用「";
-"onboarding.slide4.dynamic.titleAnd" = "」标题和「";
-"onboarding.slide4.dynamic.suffix" = "」文风为你生成日记";
-"onboarding.slide4.dynamic.notice" = "稍后你可以在蝉翼的设置页完全自定义你喜欢的风格";
+"onboarding.slide4.dynamic.prefix" = "将使用「";
+"onboarding.slide4.dynamic.titleAnd" = "」标题 ·「";
+"onboarding.slide4.dynamic.suffix" = "」文风";
+"onboarding.slide4.dynamic.notice" = "可在设置中完全自定义";
 "onboarding.slide4.apiKey.fetch.prefix" = "如果你还没有 API Key，可以";
 "onboarding.slide4.apiKey.fetch.action" = "去 %@ 获取";
 "onboarding.button.start" = "开始记录";

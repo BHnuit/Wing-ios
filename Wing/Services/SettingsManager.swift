@@ -79,7 +79,7 @@ class SettingsManager {
                 let defaultSettings = AppSettings(
                     aiProvider: .gemini,
                     aiModels: [
-                        .gemini: "gemini-3-flash",
+                        .gemini: "gemini-2.5-flash",
                         .openai: "gpt-5.2",
                         .deepseek: "deepseek-chat"
                     ],
@@ -204,7 +204,7 @@ class SettingsManager {
 
     private func defaultModel(for provider: AiProvider) -> String {
         switch provider {
-        case .gemini: return "gemini-3-flash"
+        case .gemini: return "gemini-2.5-flash"
         case .openai: return "gpt-5.2"
         case .deepseek: return "deepseek-chat"
         case .custom: return ""

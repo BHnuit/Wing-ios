@@ -74,7 +74,7 @@ enum AiProvider: String, Codable, Identifiable, CaseIterable {
     var availableModels: [String] {
         switch self {
         case .gemini:
-            return ["gemini-3.1-pro", "gemini-3-flash", "gemini-2.5-pro"]
+            return ["gemini-3.1-pro-preview", "gemini-3-flash-preview", "gemini-2.5-pro", "gemini-2.5-flash"]
         case .openai:
             return ["gpt-5.2", "gpt-5", "gpt-4.1"]
         case .deepseek:
@@ -962,7 +962,7 @@ final class AppSettings {
 
 extension Dictionary {
     /// 将字典的键从一种类型转换为另一种类型
-    func compactMapKeys<T: Hashable>(_ transform: (Key) throws -> T?) rethrows -> [T: Value] {
+    nonisolated func compactMapKeys<T: Hashable>(_ transform: (Key) throws -> T?) rethrows -> [T: Value] {
         try self.reduce(into: [T: Value]()) { result, element in
             if let key = try transform(element.key) {
                 result[key] = element.value

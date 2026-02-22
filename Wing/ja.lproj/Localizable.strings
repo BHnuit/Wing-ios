@@ -145,10 +145,10 @@
 "onboarding.slide4.apiKey.fetch.prefix" = "APIキーをお持ちでない場合は、";
 "onboarding.slide4.apiKey.fetch.action" = "%@ で取得できます";
 "onboarding.slide4.style" = "どのような日記のスタイルがお好みですか？";
-"onboarding.slide4.dynamic.prefix" = "上記の設定に基づき、蝉翼は「";
-"onboarding.slide4.dynamic.titleAnd" = "」タイトルと「";
-"onboarding.slide4.dynamic.suffix" = "」文体で日記を生成します";
-"onboarding.slide4.dynamic.notice" = "後で設定ページからお好みのスタイルを完全にカスタマイズできます。";
+"onboarding.slide4.dynamic.prefix" = "「";
+"onboarding.slide4.dynamic.titleAnd" = "」タイトル ·「";
+"onboarding.slide4.dynamic.suffix" = "」文体を使用";
+"onboarding.slide4.dynamic.notice" = "設定で完全にカスタマイズ可能";
 "onboarding.button.start" = "記録を始める";
 "onboarding.button.skip" = "今はスキップ";
 

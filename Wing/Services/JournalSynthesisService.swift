@@ -77,8 +77,12 @@ final class JournalSynthesisService {
             // 3. 调用 AI 服务
             progressCallback(.generating)
             
+            // nonisolated(unsafe) 避免 SwiftData 模型跨 actor 边界的送数据竞争检查
+            // 安全性保证：fragments 在 MainActor 上读取后传递给 AIService 仅做只读使用
+            nonisolated(unsafe) let fragments = session.fragments
+            
             let output = try await AIService.shared.synthesizeJournal(
-                fragments: session.fragments,
+                fragments: fragments,
                 memories: memories,
                 config: config,
                 journalLanguage: journalLanguage,

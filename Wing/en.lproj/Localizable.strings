@@ -132,10 +132,10 @@
 "onboarding.slide4.apiKey.placeholder" = "Enter your API Key";
 "onboarding.slide4.apiKey.fetch" = "Get it from %@";
 "onboarding.slide4.style" = "What kind of journal do you prefer?";
-"onboarding.slide4.dynamic.prefix" = "Based on the configuration above, ZenWing will use ";
-"onboarding.slide4.dynamic.titleAnd" = " title and ";
+"onboarding.slide4.dynamic.prefix" = "Using ";
+"onboarding.slide4.dynamic.titleAnd" = " title · ";
 "onboarding.slide4.dynamic.suffix" = " tone";
-"onboarding.slide4.dynamic.notice" = "You can fully customize your preferred style later in Settings.";
+"onboarding.slide4.dynamic.notice" = "Fully customizable in Settings.";
 "onboarding.slide4.apiKey.fetch.prefix" = "If you don't have an API Key yet, you can ";
 "onboarding.slide4.apiKey.fetch.action" = "get one from %@";
 "onboarding.button.start" = "Start Logging";
