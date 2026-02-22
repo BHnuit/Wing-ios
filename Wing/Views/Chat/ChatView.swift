@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import os
 
 /**
  * 聊天记录主视图
@@ -23,6 +24,7 @@ struct ImagePreviewItem: Identifiable {
 }
 
 struct ChatView: View {
+    private static let logger = Logger(subsystem: "wing", category: "ChatView")
     @Environment(\.modelContext) private var modelContext
     @Environment(NavigationManager.self) private var navigationManager
     @Environment(SettingsManager.self) private var settingsManager

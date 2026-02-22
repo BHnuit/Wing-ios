@@ -317,7 +317,7 @@ struct OnboardingView: View {
     }
     
     private var slide1Title: AttributedString {
-        highlightedText(String(localized: "onboarding.slide1.title"), keywords: ["Wing"])
+        highlightedText(String(localized: "onboarding.slide1.title"), keywords: ["蝉翼", "Wing"])
     }
     
     private var slide2Desc: AttributedString {

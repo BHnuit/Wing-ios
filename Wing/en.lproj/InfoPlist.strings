@@ -1,0 +1,5 @@
+/* ZenWing - English InfoPlist */
+CFBundleDisplayName = "ZenWing";
+CFBundleName = "ZenWing";
+NSMicrophoneUsageDescription = "ZenWing needs microphone access to record your voice notes.";
+NSSpeechRecognitionUsageDescription = "ZenWing uses speech recognition to convert your voice to text.";

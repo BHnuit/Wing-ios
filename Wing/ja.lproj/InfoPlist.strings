@@ -1,0 +1,5 @@
+/* 蝉翼 (ZenWing) - 日本語 InfoPlist */
+CFBundleDisplayName = "蝉翼";
+CFBundleName = "蝉翼";
+NSMicrophoneUsageDescription = "蝉翼は音声メモを録音するためにマイクへのアクセスが必要です。";
+NSSpeechRecognitionUsageDescription = "蝉翼は音声をテキストに変換するために音声認識を使用します。";

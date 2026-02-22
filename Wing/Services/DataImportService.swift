@@ -144,8 +144,9 @@ final class DataImportService {
         
         for sessionExport in sessions {
             // 1. 创建或获取 Session
+            // 始终按日期查找，防止备份中同一日期有多条记录（如孤儿 entries）时创建重复 Session
             let session: DailySession
-            if !clearBeforeImport, let existing = try retrieveSession(date: sessionExport.date, context: context) {
+            if let existing = try retrieveSession(date: sessionExport.date, context: context) {
                 session = existing
             } else {
                 session = DailySession(
@@ -155,6 +156,7 @@ final class DataImportService {
                 )
                 context.insert(session)
             }
+            
             
             // 2. 导入 Fragments
             for fragExport in sessionExport.fragments {
@@ -169,6 +171,7 @@ final class DataImportService {
                     type: FragmentType(rawValue: fragExport.type) ?? .text
                 )
                 fragment.dailySession = session
+                session.fragments.append(fragment)
                 context.insert(fragment)
             }
             

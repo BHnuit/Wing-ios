@@ -1,4 +1,4 @@
-/* Wing iOS - English Localization */
+/* ZenWing - English Localization */
 
 // MARK: - Tabs
 "tab.now" = "Now";
@@ -13,10 +13,10 @@
 
 // MARK: - Chat
 "chat.title" = "Now";
-"chat.empty.today" = "A new day, spread your wings...";
-"chat.empty.past" = "No feathers fell here...";
-"chat.empty.hint" = "Leave the feathers of your thoughts here";
-"chat.input.placeholder" = "Leave the feathers of your thoughts here...";
+"chat.empty.today" = "A new day, anything to say?";
+"chat.empty.past" = "Nothing recorded here yet...";
+"chat.empty.hint" = "Leave an echo of your thoughts here";
+"chat.input.placeholder" = "Leave an echo of your thoughts here...";
 "chat.generate" = "Generate Journal";
 "chat.generate.failed" = "Generation Failed";
 "chat.ok" = "OK";
@@ -26,11 +26,11 @@
 // MARK: - Synthesis Progress
 "synthesis.weaving" = "Weaving your journal...";
 "synthesis.owl.thinking" = "The owl is thinking...";
-"synthesis.organizing" = "Organizing today's feathers...";
+"synthesis.organizing" = "Weaving today's echoes...";
 "synthesis.ai.creating" = "AI is creating...";
 "synthesis.wait" = "Almost done...";
 "synthesis.time.hint" = "Usually takes 10-30 seconds";
-"synthesis.started" = "Gathering today's feathers...";
+"synthesis.started" = "Folding the wings of thought...";
 "synthesis.generating" = "Weaving your journal...";
 "synthesis.saving" = "Generating insights...";
 "synthesis.completed" = "Done gathering";
@@ -51,7 +51,7 @@
 // MARK: - Journal
 "journal.title" = "Journal";
 "journal.empty" = "No content yet";
-"journal.empty.hint" = "Gather thought-feathers from 'Now' into your journal";
+"journal.empty.hint" = "Capture echoes of your thoughts from 'Now' into a journal";
 "journal.detail.title" = "Journal Detail";
 "journal.detail.notFound" = "Journal Not Found";
 "journal.detail.notFound.desc" = "Unable to find this journal";
@@ -82,8 +82,8 @@
 "settings.section.features" = "Features";
 "settings.section.lab" = "Lab";
 "settings.stats.daysRecorded" = "Days Recorded";
-"settings.stats.todayFlaps" = "Today's Flaps";
-"settings.stats.totalFeathers" = "Total Feathers";
+"settings.stats.todayFlaps" = "Today's Ripples";
+"settings.stats.totalFeathers" = "Total Echoes";
 "settings.about.privacyPolicy" = "Privacy Policy";
 
 // MARK: - Settings > AI
@@ -93,7 +93,7 @@
 "settings.ai.section.credential" = "Credentials";
 "settings.ai.section.credential.footer" = "API Key is securely stored in Keychain and will not be uploaded to any third-party servers.";
 "settings.ai.section.advanced" = "Advanced";
-"settings.ai.section.advanced.footer" = "When enabled, Wing will extract long-term memories from your journals to enhance future conversations.";
+"settings.ai.section.advanced.footer" = "When enabled, ZenWing will extract long-term memories from your journals to enhance future conversations.";
 "settings.ai.longTermMemory" = "Long-term Memory";
 "settings.ai.model" = "Model";
 "settings.ai.modelName" = "Model Name";
@@ -120,19 +120,19 @@
 "title.style.custom" = "Custom";
 
 // MARK: - Onboarding
-"onboarding.slide1.title" = "Welcome to Wing";
-"onboarding.slide1.desc" = "Capture your fragmented thoughts effortlessly,\nand leave every feather here.";
+"onboarding.slide1.title" = "Welcome to ZenWing";
+"onboarding.slide1.desc" = "Capture the echoes within you effortlessly,\nand let your thoughts linger here.";
 "onboarding.slide2.title" = "Gather Your Daily Thoughts";
 "onboarding.slide2.desc" = "Long-press the record button to trigger the synthesis,\ngenerating a beautiful journal in your preferred style.";
 "onboarding.slide3.title" = "Memories Grow Here";
-"onboarding.slide3.desc" = "The more you record in Wing,\nthe warmer the generated journals will feel.";
+"onboarding.slide3.desc" = "The more patterns you trace in ZenWing,\nthe warmer the generated journals will feel.";
 
 "onboarding.slide4.title" = "Configuration Before We Start";
 "onboarding.slide4.model" = "Which AI model do you want to use?";
 "onboarding.slide4.apiKey.placeholder" = "Enter your API Key";
 "onboarding.slide4.apiKey.fetch" = "Get it from %@";
 "onboarding.slide4.style" = "What kind of journal do you prefer?";
-"onboarding.slide4.dynamic.prefix" = "Based on the configuration above, Wing will use ";
+"onboarding.slide4.dynamic.prefix" = "Based on the configuration above, ZenWing will use ";
 "onboarding.slide4.dynamic.titleAnd" = " title and ";
 "onboarding.slide4.dynamic.suffix" = " tone";
 "onboarding.slide4.dynamic.notice" = "You can fully customize your preferred style later in Settings.";
@@ -154,13 +154,13 @@
 "diary.writing.report" = "Report";
 
 // MARK: - Welcome Entry
-"welcome.entry.title" = "Take Flight From Here";
-"welcome.entry.summary" = "The first encounter with Wing and the user guide.";
-"welcome.entry.mood" = "🪽";
-"welcome.entry.content" = "The name Wing carries a dual imagery: the quill and the wing. Like a quill, it captures fragments of life with a light touch; like an owl folding its wings at dusk, it organizes the thoughts and memories of the day. It is a privacy-focused, lightweight AI journal app, making logging and reviewing as light and free as a feather.\n\n## Highlights of Wing\n\n- **Local Logging**: All data is strictly kept locally; your thoughts belong only to you.\n- **Backup Support**: Provides full JSON export and recovery to keep your data safe.\n- **Model Selection**: Integrates with multiple LLMs to let you choose your best AI companion.\n\n## How to Use\n\n- **Configure Model**: Fill in your API Key on the settings page, and choose your preferred writing style and title format.\n- **Capture Thoughts**: Input your fragmented ideas anytime, anywhere on the 'Now' page, just like sending a message.\n- **Generate Journal**: When night falls, long-press the '+' button at the bottom, and the AI will organize your fragments into a beautifully formatted, structured journal.\n\nThis introduction will appear here as your first journal entry. You can delete it anytime by going to the detail page and tapping 'More' → 'Delete', or keep it for future reference.\n\nMay you fly towards a farther and clearer tomorrow with Wing.";
-"welcome.entry.insight" = "Every stroke of the pen is a flap of the wings; every gathering is a step closer to a brighter self.";
+"welcome.entry.title" = "First Song of the Cicada";
+"welcome.entry.summary" = "Your first encounter with ZenWing and a quick guide.";
+"welcome.entry.mood" = "📳";
+"welcome.entry.content" = "A cicada represents the ceaseless hum of our thoughts — every echo deserves to be captured, eventually forming the beautiful veins on the cicada's translucent wings. ZenWing is just such a privacy-focused AI journal app — a wondrous blend of technology and emotion, much like the wings of a cicada themselves: delicate yet resilient.\n\n## Highlights of ZenWing\n\n- **Local Storage**: All data stays strictly on your device; your thoughts belong only to you.\n- **Backup Support**: Full JSON export and recovery keeps your data safe.\n- **Model Selection**: Integrates with multiple LLMs so you can choose the best AI companion for you.\n\n## How to Use\n\n- **Configure Model**: Enter your API Key on the Settings page and choose your preferred writing style and title format.\n- **Capture Thoughts**: Jot down your fragmented ideas anytime on the 'Now' page, just like sending a message.\n- **Generate Journal**: When night falls, long-press the '+' button at the bottom, and the AI will weave your fragments into a beautifully structured journal.\n\nThis introduction appears as your first journal entry. You can delete it anytime via 'More' → 'Delete' on the detail page, or keep it for future reference.\n\nMay ZenWing accompany you through every summer worth remembering.";
+"welcome.entry.insight" = "Every note is a ripple of the cicada's wing; every gathering brings you one step closer to a clearer self.";
 "welcome.entry.todo1" = "Finish reading the first journal entry";
-"welcome.entry.todo2" = "Add the first feather";
+"welcome.entry.todo2" = "Leave your first echo";
 
 "settings.ai.writingStyle" = "Writing Style";
 "settings.ai.writingStyle.letter" = "Letter";
@@ -345,9 +345,9 @@
 "menu.cancel" = "Cancel";
 "stats.unit.days" = "Days";
 "stats.unit.times" = "Times";
-"stats.unit.feathers" = "Feathers";
+"stats.unit.feathers" = "Echoes";
 "settings.stats.label.totalDays" = "Total Recorded";
-"settings.stats.label.todayFlaps" = "Today's Flaps";
-"settings.stats.label.totalFeathers" = "Total Feathers";
+"settings.stats.label.todayFlaps" = "Today's Ripples";
+"settings.stats.label.totalFeathers" = "Total Echoes";
 "settings.stats.heatmap.less" = "Less";
 "settings.stats.heatmap.more" = "More";
