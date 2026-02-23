@@ -323,6 +323,9 @@
 "ai.error.invalidURL" = "無効なURLアドレスです。";
 "ai.error.network" = "ネットワーク要求に失敗しました: %@";
 "ai.error.api" = "APIエラー (HTTP %d): %@";
+"ai.error.network.simple" = "ネットワーク接続に失敗しました。ネットワーク設定を確認してください。";
+"ai.error.api.simple" = "サーバーの応答が異常です。後でもう一度お試しください。";
+"ai.error.api.auth" = "API Keyの検証に失敗しました。設定を確認してください。";
 "ai.error.parsing" = "応答データの解析に失敗しました。";
 "ai.error.empty" = "サーバーが空のデータを返しました。";
 

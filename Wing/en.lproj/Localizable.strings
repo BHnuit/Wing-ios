@@ -324,6 +324,9 @@
 "ai.error.invalidURL" = "Invalid URL address.";
 "ai.error.network" = "Network request failed: %@";
 "ai.error.api" = "API Error (HTTP %d): %@";
+"ai.error.network.simple" = "Network connection failed. Please check your network.";
+"ai.error.api.simple" = "Server responded with an error. Please try again later.";
+"ai.error.api.auth" = "API Key validation failed. Please check your settings.";
 "ai.error.parsing" = "Failed to parse response data.";
 "ai.error.empty" = "Server returned empty response.";
 

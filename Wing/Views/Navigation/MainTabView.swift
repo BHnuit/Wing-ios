@@ -117,6 +117,10 @@ private struct CustomTabBar: View {
     @Namespace private var animation
     @Namespace private var glassNamespace
     
+    // Error Alert State
+    @State private var showSynthesisErrorAlert: Bool = false
+    @State private var synthesisErrorMessage: String = ""
+    
     var body: some View {
         GlassEffectContainer {
         HStack(alignment: .bottom, spacing: 0) {
@@ -226,6 +230,12 @@ private struct CustomTabBar: View {
                                      .font(.system(size: 24, weight: .bold))
                                      .foregroundStyle(Color.accentColor)
                                      .transition(.scale.combined(with: .opacity))
+                             } else if case .failed(_) = navigationManager.synthesisProgress {
+                                 // Failed State - Exclamation
+                                 Image(systemName: "exclamationmark.triangle.fill")
+                                     .font(.system(size: 24, weight: .bold))
+                                     .foregroundStyle(.red)
+                                     .transition(.scale.combined(with: .opacity))
                              } else {
                                  // Generating State - Infinity + Ring
                                  ZStack {
@@ -278,6 +288,11 @@ private struct CustomTabBar: View {
         } // GlassEffectContainer
         .padding(.horizontal, 24)
         .padding(.bottom, 16)
+        .alert(L("chat.generate.failed"), isPresented: $showSynthesisErrorAlert) {
+            Button(L("common.ok"), role: .cancel) { }
+        } message: {
+            Text(synthesisErrorMessage)
+        }
     }
     
     // MARK: - Long Press & Gesture Logic
@@ -400,6 +415,9 @@ private struct CustomTabBar: View {
                 Self.logger.error("Synthesis failed: \(error)")
                 await MainActor.run {
                     navigationManager.synthesisProgress = .failed(error: error)
+                    synthesisErrorMessage = error.localizedDescription
+                    showSynthesisErrorAlert = true
+                    
                     // 延迟重置以便用户看到失败状态
                     Task { @MainActor in
                         try? await Task.sleep(for: .seconds(2))

@@ -111,10 +111,22 @@ struct SettingsMemoryView: View {
         }
         .overlay {
             if isExtracting {
-                ProgressView(L("settings.memory.extracting"))
-                    .padding()
-                    .background(.regularMaterial)
-                    .cornerRadius(8)
+                ZStack {
+                    Color.black.opacity(0.15)
+                        .ignoresSafeArea()
+                    
+                    VStack(spacing: 16) {
+                        ProgressView()
+                            .controlSize(.large)
+                        Text(L("settings.memory.extracting"))
+                            .font(.headline)
+                        
+                    }
+                    .padding(24)
+                    .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                }
+                .animation(.easeInOut(duration: 0.2), value: isExtracting)
+                .transition(.opacity)
             }
         }
         .alert(L("settings.memory.clear.confirm"), isPresented: $showClearConfirmation) {

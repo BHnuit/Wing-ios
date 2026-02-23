@@ -340,6 +340,9 @@
 "ai.error.invalidURL" = "无效的 URL 地址。";
 "ai.error.network" = "网络请求失败: %@";
 "ai.error.api" = "API 错误 (HTTP %d): %@";
+"ai.error.network.simple" = "网络连接失败，请检查网络设置。";
+"ai.error.api.simple" = "服务器响应异常，请稍后再试。";
+"ai.error.api.auth" = "API Key 验证失败，请检查设置。";
 "ai.error.parsing" = "解析响应数据失败。";
 "ai.error.empty" = "服务器返回空数据。";
 

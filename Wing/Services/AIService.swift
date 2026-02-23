@@ -27,10 +27,14 @@ enum AIError: Error, LocalizedError {
             return L("ai.error.missingKey")
         case .invalidURL:
             return L("ai.error.invalidURL")
-        case .networkError(let error):
-            return String(format: L("ai.error.network"), error.localizedDescription)
-        case .apiError(let statusCode, let message):
-            return String(format: L("ai.error.api"), statusCode, message)
+        case .networkError(_):
+            return L("ai.error.network.simple")
+        case .apiError(let statusCode, _):
+            if statusCode == 401 || statusCode == 403 {
+                return L("ai.error.api.auth")
+            } else {
+                return L("ai.error.api.simple")
+            }
         case .parsingError:
             return L("ai.error.parsing")
         case .emptyResponse:
