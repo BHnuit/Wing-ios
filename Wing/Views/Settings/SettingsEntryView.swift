@@ -36,31 +36,6 @@ struct SettingsEntryView: View {
             .reduce(0) { $0 + $1.content.count }
     }
     
-    private var privacyPolicyURL: URL {
-        let langCode = settingsManager.appSettings?.language.rawValue ?? "system"
-        let actualLang: String
-        
-        if langCode == "system" {
-            actualLang = Locale.current.language.languageCode?.identifier ?? "en"
-        } else {
-            actualLang = langCode
-        }
-        
-        let urlString: String
-        if actualLang.hasPrefix("zh") {
-            urlString = "https://BHnuit.github.io/Wing-ios/privacy-zh.html"
-        } else if actualLang.hasPrefix("ja") {
-            urlString = "https://BHnuit.github.io/Wing-ios/privacy-ja.html"
-        } else {
-            urlString = "https://BHnuit.github.io/Wing-ios/privacy.html"
-        }
-        
-        return URL(string: urlString)!
-    }
-    
-    private var appVersion: String {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
-    }
     
     var body: some View {
         NavigationStack {
@@ -100,27 +75,9 @@ struct SettingsEntryView: View {
                 
                 // Section 4: About
                 Section {
-                    HStack {
-                        Spacer()
-                        VStack(spacing: 8) {
-                            Image(uiImage: UIImage(named: "AppIcon") ?? UIImage()) // Fallback if icon not loaded directly
-                                .resizable()
-                                .frame(width: 60, height: 60)
-                                .cornerRadius(12)
-                                .opacity(0.8)
-                            
-                            Text("Wing v\(appVersion)")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            
-                            Link(L("settings.about.privacyPolicy"), destination: privacyPolicyURL)
-                                .font(.caption)
-                                .foregroundStyle(.blue)
-                                .buttonStyle(.plain) // 限制点击区域仅为蓝字
-                        }
-                        Spacer()
+                    NavigationLink(destination: SettingsAboutView()) {
+                        Label(L("settings.about.label"), systemImage: "info.circle")
                     }
-                    .listRowBackground(Color.clear)
                 }
             }
             .navigationTitle(L("settings.title"))

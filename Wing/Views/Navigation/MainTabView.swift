@@ -121,6 +121,9 @@ private struct CustomTabBar: View {
     @State private var showSynthesisErrorAlert: Bool = false
     @State private var synthesisErrorMessage: String = ""
     
+    // Data Sharing Consent
+    @State private var showDataSharingConsent: Bool = false
+    
     var body: some View {
         GlassEffectContainer {
         HStack(alignment: .bottom, spacing: 0) {
@@ -293,6 +296,20 @@ private struct CustomTabBar: View {
         } message: {
             Text(synthesisErrorMessage)
         }
+        .sheet(isPresented: $showDataSharingConsent) {
+            DataSharingConsentView(
+                providerName: SettingsManager.shared.appSettings?.aiProvider.displayName ?? "AI",
+                onConsent: {
+                    SettingsManager.shared.appSettings?.hasConsentedDataSharing = true
+                    try? SettingsManager.shared.modelContext?.save()
+                    // 同意后继续合成
+                    performSynthesis()
+                },
+                onDecline: {
+                    // 拒绝同意，不执行合成
+                }
+            )
+        }
     }
     
     // MARK: - Long Press & Gesture Logic
@@ -371,6 +388,21 @@ private struct CustomTabBar: View {
              navigationManager.chargingProgress = 0.0
         }
         
+        guard let _ = currentSession else {
+            Self.logger.error("Synthesis aborted: no session found for date \(navigationManager.selectedDate)")
+            return
+        }
+        
+        // 检查数据共享同意状态
+        if SettingsManager.shared.appSettings?.hasConsentedDataSharing != true {
+            showDataSharingConsent = true
+            return
+        }
+        
+        performSynthesis()
+    }
+    
+    private func performSynthesis() {
         guard let session = currentSession else {
             Self.logger.error("Synthesis aborted: no session found for date \(navigationManager.selectedDate)")
             return

@@ -26,6 +26,7 @@ struct OnboardingView: View {
     
     @State private var showApiKey: Bool = false
     @State private var validationState: ValidationState = .idle
+    @State private var showDataSharingConsent: Bool = false
 
     
     var body: some View {
@@ -266,7 +267,7 @@ struct OnboardingView: View {
                             }
                             
                             Button {
-                                skipConfiguration()
+                                finalizeOnboarding()
                             } label: {
                                 Text(String(localized: "onboarding.button.skip"))
                                     .font(.system(size: 15))
@@ -302,6 +303,20 @@ struct OnboardingView: View {
                 .padding(.bottom, 60)
                 .animation(.spring(response: 0.4, dampingFraction: 0.8), value: currentPage)
             }
+        }
+        .sheet(isPresented: $showDataSharingConsent) {
+            DataSharingConsentView(
+                providerName: tempProvider.displayName,
+                onConsent: {
+                    settingsManager.appSettings?.hasConsentedDataSharing = true
+                    try? settingsManager.modelContext?.save()
+                    finalizeOnboarding()
+                },
+                onDecline: {
+                    // 用户拒绝同意，仍完成引导但不标记同意
+                    finalizeOnboarding()
+                }
+            )
         }
     }
     
@@ -372,28 +387,25 @@ struct OnboardingView: View {
                 await settingsManager.setApiKey(tempApiKey, for: tempProvider)
             }
             
-            // 标记完成，触发 RootView 切换
-            await MainActor.run {
-                withAnimation {
-                    hasCompletedOnboarding = true
+            // 如果配置了 API Key 且尚未同意数据共享，弹出同意弹窗
+            if !tempApiKey.isEmpty && settingsManager.appSettings?.hasConsentedDataSharing != true {
+                await MainActor.run {
+                    showDataSharingConsent = true
                 }
-            }
-            
-            // 尝试生成第一条记录
-            do {
-                try OnboardingService.shared.createWelcomeEntryIfNeeded(context: modelContext)
-            } catch {
-                Self.logger.error("Failed to create welcome entry: \(error)")
+            } else {
+                await MainActor.run {
+                    finalizeOnboarding()
+                }
             }
         }
     }
     
-    private func skipConfiguration() {
-        // 跳过不保存 Config
+    private func finalizeOnboarding() {
         withAnimation {
             hasCompletedOnboarding = true
         }
         
+        // 尝试生成第一条记录
         do {
             try OnboardingService.shared.createWelcomeEntryIfNeeded(context: modelContext)
         } catch {

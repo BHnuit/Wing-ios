@@ -166,7 +166,7 @@
 
         <div class="content">
             <h1>Privacy Policy</h1>
-            <div class="last-updated">Last updated: February 21, 2026</div>
+            <div class="last-updated">Last updated: February 25, 2026</div>
 
             <p>Welcome to <strong>ZenWing</strong>. We understand how important privacy is to you, which is why a
                 "Privacy-First" approach is our core design philosophy. This Privacy Policy explains how ZenWing handles
@@ -183,17 +183,52 @@
                 encrypted and stored using Apple's highest-grade security mechanism, the <strong>Keychain</strong>. This
                 information is never uploaded to any server or shared with other third parties.</p>
 
-            <h2>3. Third-Party AI Models</h2>
-            <p>When you use AI functionalities such as "Journal Synthesis", necessary journal fragments are temporarily
-                transmitted over an encrypted network to the third-party Large Language Model provider of your choice
-                (e.g., <strong>OpenAI, Gemini, DeepSeek</strong>).</p>
+            <h2>3. Third-Party AI Services & Data Sharing</h2>
+            <p>When you use AI functionalities such as "Journal Synthesis" or "Memory Extraction", certain data is
+                transmitted over an encrypted network to the third-party Large Language Model provider of your choice.
+            </p>
+
+            <h3>3.1 Data Types Shared</h3>
+            <p>The following types of data may be sent to the AI provider:</p>
             <ul>
-                <li>Your data transmission only happens between your device and the destination provider.</li>
-                <li>Please note that when data is sent to a third-party API, the data processing will follow the privacy
-                    policy of the respective service provider.</li>
-                <li>We recommend that you review the official privacy policies of your chosen model provider before
-                    using their services.</li>
+                <li><strong>Text fragments</strong>: The text content you enter in the chat interface as daily records.
+                </li>
+                <li><strong>Image descriptions</strong>: Text descriptions associated with images you attach (images
+                    themselves are not sent).</li>
+                <li><strong>Long-term memory content</strong> (if enabled): Semantic, episodic, and procedural memories
+                    extracted from your previous journals.</li>
             </ul>
+
+            <h3>3.2 How Data Is Collected</h3>
+            <p>All data shared with AI services is <strong>voluntarily provided by you</strong> through the app's chat
+                interface. ZenWing does not automatically collect or transmit any data without your active input and
+                explicit consent.</p>
+
+            <h3>3.3 User Consent</h3>
+            <p>ZenWing requires your <strong>explicit consent</strong> before sharing any data with third-party AI
+                services:</p>
+            <ul>
+                <li>A clear consent dialog is presented before any AI feature is used for the first time, explaining
+                    exactly what data will be shared and with whom.</li>
+                <li>You can <strong>revoke your consent at any time</strong> in Settings → Privacy & Data → Revoke Data
+                    Sharing Consent.</li>
+                <li>If consent is revoked, AI features will not send any data until you re-authorize.</li>
+            </ul>
+
+            <h3>3.4 Supported AI Providers</h3>
+            <p>Data is sent <strong>directly from your device</strong> to one of the following providers, depending on
+                your selection:</p>
+            <ul>
+                <li><strong>Google Gemini</strong> — <a href="https://ai.google.dev/gemini-api/terms"
+                        target="_blank">Terms of Service</a></li>
+                <li><strong>OpenAI</strong> — <a href="https://openai.com/policies/privacy-policy"
+                        target="_blank">Privacy Policy</a></li>
+                <li><strong>DeepSeek</strong> — <a href="https://www.deepseek.com/privacy" target="_blank">Privacy
+                        Policy</a></li>
+            </ul>
+            <p>ZenWing does not operate any intermediate servers. Your data transmission only happens between your
+                device and the destination provider. We strongly recommend reviewing the official privacy policy of your
+                chosen provider.</p>
 
             <h2>4. Data Collection and Tracking</h2>
             <p>ZenWing <strong>does not contain any hidden tracking scripts, advertising SDKs, or user behavior

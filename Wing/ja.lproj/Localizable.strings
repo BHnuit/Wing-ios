@@ -85,6 +85,9 @@
 "settings.stats.todayFlaps" = "今日のアクション";
 "settings.stats.totalFeathers" = "累計の余韻";
 "settings.about.privacyPolicy" = "プライバシーポリシー";
+"settings.about.title" = "蝉翼について";
+"settings.about.label" = "蝉翼について";
+"settings.about.showOnboarding" = "オンボーディングを表示";
 
 // MARK: - Settings > AI
 "settings.ai.title" = "モデル設定";
@@ -353,3 +356,30 @@
 "settings.stats.label.totalFeathers" = "累計の余韻";
 "settings.stats.heatmap.less" = "少";
 "settings.stats.heatmap.more" = "多";
+
+// MARK: - Data Sharing Consent
+"app.name" = "蝉翼";
+"consent.title" = "データ利用について";
+"consent.subtitle" = "AI機能をご利用の前に、以下の情報をご確認ください";
+"consent.data.title" = "送信されるデータ";
+"consent.data.fragments" = "入力したテキストの断片";
+"consent.data.imageDesc" = "画像の説明テキスト";
+"consent.data.memories" = "長期記憶の内容（有効な場合）";
+"consent.recipient.title" = "データの送信先";
+"consent.recipient.provider" = "選択したAIプロバイダー：%@";
+"consent.recipient.directOnly" = "データはお客様のデバイスとプロバイダー間でのみ直接送信されます";
+"consent.purpose.title" = "利用目的";
+"consent.purpose.journal" = "AI日記の生成に使用";
+"consent.purpose.memory" = "長期記憶の抽出に使用（有効な場合）";
+"consent.privacy.note" = "詳細については";
+"consent.privacy.link" = "プライバシーポリシー";
+"consent.button.agree" = "同意して続行";
+"consent.button.decline" = "今はAI機能を使用しない";
+
+// MARK: - Settings > Privacy
+"settings.section.privacy" = "プライバシーとデータ";
+"settings.privacy.dataSharing" = "AIデータ共有";
+"settings.privacy.consented" = "同意済み";
+"settings.privacy.notConsented" = "未同意";
+"settings.privacy.revoke" = "データ共有の同意を撤回";
+"settings.privacy.footer" = "AI機能は記録の内容をサードパーティプロバイダーに送信する必要があります。同意を撤回すると、AI機能を使用するには再度承認が必要です。";

@@ -886,6 +886,13 @@ final class AppSettings {
     /// 双语界面模式（暂未完全启用）
     var bilingualMode: Bool = false
     
+    /// 用户是否已同意与第三方 AI 服务共享数据
+    @Attribute(originalName: "hasConsentedDataSharing") var _hasConsentedDataSharing: Bool?
+    var hasConsentedDataSharing: Bool {
+        get { _hasConsentedDataSharing ?? false }
+        set { _hasConsentedDataSharing = newValue }
+    }
+    
     /// 按 AI 供应商分别存储的模型名称（计算属性）
     var aiModels: [AiProvider: String] {
         get {

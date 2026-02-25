@@ -85,6 +85,9 @@
 "settings.stats.todayFlaps" = "Today's Ripples";
 "settings.stats.totalFeathers" = "Total Echoes";
 "settings.about.privacyPolicy" = "Privacy Policy";
+"settings.about.title" = "About";
+"settings.about.label" = "About";
+"settings.about.showOnboarding" = "Show Onboarding";
 
 // MARK: - Settings > AI
 "settings.ai.title" = "AI Configuration";
@@ -354,3 +357,30 @@
 "settings.stats.label.totalFeathers" = "Total Echoes";
 "settings.stats.heatmap.less" = "Less";
 "settings.stats.heatmap.more" = "More";
+
+// MARK: - Data Sharing Consent
+"app.name" = "ZenWing";
+"consent.title" = "Data Usage Notice";
+"consent.subtitle" = "Please review the following before using AI features";
+"consent.data.title" = "Data Sent";
+"consent.data.fragments" = "Text fragments you enter";
+"consent.data.imageDesc" = "Image description text";
+"consent.data.memories" = "Long-term memory content (if enabled)";
+"consent.recipient.title" = "Data Recipient";
+"consent.recipient.provider" = "Your selected AI provider: %@";
+"consent.recipient.directOnly" = "Data is transmitted directly between your device and the provider only";
+"consent.purpose.title" = "Purpose";
+"consent.purpose.journal" = "To generate AI journal entries";
+"consent.purpose.memory" = "To extract long-term memories (if enabled)";
+"consent.privacy.note" = "For more details, see our";
+"consent.privacy.link" = "Privacy Policy";
+"consent.button.agree" = "Agree & Continue";
+"consent.button.decline" = "Not Now";
+
+// MARK: - Settings > Privacy
+"settings.section.privacy" = "Privacy & Data";
+"settings.privacy.dataSharing" = "AI Data Sharing";
+"settings.privacy.consented" = "Consented";
+"settings.privacy.notConsented" = "Not Consented";
+"settings.privacy.revoke" = "Revoke Data Sharing Consent";
+"settings.privacy.footer" = "AI features require sending your recorded content to a third-party provider. After revoking consent, you'll need to re-authorize to use AI features.";

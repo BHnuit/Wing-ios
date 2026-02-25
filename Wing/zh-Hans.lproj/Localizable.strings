@@ -86,6 +86,9 @@
 "settings.stats.todayFlaps" = "今日振翅";
 "settings.stats.totalFeathers" = "累计回响";
 "settings.about.privacyPolicy" = "隐私政策";
+"settings.about.title" = "关于";
+"settings.about.label" = "关于";
+"settings.about.showOnboarding" = "显示引导";
 
 // MARK: - Settings > AI
 "settings.ai.title" = "模型配置";
@@ -371,3 +374,30 @@
 "settings.stats.label.totalFeathers" = "累计回响";
 "settings.stats.heatmap.less" = "少";
 "settings.stats.heatmap.more" = "多";
+
+// MARK: - Data Sharing Consent
+"app.name" = "蝉翼";
+"consent.title" = "数据使用说明";
+"consent.subtitle" = "在使用 AI 功能之前，请了解以下信息";
+"consent.data.title" = "发送的数据";
+"consent.data.fragments" = "你输入的文字碎片内容";
+"consent.data.imageDesc" = "图片的描述文本";
+"consent.data.memories" = "长期记忆内容（如启用）";
+"consent.recipient.title" = "数据接收方";
+"consent.recipient.provider" = "你选择的 AI 服务商：%@";
+"consent.recipient.directOnly" = "数据仅在你的设备与该服务商之间直接传输";
+"consent.purpose.title" = "数据用途";
+"consent.purpose.journal" = "用于生成 AI 日记";
+"consent.purpose.memory" = "用于提取长期记忆（如启用）";
+"consent.privacy.note" = "详细信息请参阅";
+"consent.privacy.link" = "隐私政策";
+"consent.button.agree" = "同意并继续";
+"consent.button.decline" = "暂不使用 AI 功能";
+
+// MARK: - Settings > Privacy
+"settings.section.privacy" = "隐私与数据";
+"settings.privacy.dataSharing" = "AI 数据共享";
+"settings.privacy.consented" = "已同意";
+"settings.privacy.notConsented" = "未同意";
+"settings.privacy.revoke" = "撤回数据共享同意";
+"settings.privacy.footer" = "AI 功能需要将你的记录内容发送至第三方服务商。撤回同意后，需要重新授权才能使用 AI 功能。";

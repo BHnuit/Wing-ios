@@ -225,6 +225,9 @@ struct SettingsStorageView: View {
             // 重置引导页状态
             UserDefaults.standard.set(false, forKey: "hasCompletedOnboarding")
             
+            // 重置数据共享同意状态
+            SettingsManager.shared.appSettings?.hasConsentedDataSharing = false
+            
             importMessage = L("settings.storage.cleared")
         } catch {
             importMessage = "Clear failed: \(error.localizedDescription)"
